@@ -1,0 +1,238 @@
+[
+  {
+    "id": 1,
+    "name": "Massage Thư Giãn Toàn Thân",
+    "slug": "massage-thu-gian-toan-than",
+    "duration": 60,
+    "price": 300000,
+    "originalPrice": 350000,
+    "discount": 14,
+    "categoryId": 1,
+    "description": "Giảm stress, thư giãn cơ bắp, phục hồi năng lượng với các kỹ thuật massage chuyên nghiệp.",
+    "shortDescription": "Massage toàn thân thư giãn, giảm stress hiệu quả",
+    "images": [
+      "/uploads/products/massage-toan-than-1.jpg",
+      "/uploads/products/massage-toan-than-2.jpg",
+      "/uploads/products/massage-toan-than-3.jpg"
+    ],
+    "thumbnail": "/uploads/products/massage-toan-than-thumb.jpg",
+    "status": "active",
+    "featured": true,
+    "trending": true,
+    "bestseller": true,
+    "tags": ["massage", "thư giãn", "giảm stress"],
+    "benefits": [
+      "Giảm căng thẳng và stress",
+      "Thư giãn cơ bắp", 
+      "Cải thiện tuần hoàn máu",
+      "Tăng cường sức khỏe tổng thể"
+    ],
+    "procedures": [
+      "Tư vấn và kiểm tra tình trạng cơ thể",
+      "Massage toàn thân với tinh dầu thiên nhiên",
+      "Thư giãn và nghỉ ngơi sau liệu trình"
+    ],
+    "rating": 4.8,
+    "reviewCount": 127,
+    "viewCount": 1523,
+    "createdAt": "2024-01-15T08:00:00Z",
+    "updatedAt": "2024-12-01T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Chăm Sóc Da Mặt Cơ Bản",
+    "slug": "cham-soc-da-mat-co-ban",
+    "duration": 45,
+    "price": 250000,
+    "originalPrice": 280000,
+    "discount": 11,
+    "categoryId": 2,
+    "description": "Liệu trình chăm sóc da mặt cơ bản với quy trình làm sạch sâu, tẩy da chết và massage mặt nhẹ nhàng.",
+    "shortDescription": "Chăm sóc da mặt cơ bản, làm sạch và dưỡng ẩm",
+    "images": [
+      "/uploads/products/cham-soc-da-1.jpg",
+      "/uploads/products/cham-soc-da-2.jpg"
+    ],
+    "thumbnail": "/uploads/products/cham-soc-da-thumb.jpg",
+    "status": "active",
+    "featured": false,
+    "trending": true,
+    "bestseller": false,
+    "tags": ["chăm sóc da", "làm sạch", "dưỡng ẩm"],
+    "benefits": [
+      "Làm sạch sâu lỗ chân lông",
+      "Tẩy tế bào chết",
+      "Dưỡng ẩm và làm mềm da",
+      "Cải thiện độ đàn hồi của da"
+    ],
+    "procedures": [
+      "Tẩy trang và làm sạch da",
+      "Tẩy da chết nhẹ nhàng",
+      "Massage mặt và đắp mặt nạ",
+      "Dưỡng ẩm và bảo vệ da"
+    ],
+    "rating": 4.5,
+    "reviewCount": 89,
+    "viewCount": 1205,
+    "createdAt": "2024-01-20T09:00:00Z",
+    "updatedAt": "2024-11-25T14:15:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Chăm Sóc Da Chuyên Sâu",
+    "slug": "cham-soc-da-chuyen-sau",
+    "duration": 90,
+    "price": 450000,
+    "originalPrice": 500000,
+    "discount": 10,
+    "categoryId": 2,
+    "description": "Liệu trình chăm sóc da mặt chuyên sâu với công nghệ hiện đại, xử lý mụn và các vấn đề da chuyên biệt.",
+    "shortDescription": "Chăm sóc da chuyên sâu, xử lý mụn và nâng cơ",
+    "images": [
+      "/uploads/products/cham-soc-da-sau-1.jpg",
+      "/uploads/products/cham-soc-da-sau-2.jpg",
+      "/uploads/products/cham-soc-da-sau-3.jpg"
+    ],
+    "thumbnail": "/uploads/products/cham-soc-da-sau-thumb.jpg",
+    "status": "active",
+    "featured": true,
+    "trending": false,
+    "bestseller": true,
+    "tags": ["chăm sóc da", "xử lý mụn", "nâng cơ", "chống lão hóa"],
+    "benefits": [
+      "Xử lý mụn và thâm hiệu quả",
+      "Nâng cơ và chống lão hóa",
+      "Dưỡng chất sâu cho da",
+      "Cải thiện kết cấu da"
+    ],
+    "procedures": [
+      "Phân tích da và tư vấn chuyên sâu",
+      "Làm sạch và tẩy da chết chuyên sâu",
+      "Điều trị mụn và thâm",
+      "Massage nâng cơ và đắp mặt nạ dưỡng chất",
+      "Bảo vệ và dưỡng ẩm"
+    ],
+    "rating": 4.9,
+    "reviewCount": 156,
+    "viewCount": 2341,
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-12-05T11:20:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Gội Đầu Dưỡng Sinh",
+    "slug": "goi-dau-duong-sinh",
+    "duration": 40,
+    "price": 150000,
+    "originalPrice": 150000,
+    "discount": 0,
+    "categoryId": 3,
+    "description": "Dịch vụ gội đầu dưỡng sinh kết hợp massage cổ vai gáy, giúp thư giãn và cải thiện tuần hoàn máu.",
+    "shortDescription": "Gội đầu dưỡng sinh với massage cổ vai gáy",
+    "images": [
+      "/uploads/products/goi-dau-1.jpg",
+      "/uploads/products/goi-dau-2.jpg"
+    ],
+    "thumbnail": "/uploads/products/goi-dau-thumb.jpg",
+    "status": "active",
+    "featured": false,
+    "trending": false,
+    "bestseller": true,
+    "tags": ["gội đầu", "massage", "thư giãn"],
+    "benefits": [
+      "Làm sạch da đầu và tóc",
+      "Massage giảm căng thẳng cổ vai",
+      "Cải thiện tuần hoàn máu",
+      "Thư giãn tinh thần"
+    ],
+    "procedures": [
+      "Gội đầu với shampoo thảo dược",
+      "Massage da đầu kích thích tuần hoàn",
+      "Massage cổ vai gáy thư giãn",
+      "Sấy tóc và tạo kiểu nhẹ"
+    ],
+    "rating": 4.6,
+    "reviewCount": 73,
+    "viewCount": 892,
+    "createdAt": "2024-01-25T11:00:00Z",
+    "updatedAt": "2024-11-30T16:45:00Z"
+  },
+  {
+    "id": 5,
+    "name": "Tẩy Tế Bào Chết Toàn Thân",
+    "slug": "tay-te-bao-chet-toan-than",
+    "duration": 50,
+    "price": 280000,
+    "originalPrice": 320000,
+    "discount": 13,
+    "categoryId": 2,
+    "description": "Liệu trình tẩy tế bào chết toàn thân giúp làm sạch, sáng mịn và mềm mại da.",
+    "shortDescription": "Tẩy tế bào chết toàn thân, da sáng mịn",
+    "images": [
+      "/uploads/products/tay-te-bao-chet-1.jpg",
+      "/uploads/products/tay-te-bao-chet-2.jpg"
+    ],
+    "thumbnail": "/uploads/products/tay-te-bao-chet-thumb.jpg",
+    "status": "active",
+    "featured": false,
+    "trending": true,
+    "bestseller": false,
+    "tags": ["tẩy da chết", "làm đẹp", "dưỡng da"],
+    "benefits": [
+      "Loại bỏ tế bào chết",
+      "Da sáng mịn tự nhiên",
+      "Cải thiện kết cấu da",
+      "Tăng độ đàn hồi cho da"
+    ],
+    "procedures": [
+      "Tư vấn và kiểm tra da",
+      "Tẩy tế bào chết nhẹ nhàng",
+      "Massage dưỡng ẩm",
+      "Chăm sóc và bảo vệ da"
+    ],
+    "rating": 4.4,
+    "reviewCount": 65,
+    "viewCount": 987,
+    "createdAt": "2024-02-05T13:30:00Z",
+    "updatedAt": "2024-11-28T12:10:00Z"
+  },
+  {
+    "id": 6,
+    "name": "Massage Đá Nóng",
+    "slug": "massage-da-nong",
+    "duration": 75,
+    "price": 380000,
+    "originalPrice": 420000,
+    "discount": 10,
+    "categoryId": 1,
+    "description": "Liệu pháp massage với đá nóng từ thiên nhiên, giúp thư giãn cơ bắp sâu và cải thiện tuần hoàn máu.",
+    "shortDescription": "Massage đá nóng thư giãn sâu",
+    "images": [
+      "/uploads/products/massage-da-nong-1.jpg",
+      "/uploads/products/massage-da-nong-2.jpg"
+    ],
+    "thumbnail": "/uploads/products/massage-da-nong-thumb.jpg",
+    "status": "active",
+    "featured": true,
+    "trending": true,
+    "bestseller": false,
+    "tags": ["massage", "đá nóng", "thư giãn sâu"],
+    "benefits": [
+      "Thư giãn cơ bắp sâu",
+      "Cải thiện tuần hoàn máu",
+      "Giảm đau nhức cơ bắp",
+      "Cân bằng năng lượng cơ thể"
+    ],
+    "procedures": [
+      "Tư vấn và chuẩn bị đá nóng",
+      "Đặt đá nóng lên các huyệt đạo",
+      "Massage toàn thân với đá nóng",
+      "Nghỉ ngơi và thư giãn"
+    ],
+    "rating": 4.7,
+    "reviewCount": 94,
+    "viewCount": 1456,
+    "createdAt": "2024-02-10T14:00:00Z",
+    "updatedAt": "2024-12-03T09:15:00Z"
+  }
+]

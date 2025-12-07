@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "title": "Ưu đãi Giáng Sinh 2024",
+    "subtitle": "Giảm giá lên đến 20% cho tất cả dịch vụ",
+    "description": "Chào đón mùa Giáng Sinh với những ưu đãi hấp dẫn nhất trong năm",
+    "image": "/uploads/banners/christmas-2024.jpg",
+    "buttonText": "Đặt lịch ngay",
+    "buttonLink": "/booking",
+    "backgroundColor": "#c41e3a",
+    "textColor": "#ffffff",
+    "position": 1,
+    "status": "active",
+    "startDate": "2024-12-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "createdAt": "2024-11-25T10:00:00Z",
+    "updatedAt": "2024-12-01T09:00:00Z"
+  },
+  {
+    "id": 2,
+    "title": "Spa & Massage Premium",
+    "subtitle": "Trải nghiệm dịch vụ 5 sao với không gian sang trọng",
+    "description": "Thư giãn hoàn toàn với các liệu trình massage chuyên nghiệp",
+    "image": "/uploads/banners/premium-spa.jpg",
+    "buttonText": "Khám phá ngay",
+    "buttonLink": "/products",
+    "backgroundColor": "#2c5530", 
+    "textColor": "#ffffff",
+    "position": 2,
+    "status": "active",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-11-20T15:30:00Z"
+  },
+  {
+    "id": 3,
+    "title": "Chăm Sóc Da Chuyên Sâu",
+    "subtitle": "Công nghệ hiện đại cho làn da hoàn hảo",
+    "description": "Điều trị và chăm sóc da với các sản phẩm cao cấp nhất",
+    "image": "/uploads/banners/skincare.jpg",
+    "buttonText": "Tìm hiểu thêm",
+    "buttonLink": "/products/skincare",
+    "backgroundColor": "#f8f9fa",
+    "textColor": "#212529",
+    "position": 3,
+    "status": "active",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "createdAt": "2024-02-01T00:00:00Z",
+    "updatedAt": "2024-11-15T11:45:00Z"
+  }
+]

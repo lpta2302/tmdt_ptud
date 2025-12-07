@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Massage & Spa",
+    "slug": "massage-spa",
+    "description": "Các dịch vụ massage và spa thư giãn",
+    "image": "/uploads/categories/massage-spa.jpg",
+    "status": "active",
+    "sortOrder": 1,
+    "productCount": 3,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Chăm Sóc Da",
+    "slug": "cham-soc-da",
+    "description": "Dịch vụ chăm sóc và làm đẹp da mặt, body",
+    "image": "/uploads/categories/cham-soc-da.jpg",
+    "status": "active",
+    "sortOrder": 2,
+    "productCount": 3,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Chăm Sóc Tóc",
+    "slug": "cham-soc-toc",
+    "description": "Dịch vụ chăm sóc tóc và da đầu",
+    "image": "/uploads/categories/cham-soc-toc.jpg",
+    "status": "active",
+    "sortOrder": 3,
+    "productCount": 1,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-01T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Chăm Sóc Cơ Thể",
+    "slug": "cham-soc-co-the",
+    "description": "Dịch vụ chăm sóc toàn diện cho cơ thể",
+    "image": "/uploads/categories/cham-soc-co-the.jpg",
+    "status": "active",
+    "sortOrder": 4,
+    "productCount": 0,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-01T00:00:00Z"
+  }
+]

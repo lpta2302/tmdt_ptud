@@ -1,0 +1,116 @@
+[
+  {
+    "id": 1,
+    "orderNumber": "ORD001",
+    "customerId": 1,
+    "customerInfo": {
+      "name": "Nguyễn Văn An",
+      "phone": "0901234567",
+      "email": "nguyenvanan@gmail.com"
+    },
+    "items": [
+      {
+        "id": 1,
+        "productId": 1,
+        "productName": "Massage Thư Giãn Toàn Thân",
+        "price": 300000,
+        "originalPrice": 350000,
+        "quantity": 1,
+        "total": 300000,
+        "appointmentDate": "2024-12-15",
+        "appointmentTime": "09:00"
+      }
+    ],
+    "subtotal": 300000,
+    "discount": 50000,
+    "discountCode": "GIAM50K",
+    "shippingFee": 0,
+    "total": 250000,
+    "paymentMethod": "cash",
+    "paymentStatus": "paid",
+    "status": "completed",
+    "notes": "Khách yêu cầu massage nhẹ nhàng",
+    "createdAt": "2024-11-20T08:00:00Z",
+    "updatedAt": "2024-11-20T10:30:00Z",
+    "completedAt": "2024-11-20T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "orderNumber": "ORD002",
+    "customerId": 2,
+    "customerInfo": {
+      "name": "Trần Thị Bình",
+      "phone": "0912345678",
+      "email": "tranthib@gmail.com"
+    },
+    "items": [
+      {
+        "id": 1,
+        "productId": 2,
+        "productName": "Chăm Sóc Da Mặt Cơ Bản",
+        "price": 250000,
+        "originalPrice": 280000,
+        "quantity": 1,
+        "total": 250000,
+        "appointmentDate": "2024-12-16",
+        "appointmentTime": "14:00"
+      }
+    ],
+    "subtotal": 250000,
+    "discount": 0,
+    "discountCode": null,
+    "shippingFee": 0,
+    "total": 250000,
+    "paymentMethod": "bank_transfer",
+    "paymentStatus": "pending",
+    "status": "confirmed",
+    "notes": "",
+    "createdAt": "2024-12-05T14:20:00Z",
+    "updatedAt": "2024-12-05T14:20:00Z"
+  },
+  {
+    "id": 3,
+    "orderNumber": "ORD003",
+    "customerId": 1,
+    "customerInfo": {
+      "name": "Nguyễn Văn An",
+      "phone": "0901234567",
+      "email": "nguyenvanan@gmail.com"
+    },
+    "items": [
+      {
+        "id": 1,
+        "productId": 3,
+        "productName": "Chăm Sóc Da Chuyên Sâu",
+        "price": 450000,
+        "originalPrice": 500000,
+        "quantity": 1,
+        "total": 450000,
+        "appointmentDate": "2024-12-20",
+        "appointmentTime": "10:00"
+      },
+      {
+        "id": 2,
+        "productId": 4,
+        "productName": "Gội Đầu Dưỡng Sinh",
+        "price": 150000,
+        "originalPrice": 150000,
+        "quantity": 1,
+        "total": 150000,
+        "appointmentDate": "2024-12-20",
+        "appointmentTime": "11:30"
+      }
+    ],
+    "subtotal": 600000,
+    "discount": 60000,
+    "discountCode": "GIAM10PERCENT",
+    "shippingFee": 0,
+    "total": 540000,
+    "paymentMethod": "credit_card",
+    "paymentStatus": "paid",
+    "status": "processing",
+    "notes": "Combo dịch vụ chăm sóc toàn diện",
+    "createdAt": "2024-12-06T10:30:00Z",
+    "updatedAt": "2024-12-06T10:30:00Z"
+  }
+]

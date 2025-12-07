@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@spa.com",
+    "password": "$2b$10$hash_admin_password_here",
+    "fullName": "Quản trị viên",
+    "role": "admin",
+    "permissions": ["all"],
+    "avatar": "/uploads/avatars/admin.jpg",
+    "status": "active",
+    "lastLoginAt": "2024-12-07T08:00:00Z",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-12-07T08:00:00Z"
+  },
+  {
+    "id": 2,
+    "username": "manager",
+    "email": "manager@spa.com", 
+    "password": "$2b$10$hash_manager_password_here",
+    "fullName": "Nguyễn Thị Lan",
+    "role": "manager",
+    "permissions": ["orders", "customers", "products", "reports"],
+    "avatar": "/uploads/avatars/manager.jpg",
+    "status": "active",
+    "lastLoginAt": "2024-12-06T17:30:00Z",
+    "createdAt": "2024-02-01T00:00:00Z",
+    "updatedAt": "2024-12-06T17:30:00Z"
+  },
+  {
+    "id": 3,
+    "username": "staff",
+    "email": "staff@spa.com",
+    "password": "$2b$10$hash_staff_password_here",
+    "fullName": "Trần Văn Minh",
+    "role": "staff", 
+    "permissions": ["orders", "customers"],
+    "avatar": "/uploads/avatars/staff.jpg",
+    "status": "active",
+    "lastLoginAt": "2024-12-06T18:45:00Z",
+    "createdAt": "2024-03-01T00:00:00Z",
+    "updatedAt": "2024-12-06T18:45:00Z"
+  }
+]

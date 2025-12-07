@@ -1,0 +1,125 @@
+[
+  {
+    "id": 1,
+    "email": "nguyenvanan@gmail.com",
+    "password": "$2b$10$hash_password_here",
+    "firstName": "Văn An",
+    "lastName": "Nguyễn",
+    "fullName": "Nguyễn Văn An",
+    "phone": "0901234567",
+    "dateOfBirth": "1990-05-15",
+    "gender": "male",
+    "avatar": "/uploads/avatars/customer-1.jpg",
+    "addresses": [
+      {
+        "id": 1,
+        "type": "home",
+        "isDefault": true,
+        "recipientName": "Nguyễn Văn An",
+        "recipientPhone": "0901234567",
+        "address": "123 Đường ABC, Phường 1",
+        "ward": "Phường 1",
+        "district": "Quận 1",
+        "city": "TP. Hồ Chí Minh",
+        "postalCode": "70000"
+      }
+    ],
+    "preferences": {
+      "newsletter": true,
+      "smsNotification": false,
+      "emailNotification": true
+    },
+    "status": "active",
+    "emailVerified": true,
+    "phoneVerified": true,
+    "totalSpent": 850000,
+    "orderCount": 3,
+    "wishlist": [1, 3],
+    "viewedProducts": [1, 2, 3, 4],
+    "lastLoginAt": "2024-12-06T10:30:00Z",
+    "createdAt": "2024-01-15T08:00:00Z",
+    "updatedAt": "2024-12-06T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "email": "tranthib@gmail.com",
+    "password": "$2b$10$hash_password_here",
+    "firstName": "Thị Bình",
+    "lastName": "Trần",
+    "fullName": "Trần Thị Bình",
+    "phone": "0912345678",
+    "dateOfBirth": "1985-08-22",
+    "gender": "female",
+    "avatar": "/uploads/avatars/customer-2.jpg",
+    "addresses": [
+      {
+        "id": 1,
+        "type": "home",
+        "isDefault": true,
+        "recipientName": "Trần Thị Bình",
+        "recipientPhone": "0912345678",
+        "address": "456 Đường DEF, Phường 5",
+        "ward": "Phường 5",
+        "district": "Quận 3",
+        "city": "TP. Hồ Chí Minh",
+        "postalCode": "70000"
+      }
+    ],
+    "preferences": {
+      "newsletter": true,
+      "smsNotification": true,
+      "emailNotification": true
+    },
+    "status": "active",
+    "emailVerified": true,
+    "phoneVerified": false,
+    "totalSpent": 520000,
+    "orderCount": 2,
+    "wishlist": [2, 5],
+    "viewedProducts": [2, 5, 6],
+    "lastLoginAt": "2024-12-05T14:20:00Z",
+    "createdAt": "2024-02-10T11:15:00Z",
+    "updatedAt": "2024-12-05T14:20:00Z"
+  },
+  {
+    "id": 3,
+    "email": "levanc@gmail.com",
+    "password": "$2b$10$hash_password_here",
+    "firstName": "Văn Cường",
+    "lastName": "Lê",
+    "fullName": "Lê Văn Cường",
+    "phone": "0923456789",
+    "dateOfBirth": "1992-12-03",
+    "gender": "male",
+    "avatar": "/uploads/avatars/customer-3.jpg",
+    "addresses": [
+      {
+        "id": 1,
+        "type": "home",
+        "isDefault": true,
+        "recipientName": "Lê Văn Cường",
+        "recipientPhone": "0923456789",
+        "address": "789 Đường GHI, Phường 10",
+        "ward": "Phường 10",
+        "district": "Quận 10",
+        "city": "TP. Hồ Chí Minh",
+        "postalCode": "70000"
+      }
+    ],
+    "preferences": {
+      "newsletter": false,
+      "smsNotification": false,
+      "emailNotification": true
+    },
+    "status": "active",
+    "emailVerified": true,
+    "phoneVerified": true,
+    "totalSpent": 250000,
+    "orderCount": 1,
+    "wishlist": [1, 4, 6],
+    "viewedProducts": [1, 2, 4, 6],
+    "lastLoginAt": "2024-12-04T09:45:00Z",
+    "createdAt": "2024-03-05T16:30:00Z",
+    "updatedAt": "2024-12-04T09:45:00Z"
+  }
+]

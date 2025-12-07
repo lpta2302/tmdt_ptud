@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "productId": 1,
+    "customerId": 1,
+    "customerName": "Nguyễn Văn An",
+    "customerAvatar": "/uploads/avatars/customer-1.jpg",
+    "rating": 5,
+    "comment": "Dịch vụ massage rất tốt, nhân viên chuyên nghiệp. Tôi cảm thấy rất thư giãn sau liệu trình.",
+    "status": "approved",
+    "createdAt": "2024-11-20T10:30:00Z",
+    "updatedAt": "2024-11-20T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "productId": 1,
+    "customerId": 2,
+    "customerName": "Trần Thị Bình",
+    "customerAvatar": "/uploads/avatars/customer-2.jpg",
+    "rating": 4,
+    "comment": "Không gian spa rất đẹp và yên tĩnh. Kỹ thuật massage cũng khá ổn, sẽ quay lại lần sau.",
+    "status": "approved",
+    "createdAt": "2024-11-18T14:15:00Z",
+    "updatedAt": "2024-11-18T14:15:00Z"
+  },
+  {
+    "id": 3,
+    "productId": 2,
+    "customerId": 3,
+    "customerName": "Lê Văn Cường",
+    "customerAvatar": "/uploads/avatars/customer-3.jpg",
+    "rating": 5,
+    "comment": "Chăm sóc da rất kỹ lưỡng, da tôi sạch và mềm mại hơn nhiều. Giá cả hợp lý.",
+    "status": "approved",
+    "createdAt": "2024-11-15T16:45:00Z",
+    "updatedAt": "2024-11-15T16:45:00Z"
+  },
+  {
+    "id": 4,
+    "productId": 3,
+    "customerId": 4,
+    "customerName": "Phạm Thị Dung",
+    "customerAvatar": "/uploads/avatars/customer-4.jpg",
+    "rating": 5,
+    "comment": "Liệu trình chăm sóc da chuyên sâu rất hiệu quả. Mụn của tôi đã giảm đáng kể. Cảm ơn spa!",
+    "status": "approved",
+    "createdAt": "2024-11-12T09:20:00Z",
+    "updatedAt": "2024-11-12T09:20:00Z"
+  },
+  {
+    "id": 5,
+    "productId": 1,
+    "customerId": 5,
+    "customerName": "Hoàng Văn Em",
+    "customerAvatar": "/uploads/avatars/customer-5.jpg",
+    "rating": 4,
+    "comment": "Dịch vụ tốt, giá cả phù hợp. Chỉ có điều thời gian chờ hơi lâu một chút.",
+    "status": "approved",
+    "createdAt": "2024-11-10T11:10:00Z",
+    "updatedAt": "2024-11-10T11:10:00Z"
+  },
+  {
+    "id": 6,
+    "productId": 4,
+    "customerId": 6,
+    "customerName": "Vũ Thị Phương",
+    "customerAvatar": "/uploads/avatars/customer-6.jpg",
+    "rating": 5,
+    "comment": "Gội đầu dưỡng sinh rất thư giãn. Massage cổ vai rất nhẹ nhàng và hiệu quả.",
+    "status": "approved",
+    "createdAt": "2024-11-08T15:30:00Z",
+    "updatedAt": "2024-11-08T15:30:00Z"
+  }
+]

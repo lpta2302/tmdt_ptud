@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "customerId": 1,
+    "items": [
+      {
+        "id": 1,
+        "productId": 3,
+        "productName": "Chăm Sóc Da Chuyên Sâu",
+        "price": 450000,
+        "originalPrice": 500000,
+        "thumbnail": "/uploads/products/cham-soc-da-sau-thumb.jpg",
+        "quantity": 1,
+        "addedAt": "2024-12-06T14:30:00Z"
+      },
+      {
+        "id": 2,
+        "productId": 6,
+        "productName": "Massage Đá Nóng",
+        "price": 380000,
+        "originalPrice": 420000,
+        "thumbnail": "/uploads/products/massage-da-nong-thumb.jpg",
+        "quantity": 2,
+        "addedAt": "2024-12-06T15:15:00Z"
+      }
+    ],
+    "subtotal": 1210000,
+    "itemCount": 3,
+    "updatedAt": "2024-12-06T15:15:00Z"
+  },
+  {
+    "id": 2,
+    "customerId": 2,
+    "items": [
+      {
+        "id": 1,
+        "productId": 2,
+        "productName": "Chăm Sóc Da Mặt Cơ Bản",
+        "price": 250000,
+        "originalPrice": 280000,
+        "thumbnail": "/uploads/products/cham-soc-da-thumb.jpg",
+        "quantity": 1,
+        "addedAt": "2024-12-05T16:45:00Z"
+      }
+    ],
+    "subtotal": 250000,
+    "itemCount": 1,
+    "updatedAt": "2024-12-05T16:45:00Z"
+  }
+]
