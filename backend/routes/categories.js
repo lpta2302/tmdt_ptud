@@ -4,19 +4,19 @@ import { authenticateToken, requireAdmin } from './auth.js';
 
 const router = express.Router();
 
-// GET /categories - Get all categories
+// GET /categories - Lấy tất cả danh mục
 router.get('/', (req, res) => {
   try {
     const { status = 'active', includeCount = false } = req.query;
     
     let categories = readJsonFile('categories.json') || [];
     
-    // Filter by status
+    // Lọc theo trạng thái
     if (status) {
       categories = categories.filter(c => c.status === status);
     }
 
-    // Include product count if requested
+    // Thêm số lượng sản phẩm nếu được yêu cầu
     if (includeCount === 'true') {
       const products = readJsonFile('products.json') || [];
       categories = categories.map(category => ({
@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
       }));
     }
 
-    // Sort by sortOrder
+    // Sắp xếp theo sortOrder
     categories.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
     res.json(categories);
@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /categories/:id - Get single category
+// GET /categories/:id - Lấy chi tiết danh mục
 router.get('/:id', (req, res) => {
   try {
     const categoryId = parseInt(req.params.id);
@@ -48,7 +48,7 @@ router.get('/:id', (req, res) => {
       return res.status(404).json({ error: 'Không tìm thấy danh mục' });
     }
 
-    // Get category products
+    // Lấy sản phẩm thuộc danh mục
     const categoryProducts = products.filter(p => 
       p.categoryId === categoryId && p.status === 'active'
     );
@@ -67,7 +67,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// POST /categories - Create new category (Admin only)
+// POST /categories - Tạo danh mục mới (chỉ Admin)
 router.post('/', authenticateToken, requireAdmin, (req, res) => {
   try {
     const { name, slug, description, sortOrder, status } = req.body;
@@ -78,7 +78,7 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
 
     const categories = readJsonFile('categories.json') || [];
 
-    // Check if category name already exists
+    // Kiểm tra tên danh mục đã tồn tại chưa
     const existingCategory = categories.find(c => 
       c.name.toLowerCase() === name.toLowerCase()
     );

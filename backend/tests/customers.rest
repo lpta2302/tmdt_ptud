@@ -1,0 +1,18 @@
+### Lấy tất cả khách hàng (public)
+GET http://localhost:3000/api/customers
+
+### Lấy chi tiết khách hàng theo id (public)
+GET http://localhost:3000/api/customers/1
+
+### Lấy profile khách hàng (cần token)
+# Thay {{token}} bằng JWT hợp lệ
+GET http://localhost:3000/api/customers/1/profile
+Authorization: Bearer {{token}}
+
+### Lấy danh sách đơn hàng của khách (cần token)
+GET http://localhost:3000/api/customers/1/orders
+Authorization: Bearer {{token}}
+
+### Lấy wishlist của khách (cần token)
+GET http://localhost:3000/api/customers/1/wishlist
+Authorization: Bearer {{token}}

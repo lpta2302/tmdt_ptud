@@ -4,19 +4,19 @@ import { authenticateToken, requireAdmin } from './auth.js';
 
 const router = express.Router();
 
-// GET /promotions - Get all promotions
+// GET /promotions - Lấy tất cả khuyến mãi
 router.get('/', (req, res) => {
   try {
     const { status, active, page = 1, limit = 10 } = req.query;
     
     let promotions = readJsonFile('promotions.json') || [];
 
-    // Filter by status
+    // Lọc theo trạng thái
     if (status) {
       promotions = promotions.filter(p => p.status === status);
     }
 
-    // Filter by active promotions (within date range)
+    // Lọc khuyến mãi còn hiệu lực (trong khoảng ngày)
     if (active === 'true') {
       const now = new Date();
       promotions = promotions.filter(p => 
@@ -27,10 +27,10 @@ router.get('/', (req, res) => {
       );
     }
 
-    // Sort by creation date (newest first)
+    // Sắp xếp theo ngày tạo (mới nhất trước)
     promotions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-    // Pagination
+    // Phân trang
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const startIndex = (pageNum - 1) * limitNum;
@@ -54,7 +54,7 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /promotions/:id - Get single promotion
+// GET /promotions/:id - Lấy chi tiết khuyến mãi
 router.get('/:id', (req, res) => {
   try {
     const promotionId = parseInt(req.params.id);
@@ -73,7 +73,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// GET /promotions/code/:code - Get promotion by code
+// GET /promotions/code/:code - Lấy khuyến mãi theo mã
 router.get('/code/:code', (req, res) => {
   try {
     const promotionCode = req.params.code.toUpperCase();
@@ -87,7 +87,7 @@ router.get('/code/:code', (req, res) => {
       return res.status(404).json({ error: 'Mã giảm giá không tồn tại' });
     }
 
-    // Check if promotion is valid (within date range and usage limit)
+    // Kiểm tra khuyến mãi còn hiệu lực (trong ngày và số lượt)
     const now = new Date();
     const isValid = new Date(promotion.startDate) <= now &&
                    new Date(promotion.endDate) >= now &&

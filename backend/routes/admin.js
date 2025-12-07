@@ -4,11 +4,11 @@ import { authenticateToken, requireAdmin } from './auth.js';
 
 const router = express.Router();
 
-// All routes require admin authentication
+// Tất cả route yêu cầu xác thực admin
 router.use(authenticateToken);
 router.use(requireAdmin);
 
-// GET /admin/dashboard - Dashboard statistics
+// GET /admin/dashboard - Thống kê tổng quan dashboard
 router.get('/dashboard', (req, res) => {
   try {
     const products = readJsonFile('products.json') || [];
@@ -20,7 +20,7 @@ router.get('/dashboard', (req, res) => {
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
 
-    // Current month statistics
+    // Thống kê tháng hiện tại
     const currentMonthBookings = bookings.filter(b => 
       new Date(b.createdAt) >= thisMonth
     );
@@ -37,7 +37,7 @@ router.get('/dashboard', (req, res) => {
       .filter(b => b.paymentStatus === 'paid')
       .reduce((sum, b) => sum + b.total, 0);
 
-    // Calculate growth rates
+    // Tính tỷ lệ tăng trưởng
     const bookingGrowth = lastMonthBookings.length > 0 ? 
       ((currentMonthBookings.length - lastMonthBookings.length) / lastMonthBookings.length) * 100 : 0;
 
@@ -84,7 +84,7 @@ router.get('/dashboard', (req, res) => {
   }
 });
 
-// GET /admin/sales-analytics - Sales analytics with charts data
+// GET /admin/sales-analytics - Phân tích doanh số với dữ liệu biểu đồ
 router.get('/sales-analytics', (req, res) => {
   try {
     const { period = 'month', year = new Date().getFullYear() } = req.query;

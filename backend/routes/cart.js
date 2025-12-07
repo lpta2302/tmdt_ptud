@@ -4,12 +4,12 @@ import { authenticateToken } from './auth.js';
 
 const router = express.Router();
 
-// GET /cart/:customerId - Get customer's cart
+// GET /cart/:customerId - Lấy giỏ hàng của khách
 router.get('/:customerId', authenticateToken, (req, res) => {
   try {
     const customerId = parseInt(req.params.customerId);
     
-    // Check if user can access this cart
+    // Kiểm tra quyền truy cập giỏ hàng
     if (req.user.type === 'customer' && req.user.id !== customerId) {
       return res.status(403).json({ error: 'Không có quyền truy cập' });
     }
@@ -20,7 +20,7 @@ router.get('/:customerId', authenticateToken, (req, res) => {
     let cart = carts.find(c => c.customerId === customerId);
     
     if (!cart) {
-      // Create empty cart if doesn't exist
+      // Tạo giỏ hàng rỗng nếu chưa có
       cart = {
         id: carts.length + 1,
         customerId,
@@ -33,7 +33,7 @@ router.get('/:customerId', authenticateToken, (req, res) => {
       writeJsonFile('carts.json', carts);
     }
 
-    // Update cart items with current product info
+    // Cập nhật thông tin sản phẩm trong giỏ
     cart.items = cart.items.map(item => {
       const product = products.find(p => p.id === item.productId);
       if (product) {
@@ -47,9 +47,9 @@ router.get('/:customerId', authenticateToken, (req, res) => {
         };
       }
       return item;
-    }).filter(item => item.status === 'active'); // Remove inactive products
+    }).filter(item => item.status === 'active'); // Bỏ sản phẩm không còn hoạt động
 
-    // Recalculate totals
+    // Tính lại tổng tiền và số lượng
     cart.subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     cart.itemCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -60,13 +60,13 @@ router.get('/:customerId', authenticateToken, (req, res) => {
   }
 });
 
-// POST /cart/:customerId/add - Add product to cart
+// POST /cart/:customerId/add - Thêm sản phẩm vào giỏ
 router.post('/:customerId/add', authenticateToken, (req, res) => {
   try {
     const customerId = parseInt(req.params.customerId);
     const { productId, quantity = 1 } = req.body;
 
-    // Check if user can access this cart
+    // Kiểm tra quyền truy cập giỏ hàng
     if (req.user.type === 'customer' && req.user.id !== customerId) {
       return res.status(403).json({ error: 'Không có quyền truy cập' });
     }
@@ -78,7 +78,7 @@ router.post('/:customerId/add', authenticateToken, (req, res) => {
     const carts = readJsonFile('carts.json') || [];
     const products = readJsonFile('products.json') || [];
 
-    // Check if product exists and is active
+    // Kiểm tra sản phẩm tồn tại và còn hoạt động
     const product = products.find(p => p.id === parseInt(productId) && p.status === 'active');
     if (!product) {
       return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
@@ -97,7 +97,7 @@ router.post('/:customerId/add', authenticateToken, (req, res) => {
       carts.push(cart);
     }
 
-    // Check if product already in cart
+    // Kiểm tra sản phẩm đã có trong giỏ chưa
     const existingItemIndex = cart.items.findIndex(item => item.productId === parseInt(productId));
     
     if (existingItemIndex >= 0) {

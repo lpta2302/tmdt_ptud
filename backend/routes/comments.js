@@ -4,7 +4,7 @@ import { authenticateToken, requireAdmin } from './auth.js';
 
 const router = express.Router();
 
-// GET /comments - Get all comments with filters
+// GET /comments - Lấy tất cả bình luận với bộ lọc
 router.get('/', (req, res) => {
   try {
     const { 
@@ -18,17 +18,17 @@ router.get('/', (req, res) => {
 
     let comments = readJsonFile('comments.json') || [];
 
-    // Filter by product ID
+    // Lọc theo productId
     if (productId) {
       comments = comments.filter(c => c.productId === parseInt(productId));
     }
 
-    // Filter by status
+    // Lọc theo trạng thái
     if (status) {
       comments = comments.filter(c => c.status === status);
     }
 
-    // Sort comments
+    // Sắp xếp bình luận
     comments.sort((a, b) => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
@@ -40,7 +40,7 @@ router.get('/', (req, res) => {
       }
     });
 
-    // Pagination
+    // Phân trang
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const startIndex = (pageNum - 1) * limitNum;
@@ -64,7 +64,7 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /comments/:id - Get single comment
+// GET /comments/:id - Lấy chi tiết bình luận
 router.get('/:id', (req, res) => {
   try {
     const commentId = parseInt(req.params.id);
@@ -83,7 +83,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// POST /comments - Create new comment (Customer only)
+// POST /comments - Tạo bình luận mới (chỉ khách hàng)
 router.post('/', authenticateToken, (req, res) => {
   try {
     const { productId, rating, comment } = req.body;
@@ -96,7 +96,7 @@ router.post('/', authenticateToken, (req, res) => {
       return res.status(400).json({ error: 'Đánh giá từ 1 đến 5 sao' });
     }
 
-    // Only allow customers to comment
+    // Chỉ cho phép khách hàng bình luận
     if (req.user.type !== 'customer') {
       return res.status(403).json({ error: 'Chỉ khách hàng mới có thể bình luận' });
     }

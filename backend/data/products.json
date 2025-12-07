@@ -20,10 +20,14 @@
     "featured": true,
     "trending": true,
     "bestseller": true,
-    "tags": ["massage", "thư giãn", "giảm stress"],
+    "tags": [
+      "massage",
+      "thư giãn",
+      "giảm stress"
+    ],
     "benefits": [
       "Giảm căng thẳng và stress",
-      "Thư giãn cơ bắp", 
+      "Thư giãn cơ bắp",
       "Cải thiện tuần hoàn máu",
       "Tăng cường sức khỏe tổng thể"
     ],
@@ -34,9 +38,9 @@
     ],
     "rating": 4.8,
     "reviewCount": 127,
-    "viewCount": 1523,
+    "viewCount": 1524,
     "createdAt": "2024-01-15T08:00:00Z",
-    "updatedAt": "2024-12-01T10:30:00Z"
+    "updatedAt": "2025-12-07T05:18:52.775Z"
   },
   {
     "id": 2,
@@ -58,7 +62,11 @@
     "featured": false,
     "trending": true,
     "bestseller": false,
-    "tags": ["chăm sóc da", "làm sạch", "dưỡng ẩm"],
+    "tags": [
+      "chăm sóc da",
+      "làm sạch",
+      "dưỡng ẩm"
+    ],
     "benefits": [
       "Làm sạch sâu lỗ chân lông",
       "Tẩy tế bào chết",
@@ -98,7 +106,12 @@
     "featured": true,
     "trending": false,
     "bestseller": true,
-    "tags": ["chăm sóc da", "xử lý mụn", "nâng cơ", "chống lão hóa"],
+    "tags": [
+      "chăm sóc da",
+      "xử lý mụn",
+      "nâng cơ",
+      "chống lão hóa"
+    ],
     "benefits": [
       "Xử lý mụn và thâm hiệu quả",
       "Nâng cơ và chống lão hóa",
@@ -138,7 +151,11 @@
     "featured": false,
     "trending": false,
     "bestseller": true,
-    "tags": ["gội đầu", "massage", "thư giãn"],
+    "tags": [
+      "gội đầu",
+      "massage",
+      "thư giãn"
+    ],
     "benefits": [
       "Làm sạch da đầu và tóc",
       "Massage giảm căng thẳng cổ vai",
@@ -177,7 +194,11 @@
     "featured": false,
     "trending": true,
     "bestseller": false,
-    "tags": ["tẩy da chết", "làm đẹp", "dưỡng da"],
+    "tags": [
+      "tẩy da chết",
+      "làm đẹp",
+      "dưỡng da"
+    ],
     "benefits": [
       "Loại bỏ tế bào chết",
       "Da sáng mịn tự nhiên",
@@ -216,7 +237,11 @@
     "featured": true,
     "trending": true,
     "bestseller": false,
-    "tags": ["massage", "đá nóng", "thư giãn sâu"],
+    "tags": [
+      "massage",
+      "đá nóng",
+      "thư giãn sâu"
+    ],
     "benefits": [
       "Thư giãn cơ bắp sâu",
       "Cải thiện tuần hoàn máu",

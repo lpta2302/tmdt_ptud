@@ -70,7 +70,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/promotions', promotionsRouter);
-app.use('/api/customers', customersRouter);
+app.use('/api/customers', customersRouter); // Đã có GET /api/customers và GET /api/customers/:id public
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/cart', cartRouter);

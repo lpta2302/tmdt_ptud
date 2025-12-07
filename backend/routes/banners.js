@@ -4,24 +4,24 @@ import { requireAdmin, authenticateToken } from './auth.js';
 
 const router = express.Router();
 
-// GET /banners - Get banners for homepage
+// GET /banners - Lấy banner cho trang chủ
 router.get('/', (req, res) => {
   try {
     const { type, active, page = 1, limit = 10 } = req.query;
     
     let banners = readJsonFile('banners.json') || [];
 
-    // Filter by type
+    // Lọc theo loại
     if (type) {
       banners = banners.filter(b => b.type === type);
     }
 
-    // Filter by active status
+    // Lọc theo trạng thái hoạt động
     if (active !== undefined) {
       banners = banners.filter(b => b.isActive === (active === 'true'));
     }
 
-    // Sort by order and creation date
+    // Sắp xếp theo thứ tự và ngày tạo
     banners.sort((a, b) => {
       if (a.order !== b.order) {
         return a.order - b.order;
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
 
-    // Pagination
+    // Phân trang
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const startIndex = (pageNum - 1) * limitNum;
@@ -53,7 +53,7 @@ router.get('/', (req, res) => {
   }
 });
 
-// GET /banners/:id - Get single banner
+// GET /banners/:id - Lấy chi tiết banner
 router.get('/:id', (req, res) => {
   try {
     const bannerId = parseInt(req.params.id);
@@ -72,7 +72,7 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// POST /banners - Create new banner (Admin only)
+// POST /banners - Tạo banner mới (chỉ Admin)
 router.post('/', authenticateToken, requireAdmin, (req, res) => {
   try {
     const {

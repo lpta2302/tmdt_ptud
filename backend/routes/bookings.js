@@ -4,26 +4,26 @@ import { authenticateToken, requireAdmin } from './auth.js';
 
 const router = express.Router();
 
-// GET /bookings - Get all bookings (Admin) or user's bookings
+// GET /bookings - Lấy tất cả đơn đặt lịch (Admin hoặc của khách)
 router.get('/', authenticateToken, (req, res) => {
   try {
     const { status, customerId, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
     
     let bookings = readJsonFile('bookings.json') || [];
 
-    // Filter by customer for non-admin users
+    // Lọc theo khách hàng nếu không phải admin
     if (req.user.type === 'customer') {
       bookings = bookings.filter(b => b.customerId === req.user.id);
     } else if (customerId && req.user.type === 'admin') {
       bookings = bookings.filter(b => b.customerId === parseInt(customerId));
     }
 
-    // Filter by status
+    // Lọc theo trạng thái
     if (status) {
       bookings = bookings.filter(b => b.status === status);
     }
 
-    // Sort bookings
+    // Sắp xếp đơn đặt lịch
     bookings.sort((a, b) => {
       const aValue = a[sortBy];
       const bValue = b[sortBy];
@@ -35,7 +35,7 @@ router.get('/', authenticateToken, (req, res) => {
       }
     });
 
-    // Pagination
+    // Phân trang
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
     const startIndex = (pageNum - 1) * limitNum;
@@ -59,7 +59,7 @@ router.get('/', authenticateToken, (req, res) => {
   }
 });
 
-// GET /bookings/:id - Get booking details
+// GET /bookings/:id - Lấy chi tiết đơn đặt lịch
 router.get('/:id', authenticateToken, (req, res) => {
   try {
     const bookingId = parseInt(req.params.id);
@@ -70,7 +70,7 @@ router.get('/:id', authenticateToken, (req, res) => {
       return res.status(404).json({ error: 'Không tìm thấy đơn đặt lịch' });
     }
 
-    // Check if user can access this booking
+    // Kiểm tra quyền truy cập đơn đặt lịch
     if (req.user.type === 'customer' && booking.customerId !== req.user.id) {
       return res.status(403).json({ error: 'Không có quyền truy cập' });
     }
@@ -83,7 +83,7 @@ router.get('/:id', authenticateToken, (req, res) => {
   }
 });
 
-// POST /bookings - Create new booking
+// POST /bookings - Tạo đơn đặt lịch mới
 router.post('/', authenticateToken, (req, res) => {
   try {
     const {
