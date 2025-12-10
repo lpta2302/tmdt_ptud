@@ -1,94 +1,83 @@
 import express from 'express';
-import { readJsonFile, writeJsonFile } from '../helpers/fileHelper.js';
-import { authenticateToken, requireAdmin } from './auth.js';
+import Comment from '../models/Comment.js';
+import Product from '../models/Product.js';
+// Bỏ authentication - tất cả API public
 
 const router = express.Router();
 
 // GET /comments - Lấy tất cả bình luận với bộ lọc
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { 
       productId, 
-      status = 'approved', 
+      customerId, 
+      rating, 
       page = 1, 
       limit = 10,
       sortBy = 'createdAt',
-      sortOrder = 'desc'
+      order = 'desc'
     } = req.query;
 
-    let comments = readJsonFile('comments.json') || [];
+    // Xây dựng bộ lọc
+    let filter = {};
+    if (productId) filter.productId = productId;
+    if (customerId) filter.customerId = customerId;
+    if (rating) filter.rating = parseInt(rating);
 
-    // Lọc theo productId
-    if (productId) {
-      comments = comments.filter(c => c.productId === parseInt(productId));
-    }
+    // Tính toán phân trang
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortOrder = order === 'asc' ? 1 : -1;
 
-    // Lọc theo trạng thái
-    if (status) {
-      comments = comments.filter(c => c.status === status);
-    }
+    // Truy vấn bình luận với populate để lấy thông tin khách hàng và sản phẩm
+    const comments = await Comment.find(filter)
+      .populate('customerId', 'name email')
+      .populate('productId', 'name')
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    // Sắp xếp bình luận
-    comments.sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-    // Phân trang
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const startIndex = (pageNum - 1) * limitNum;
-    const endIndex = startIndex + limitNum;
-    
-    const paginatedComments = comments.slice(startIndex, endIndex);
+    // Đếm tổng số bình luận
+    const total = await Comment.countDocuments(filter);
 
     res.json({
-      comments: paginatedComments,
+      comments,
       pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(comments.length / limitNum),
-        totalItems: comments.length,
-        itemsPerPage: limitNum
+        current: parseInt(page),
+        pages: Math.ceil(total / parseInt(limit)),
+        total,
+        limit: parseInt(limit)
       }
     });
-
   } catch (error) {
-    console.error('Get comments error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy bình luận' });
   }
 });
 
-// GET /comments/:id - Lấy chi tiết bình luận
-router.get('/:id', (req, res) => {
+// GET /comments/:id - Lấy thông tin một bình luận cụ thể
+router.get('/:id', async (req, res) => {
   try {
-    const commentId = parseInt(req.params.id);
-    const comments = readJsonFile('comments.json') || [];
-    
-    const comment = comments.find(c => c.id === commentId);
+    const comment = await Comment.findById(req.params.id)
+      .populate('customerId', 'name email')
+      .populate('productId', 'name');
+
     if (!comment) {
       return res.status(404).json({ error: 'Không tìm thấy bình luận' });
     }
 
     res.json(comment);
-
   } catch (error) {
-    console.error('Get comment error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy bình luận' });
   }
 });
 
-// POST /comments - Tạo bình luận mới (chỉ khách hàng)
-router.post('/', authenticateToken, (req, res) => {
+// POST /comments - Tạo bình luận mới (public)
+router.post('/', async (req, res) => {
   try {
-    const { productId, rating, comment } = req.body;
+    const { productId, customerId, rating, comment } = req.body;
 
-    if (!productId || !rating || !comment) {
+    if (!productId || !customerId || !rating || !comment) {
       return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin' });
     }
 
@@ -96,222 +85,182 @@ router.post('/', authenticateToken, (req, res) => {
       return res.status(400).json({ error: 'Đánh giá từ 1 đến 5 sao' });
     }
 
-    // Chỉ cho phép khách hàng bình luận
-    if (req.user.type !== 'customer') {
-      return res.status(403).json({ error: 'Chỉ khách hàng mới có thể bình luận' });
-    }
-
-    const products = readJsonFile('products.json') || [];
-    const customers = readJsonFile('customers.json') || [];
-    const comments = readJsonFile('comments.json') || [];
-
-    // Check if product exists
-    const product = products.find(p => p.id === parseInt(productId) && p.status === 'active');
+    // Kiểm tra sản phẩm có tồn tại không
+    const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
     }
 
-    // Get customer info
-    const customer = customers.find(c => c.id === req.user.id);
-    if (!customer) {
-      return res.status(404).json({ error: 'Không tìm thấy thông tin khách hàng' });
-    }
+    // Kiểm tra xem khách hàng đã bình luận cho sản phẩm này chưa
+    const existingComment = await Comment.findOne({
+      productId,
+      customerId
+    });
 
-    // Check if customer already commented on this product
-    const existingComment = comments.find(c => 
-      c.productId === parseInt(productId) && c.customerId === req.user.id
-    );
     if (existingComment) {
-      return res.status(400).json({ error: 'Bạn đã đánh giá sản phẩm này rồi' });
+      return res.status(400).json({ error: 'Bạn đã bình luận cho sản phẩm này rồi' });
     }
 
-    const newComment = {
-      id: comments.length > 0 ? Math.max(...comments.map(c => c.id)) + 1 : 1,
-      productId: parseInt(productId),
-      customerId: req.user.id,
-      customerName: customer.fullName,
-      customerAvatar: customer.avatar || '',
+    // Tạo bình luận mới
+    const newComment = new Comment({
+      productId,
+      customerId,
       rating: parseInt(rating),
-      comment: comment.trim(),
-      status: 'pending', // Need admin approval
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      comment,
+      createdAt: new Date()
+    });
 
-    comments.push(newComment);
-    writeJsonFile('comments.json', comments);
+    await newComment.save();
+
+    // Cập nhật rating trung bình của sản phẩm
+    const allComments = await Comment.find({ productId });
+    const averageRating = allComments.reduce((sum, c) => sum + c.rating, 0) / allComments.length;
+    
+    await Product.findByIdAndUpdate(productId, { 
+      rating: Math.round(averageRating * 10) / 10 // Làm tròn 1 chữ số thập phân
+    });
+
+    // Lấy bình luận với thông tin đầy đủ để trả về
+    const populatedComment = await Comment.findById(newComment._id)
+      .populate('customerId', 'name email')
+      .populate('productId', 'name');
 
     res.status(201).json({
-      message: 'Gửi đánh giá thành công. Đánh giá của bạn sẽ được hiển thị sau khi được duyệt.',
-      comment: newComment
+      message: 'Tạo bình luận thành công',
+      comment: populatedComment
     });
-
   } catch (error) {
-    console.error('Create comment error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi tạo bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi tạo bình luận' });
   }
 });
 
-// PUT /comments/:id/status - Update comment status (Admin only)
-router.put('/:id/status', authenticateToken, requireAdmin, (req, res) => {
+// PUT /comments/:id - Cập nhật bình luận (chỉ chủ sở hữu)
+router.put('/:id', async (req, res) => {
   try {
-    const commentId = parseInt(req.params.id);
-    const { status } = req.body;
+    const { rating, comment } = req.body;
 
-    if (!status || !['pending', 'approved', 'rejected'].includes(status)) {
-      return res.status(400).json({ error: 'Trạng thái không hợp lệ' });
-    }
-
-    const comments = readJsonFile('comments.json') || [];
-    const commentIndex = comments.findIndex(c => c.id === commentId);
-
-    if (commentIndex === -1) {
+    const existingComment = await Comment.findById(req.params.id);
+    if (!existingComment) {
       return res.status(404).json({ error: 'Không tìm thấy bình luận' });
     }
 
-    comments[commentIndex].status = status;
-    comments[commentIndex].updatedAt = new Date().toISOString();
-
-    // If approved, update product rating
-    if (status === 'approved') {
-      updateProductRating(comments[commentIndex].productId);
+    // Chỉ chủ sở hữu mới được sửa
+    if (existingComment.customerId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: 'Bạn không có quyền sửa bình luận này' });
     }
 
-    writeJsonFile('comments.json', comments);
+    // Cập nhật thông tin
+    if (rating !== undefined) {
+      if (rating < 1 || rating > 5) {
+        return res.status(400).json({ error: 'Đánh giá từ 1 đến 5 sao' });
+      }
+      existingComment.rating = parseInt(rating);
+    }
+
+    if (comment !== undefined) {
+      existingComment.comment = comment;
+    }
+
+    existingComment.updatedAt = new Date();
+
+    await existingComment.save();
+
+    // Cập nhật lại rating trung bình của sản phẩm
+    const allComments = await Comment.find({ productId: existingComment.productId });
+    const averageRating = allComments.reduce((sum, c) => sum + c.rating, 0) / allComments.length;
+    
+    await Product.findByIdAndUpdate(existingComment.productId, { 
+      rating: Math.round(averageRating * 10) / 10
+    });
+
+    // Lấy bình luận với thông tin đầy đủ để trả về
+    const updatedComment = await Comment.findById(existingComment._id)
+      .populate('customerId', 'name email')
+      .populate('productId', 'name');
 
     res.json({
-      message: 'Cập nhật trạng thái bình luận thành công',
-      comment: comments[commentIndex]
+      message: 'Cập nhật bình luận thành công',
+      comment: updatedComment
     });
-
   } catch (error) {
-    console.error('Update comment status error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật bình luận' });
   }
 });
 
-// DELETE /comments/:id - Delete comment (Admin only)
-router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
+// DELETE /comments/:id - Xóa bình luận (chủ sở hữu hoặc admin)
+router.delete('/:id', async (req, res) => {
   try {
-    const commentId = parseInt(req.params.id);
-    const comments = readJsonFile('comments.json') || [];
-    
-    const commentIndex = comments.findIndex(c => c.id === commentId);
-    if (commentIndex === -1) {
+    const comment = await Comment.findById(req.params.id);
+    if (!comment) {
       return res.status(404).json({ error: 'Không tìm thấy bình luận' });
     }
 
-    const deletedComment = comments[commentIndex];
-    comments.splice(commentIndex, 1);
-    writeJsonFile('comments.json', comments);
+    // Chỉ chủ sở hữu hoặc admin mới được xóa
+    const isOwner = comment.customerId.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
 
-    // Update product rating after deletion
-    updateProductRating(deletedComment.productId);
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ error: 'Bạn không có quyền xóa bình luận này' });
+    }
+
+    const productId = comment.productId;
+    await Comment.findByIdAndDelete(req.params.id);
+
+    // Cập nhật lại rating trung bình của sản phẩm
+    const allComments = await Comment.find({ productId });
+    if (allComments.length > 0) {
+      const averageRating = allComments.reduce((sum, c) => sum + c.rating, 0) / allComments.length;
+      await Product.findByIdAndUpdate(productId, { 
+        rating: Math.round(averageRating * 10) / 10
+      });
+    } else {
+      // Nếu không còn bình luận nào, đặt rating về 0
+      await Product.findByIdAndUpdate(productId, { rating: 0 });
+    }
 
     res.json({ message: 'Xóa bình luận thành công' });
-
   } catch (error) {
-    console.error('Delete comment error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi xóa bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi xóa bình luận' });
   }
 });
 
-// GET /comments/product/:productId - Get comments for a specific product
-router.get('/product/:productId', (req, res) => {
+// GET /comments/product/:productId/stats - Thống kê bình luận theo sản phẩm
+router.get('/product/:productId/stats', async (req, res) => {
   try {
-    const productId = parseInt(req.params.productId);
-    const { page = 1, limit = 5, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
+    const productId = req.params.productId;
 
-    const comments = readJsonFile('comments.json') || [];
-    
-    let productComments = comments.filter(c => 
-      c.productId === productId && c.status === 'approved'
-    );
+    // Thống kê số lượng theo rating
+    const ratingStats = await Comment.aggregate([
+      { $match: { productId: productId } },
+      { $group: { _id: '$rating', count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
 
-    // Sort comments
-    productComments.sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    // Tổng số bình luận
+    const totalComments = await Comment.countDocuments({ productId });
 
-    // Calculate rating statistics
-    const ratings = productComments.map(c => c.rating);
-    const avgRating = ratings.length > 0 ? 
-      (ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length).toFixed(1) : 0;
-    
-    const ratingStats = {
-      1: ratings.filter(r => r === 1).length,
-      2: ratings.filter(r => r === 2).length,
-      3: ratings.filter(r => r === 3).length,
-      4: ratings.filter(r => r === 4).length,
-      5: ratings.filter(r => r === 5).length
-    };
+    // Rating trung bình
+    const avgResult = await Comment.aggregate([
+      { $match: { productId: productId } },
+      { $group: { _id: null, averageRating: { $avg: '$rating' } } }
+    ]);
 
-    // Pagination
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const startIndex = (pageNum - 1) * limitNum;
-    const endIndex = startIndex + limitNum;
-    
-    const paginatedComments = productComments.slice(startIndex, endIndex);
+    const averageRating = avgResult.length > 0 ? 
+      Math.round(avgResult[0].averageRating * 10) / 10 : 0;
 
     res.json({
-      comments: paginatedComments,
-      statistics: {
-        totalComments: productComments.length,
-        averageRating: parseFloat(avgRating),
-        ratingDistribution: ratingStats
-      },
-      pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(productComments.length / limitNum),
-        totalItems: productComments.length,
-        itemsPerPage: limitNum
-      }
+      productId,
+      totalComments,
+      averageRating,
+      ratingDistribution: ratingStats
     });
-
   } catch (error) {
-    console.error('Get product comments error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi thống kê bình luận:', error);
+    res.status(500).json({ error: 'Lỗi server khi thống kê bình luận' });
   }
 });
-
-// Helper function to update product rating
-function updateProductRating(productId) {
-  try {
-    const products = readJsonFile('products.json') || [];
-    const comments = readJsonFile('comments.json') || [];
-    
-    const productIndex = products.findIndex(p => p.id === productId);
-    if (productIndex === -1) return;
-
-    const approvedComments = comments.filter(c => 
-      c.productId === productId && c.status === 'approved'
-    );
-
-    if (approvedComments.length > 0) {
-      const totalRating = approvedComments.reduce((sum, c) => sum + c.rating, 0);
-      const avgRating = totalRating / approvedComments.length;
-      
-      products[productIndex].rating = Math.round(avgRating * 10) / 10;
-      products[productIndex].reviewCount = approvedComments.length;
-    } else {
-      products[productIndex].rating = 0;
-      products[productIndex].reviewCount = 0;
-    }
-
-    products[productIndex].updatedAt = new Date().toISOString();
-    writeJsonFile('products.json', products);
-    
-  } catch (error) {
-    console.error('Update product rating error:', error);
-  }
-}
 
 export default router;

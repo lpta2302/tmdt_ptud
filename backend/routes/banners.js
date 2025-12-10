@@ -1,234 +1,276 @@
 import express from 'express';
-import { readJsonFile, writeJsonFile } from '../helpers/fileHelper.js';
-import { requireAdmin, authenticateToken } from './auth.js';
+import Banner from '../models/Banner.js';
+import { upload, uploadToGridFS } from '../middleware/upload.js';
+// Bỏ authentication - tất cả API public
 
 const router = express.Router();
 
-// GET /banners - Lấy banner cho trang chủ
-router.get('/', (req, res) => {
+// GET /banners - Lấy danh sách banner
+router.get('/', async (req, res) => {
   try {
-    const { type, active, page = 1, limit = 10 } = req.query;
-    
-    let banners = readJsonFile('banners.json') || [];
+    const { 
+      type, 
+      active, 
+      page = 1, 
+      limit = 10,
+      sortBy = 'order',
+      order = 'asc'
+    } = req.query;
 
-    // Lọc theo loại
-    if (type) {
-      banners = banners.filter(b => b.type === type);
-    }
+    // Xây dựng bộ lọc
+    let filter = {};
+    if (type) filter.type = type;
+    if (active !== undefined) filter.isActive = active === 'true';
 
-    // Lọc theo trạng thái hoạt động
-    if (active !== undefined) {
-      banners = banners.filter(b => b.isActive === (active === 'true'));
-    }
+    // Tính toán phân trang
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortOrder = order === 'asc' ? 1 : -1;
 
-    // Sắp xếp theo thứ tự và ngày tạo
-    banners.sort((a, b) => {
-      if (a.order !== b.order) {
-        return a.order - b.order;
-      }
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    // Truy vấn banners
+    const banners = await Banner.find(filter)
+      .sort({ [sortBy]: sortOrder, createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    // Phân trang
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const startIndex = (pageNum - 1) * limitNum;
-    const endIndex = startIndex + limitNum;
-    
-    const paginatedBanners = banners.slice(startIndex, endIndex);
+    // Đếm tổng số banners
+    const total = await Banner.countDocuments(filter);
 
     res.json({
-      banners: paginatedBanners,
+      banners,
       pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(banners.length / limitNum),
-        totalItems: banners.length,
-        itemsPerPage: limitNum
+        current: parseInt(page),
+        pages: Math.ceil(total / parseInt(limit)),
+        total,
+        limit: parseInt(limit)
       }
     });
-
   } catch (error) {
-    console.error('Get banners error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy danh sách banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy danh sách banner' });
   }
 });
 
 // GET /banners/:id - Lấy chi tiết banner
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const bannerId = parseInt(req.params.id);
-    const banners = readJsonFile('banners.json') || [];
-    
-    const banner = banners.find(b => b.id === bannerId);
+    const banner = await Banner.findById(req.params.id);
+
     if (!banner) {
       return res.status(404).json({ error: 'Không tìm thấy banner' });
     }
 
     res.json(banner);
-
   } catch (error) {
-    console.error('Get banner error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy chi tiết banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy chi tiết banner' });
   }
 });
 
-// POST /banners - Tạo banner mới (chỉ Admin)
-router.post('/', authenticateToken, requireAdmin, (req, res) => {
+// POST /banners - Tạo banner mới
+router.post('/', upload.single('image'), uploadToGridFS, async (req, res) => {
   try {
     const {
       title,
       description,
-      imageUrl,
-      linkUrl,
       type,
-      isActive,
+      linkUrl,
+      buttonText,
       order,
-      startDate,
-      endDate
+      isActive
     } = req.body;
 
-    if (!title || !imageUrl || !type) {
-      return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin bắt buộc' });
+    // Kiểm tra dữ liệu đầu vào
+    if (!title || !type) {
+      return res.status(400).json({ 
+        error: 'Vui lòng điền đầy đủ thông tin: tiêu đề và loại banner' 
+      });
     }
 
-    if (!['hero', 'promotion', 'category', 'service'].includes(type)) {
-      return res.status(400).json({ error: 'Loại banner không hợp lệ' });
+    // Validate type
+    const validTypes = ['main_slider', 'side_banner', 'promotional', 'category'];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({ 
+        error: 'Loại banner không hợp lệ. Chỉ chấp nhận: ' + validTypes.join(', ') 
+      });
     }
 
-    const banners = readJsonFile('banners.json') || [];
-
-    const newBanner = {
-      id: banners.length > 0 ? Math.max(...banners.map(b => b.id)) + 1 : 1,
+    // Tạo banner mới
+    const newBanner = new Banner({
       title,
       description: description || '',
-      imageUrl,
-      linkUrl: linkUrl || '',
       type,
-      isActive: isActive !== undefined ? isActive : true,
-      order: parseInt(order) || 0,
-      startDate: startDate ? new Date(startDate).toISOString() : null,
-      endDate: endDate ? new Date(endDate).toISOString() : null,
-      clickCount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      imageUrl: req.uploadedFileId || '',
+      linkUrl: linkUrl || '',
+      buttonText: buttonText || '',
+      order: order ? parseInt(order) : 0,
+      isActive: isActive === 'true' || isActive === true,
+      createdAt: new Date()
+    });
 
-    banners.push(newBanner);
-    writeJsonFile('banners.json', banners);
+    await newBanner.save();
 
-    res.status(201).json(newBanner);
-
+    res.status(201).json({
+      message: 'Tạo banner thành công',
+      banner: newBanner
+    });
   } catch (error) {
-    console.error('Create banner error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi tạo banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi tạo banner' });
   }
 });
 
-// PUT /banners/:id - Update banner (Admin only)
-router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
+// PUT /banners/:id - Cập nhật banner
+router.put('/:id', upload.single('image'), uploadToGridFS, async (req, res) => {
   try {
-    const bannerId = parseInt(req.params.id);
-    const banners = readJsonFile('banners.json') || [];
-    
-    const bannerIndex = banners.findIndex(b => b.id === bannerId);
-    if (bannerIndex === -1) {
+    const {
+      title,
+      description,
+      type,
+      linkUrl,
+      buttonText,
+      order,
+      isActive
+    } = req.body;
+
+    const banner = await Banner.findById(req.params.id);
+    if (!banner) {
       return res.status(404).json({ error: 'Không tìm thấy banner' });
     }
 
-    const updatedBanner = {
-      ...banners[bannerIndex],
-      ...req.body,
-      id: bannerId,
-      updatedAt: new Date().toISOString()
-    };
+    // Cập nhật các trường
+    if (title) banner.title = title;
+    if (description !== undefined) banner.description = description;
+    if (type) {
+      const validTypes = ['main_slider', 'side_banner', 'promotional', 'category'];
+      if (!validTypes.includes(type)) {
+        return res.status(400).json({ 
+          error: 'Loại banner không hợp lệ. Chỉ chấp nhận: ' + validTypes.join(', ') 
+        });
+      }
+      banner.type = type;
+    }
+    if (linkUrl !== undefined) banner.linkUrl = linkUrl;
+    if (buttonText !== undefined) banner.buttonText = buttonText;
+    if (order !== undefined) banner.order = parseInt(order) || 0;
+    if (isActive !== undefined) banner.isActive = isActive === 'true' || isActive === true;
 
-    banners[bannerIndex] = updatedBanner;
-    writeJsonFile('banners.json', banners);
+    // Cập nhật ảnh nếu có
+    if (req.uploadedFileId) {
+      banner.imageUrl = req.uploadedFileId;
+    }
 
-    res.json(updatedBanner);
+    banner.updatedAt = new Date();
+    await banner.save();
 
+    res.json({
+      message: 'Cập nhật banner thành công',
+      banner
+    });
   } catch (error) {
-    console.error('Update banner error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật banner' });
   }
 });
 
-// DELETE /banners/:id - Delete banner (Admin only)
-router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
+// DELETE /banners/:id - Xóa banner
+router.delete('/:id', async (req, res) => {
   try {
-    const bannerId = parseInt(req.params.id);
-    const banners = readJsonFile('banners.json') || [];
-    
-    const bannerIndex = banners.findIndex(b => b.id === bannerId);
-    if (bannerIndex === -1) {
+    const banner = await Banner.findByIdAndDelete(req.params.id);
+
+    if (!banner) {
       return res.status(404).json({ error: 'Không tìm thấy banner' });
     }
-
-    banners.splice(bannerIndex, 1);
-    writeJsonFile('banners.json', banners);
 
     res.json({ message: 'Xóa banner thành công' });
-
   } catch (error) {
-    console.error('Delete banner error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi xóa banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi xóa banner' });
   }
 });
 
-// PUT /banners/:id/status - Toggle banner status (Admin only)
-router.put('/:id/status', authenticateToken, requireAdmin, (req, res) => {
+// PUT /banners/:id/status - Cập nhật trạng thái banner
+router.put('/:id/status', async (req, res) => {
   try {
-    const bannerId = parseInt(req.params.id);
     const { isActive } = req.body;
 
     if (isActive === undefined) {
       return res.status(400).json({ error: 'Vui lòng cung cấp trạng thái' });
     }
 
-    const banners = readJsonFile('banners.json') || [];
-    const bannerIndex = banners.findIndex(b => b.id === bannerId);
+    const banner = await Banner.findByIdAndUpdate(
+      req.params.id,
+      { 
+        isActive: isActive === 'true' || isActive === true,
+        updatedAt: new Date() 
+      },
+      { new: true }
+    );
 
-    if (bannerIndex === -1) {
+    if (!banner) {
       return res.status(404).json({ error: 'Không tìm thấy banner' });
     }
 
-    banners[bannerIndex].isActive = isActive;
-    banners[bannerIndex].updatedAt = new Date().toISOString();
-
-    writeJsonFile('banners.json', banners);
-
     res.json({
-      message: 'Cập nhật trạng thái thành công',
-      banner: banners[bannerIndex]
+      message: 'Cập nhật trạng thái banner thành công',
+      banner
     });
-
   } catch (error) {
-    console.error('Update banner status error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật trạng thái banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật trạng thái banner' });
   }
 });
 
-// PUT /banners/:id/click - Track banner click
-router.put('/:id/click', (req, res) => {
+// GET /banners/active/homepage - Lấy banner cho trang chủ (chỉ banner active)
+router.get('/active/homepage', async (req, res) => {
   try {
-    const bannerId = parseInt(req.params.id);
-    const banners = readJsonFile('banners.json') || [];
-    
-    const bannerIndex = banners.findIndex(b => b.id === bannerId);
-    if (bannerIndex === -1) {
+    const banners = await Banner.find({ 
+      isActive: true,
+      type: { $in: ['main_slider', 'side_banner', 'promotional'] }
+    }).sort({ order: 1, createdAt: -1 });
+
+    // Nhóm banner theo loại
+    const groupedBanners = {
+      main_slider: banners.filter(b => b.type === 'main_slider'),
+      side_banner: banners.filter(b => b.type === 'side_banner'),
+      promotional: banners.filter(b => b.type === 'promotional')
+    };
+
+    res.json(groupedBanners);
+  } catch (error) {
+    console.error('Lỗi lấy banner trang chủ:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy banner trang chủ' });
+  }
+});
+
+// PUT /banners/:id/order - Cập nhật thứ tự hiển thị
+router.put('/:id/order', async (req, res) => {
+  try {
+    const { order } = req.body;
+
+    if (order === undefined || order < 0) {
+      return res.status(400).json({ error: 'Thứ tự phải là số không âm' });
+    }
+
+    const banner = await Banner.findByIdAndUpdate(
+      req.params.id,
+      { 
+        order: parseInt(order),
+        updatedAt: new Date() 
+      },
+      { new: true }
+    );
+
+    if (!banner) {
       return res.status(404).json({ error: 'Không tìm thấy banner' });
     }
 
-    banners[bannerIndex].clickCount = (banners[bannerIndex].clickCount || 0) + 1;
-    banners[bannerIndex].updatedAt = new Date().toISOString();
-
-    writeJsonFile('banners.json', banners);
-
-    res.json({ message: 'Tracked click successfully' });
-
+    res.json({
+      message: 'Cập nhật thứ tự banner thành công',
+      banner
+    });
   } catch (error) {
-    console.error('Track banner click error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật thứ tự banner:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật thứ tự banner' });
   }
 });
 

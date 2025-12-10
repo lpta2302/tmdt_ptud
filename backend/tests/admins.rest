@@ -1,0 +1,154 @@
+### Admins API Tests
+
+# Lấy tất cả admin
+GET http://localhost:3000/api/admins
+
+###
+
+# Lấy admin với phân trang và tìm kiếm
+GET http://localhost:3000/api/admins?page=1&limit=10&search=admin
+
+###
+
+# Lấy chi tiết admin theo ID
+GET http://localhost:3000/api/admins/674b2f8e123456789abcdef8
+
+###
+
+# Tạo admin mới
+POST http://localhost:3000/api/admins
+Content-Type: application/json
+
+{
+  "username": "admin_spa",
+  "email": "admin@spa.com",
+  "password": "123456",
+  "fullName": "Nguyễn Văn Admin",
+  "phone": "0987654321",
+  "role": "admin",
+  "permissions": ["read", "write", "delete"],
+  "isActive": true
+}
+
+###
+
+# Tạo super admin
+POST http://localhost:3000/api/admins
+Content-Type: application/json
+
+{
+  "username": "superadmin",
+  "email": "superadmin@spa.com", 
+  "password": "superadmin123",
+  "fullName": "Trần Thị Super Admin",
+  "phone": "0123456789",
+  "role": "super_admin",
+  "permissions": ["read", "write", "delete", "manage_users", "system_config"],
+  "isActive": true
+}
+
+###
+
+# Cập nhật thông tin admin
+PUT http://localhost:3000/api/admins/674b2f8e123456789abcdef8
+Content-Type: application/json
+
+{
+  "fullName": "Nguyễn Văn Admin Updated",
+  "phone": "0987654322",
+  "permissions": ["read", "write", "delete", "manage_bookings"]
+}
+
+###
+
+# Thay đổi mật khẩu admin
+PUT http://localhost:3000/api/admins/674b2f8e123456789abcdef8/password
+Content-Type: application/json
+
+{
+  "currentPassword": "123456",
+  "newPassword": "newpassword123"
+}
+
+###
+
+# Cập nhật trạng thái admin
+PUT http://localhost:3000/api/admins/674b2f8e123456789abcdef8/status
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+
+###
+
+# Xóa admin
+DELETE http://localhost:3000/api/admins/674b2f8e123456789abcdef8
+
+###
+
+# Đăng nhập admin (tương tự auth)
+POST http://localhost:3000/api/auth/admin/login
+Content-Type: application/json
+
+{
+  "email": "admin@spa.com",
+  "password": "123456"
+}
+
+###
+
+# Lấy thống kê admin
+GET http://localhost:3000/api/admins/stats
+
+###
+
+# Lấy admin theo role
+GET http://localhost:3000/api/admins?role=admin
+
+###
+
+# Lấy admin theo trạng thái
+GET http://localhost:3000/api/admins?active=true
+
+###
+
+# Kiểm tra email admin có tồn tại
+GET http://localhost:3000/api/admins/check-email?email=admin@spa.com
+
+###
+
+# Kiểm tra username admin có tồn tại  
+GET http://localhost:3000/api/admins/check-username?username=admin_spa
+
+###
+
+# Tạo admin với avatar
+POST http://localhost:3000/api/admins
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="username"
+
+manager_spa
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email"
+
+manager@spa.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="password"
+
+manager123
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fullName"
+
+Lê Thị Manager
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="phone"
+
+0988777666
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="role"
+
+manager
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

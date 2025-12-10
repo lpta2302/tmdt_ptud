@@ -1,0 +1,76 @@
+### Comments API Tests
+
+# Lấy tất cả bình luận
+GET http://localhost:3000/api/comments
+
+###
+
+# Lấy bình luận với phân trang và lọc
+GET http://localhost:3000/api/comments?page=1&limit=10&productId=674b2f8e123456789abcdef0&rating=5
+
+###
+
+# Lấy chi tiết bình luận theo ID
+GET http://localhost:3000/api/comments/674b2f8e123456789abcdef5
+
+###
+
+# Tạo bình luận mới
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+
+{
+  "productId": "674b2f8e123456789abcdef0",
+  "customerId": "674b2f8e123456789abcdef2",
+  "rating": 5,
+  "comment": "Dịch vụ rất tốt, nhân viên thân thiện và chuyên nghiệp. Tôi sẽ quay lại lần sau!"
+}
+
+###
+
+# Cập nhật bình luận
+PUT http://localhost:3000/api/comments/674b2f8e123456789abcdef5
+Content-Type: application/json
+
+{
+  "rating": 4,
+  "comment": "Dịch vụ tốt nhưng cần cải thiện thêm về thời gian chờ đợi."
+}
+
+###
+
+# Xóa bình luận
+DELETE http://localhost:3000/api/comments/674b2f8e123456789abcdef5
+
+###
+
+# Admin xóa bình luận
+DELETE http://localhost:3000/api/comments/admin/674b2f8e123456789abcdef5
+
+###
+
+# Thống kê bình luận theo sản phẩm
+GET http://localhost:3000/api/comments/product/674b2f8e123456789abcdef0/stats
+
+###
+
+# Lấy bình luận theo khách hàng
+GET http://localhost:3000/api/comments?customerId=674b2f8e123456789abcdef2&sortBy=createdAt&order=desc
+
+###
+
+# Lấy bình luận theo rating
+GET http://localhost:3000/api/comments?rating=5&page=1&limit=5
+
+###
+
+# Tạo bình luận với rating thấp
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+
+{
+  "productId": "674b2f8e123456789abcdef0",
+  "customerId": "674b2f8e123456789abcdef2",
+  "rating": 2,
+  "comment": "Dịch vụ không như mong đợi, cần cải thiện."
+}

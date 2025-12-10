@@ -1,258 +1,307 @@
 import express from 'express';
-import { readJsonFile, writeJsonFile, generateId } from '../helpers/fileHelper.js';
-import { authenticateToken, requireAdmin } from './auth.js';
+import Product from '../models/Product.js';
+import Category from '../models/Category.js';
+// Bỏ authentication - tất cả API public
+import { upload, uploadToGridFS } from '../middleware/upload.js';
 
 const router = express.Router();
 
 // GET /products - Lấy tất cả sản phẩm với bộ lọc và phân trang
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    let products = readJsonFile('products.json') || [];
-    const categories = readJsonFile('categories.json') || [];
-    
     // Tham số lọc
     const { 
-      status = 'active', 
       category, 
-      featured, 
-      trending, 
-      bestseller,
       search,
       sortBy = 'createdAt',
       sortOrder = 'desc',
       page = 1,
       limit = 12,
       minPrice,
-      maxPrice
+      maxPrice,
+      featured,
+      trending
     } = req.query;
 
-    // Áp dụng bộ lọc
-    if (status) {
-      products = products.filter(p => p.status === status);
-    }
+    // Xây dựng query filter
+    const filter = { isActive: true };
 
     if (category) {
-      products = products.filter(p => p.categoryId == category);
-    }
-
-    if (featured === 'true') {
-      products = products.filter(p => p.featured === true);
-    }
-
-    if (trending === 'true') {
-      products = products.filter(p => p.trending === true);
-    }
-
-    if (bestseller === 'true') {
-      products = products.filter(p => p.bestseller === true);
+      filter.category = category;
     }
 
     if (search) {
-      const searchLower = search.toLowerCase();
-      products = products.filter(p => 
-        p.name.toLowerCase().includes(searchLower) ||
-        p.description.toLowerCase().includes(searchLower) ||
-        p.tags.some(tag => tag.toLowerCase().includes(searchLower))
-      );
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { category: { $regex: search, $options: 'i' } }
+      ];
     }
 
-    if (minPrice) {
-      products = products.filter(p => p.price >= parseInt(minPrice));
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
     }
 
-    if (maxPrice) {
-      products = products.filter(p => p.price <= parseInt(maxPrice));
-    }
+    // Xây dựng sort
+    const sortOptions = {};
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
 
-    // Sắp xếp
-    products.sort((a, b) => {
-      let aValue = a[sortBy];
-      let bValue = b[sortBy];
-      
-      if (sortBy === 'price' || sortBy === 'rating' || sortBy === 'viewCount') {
-        aValue = Number(aValue);
-        bValue = Number(bValue);
-      }
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    // Tính toán phân trang
+    const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    // Phân trang
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const startIndex = (pageNum - 1) * limitNum;
-    const endIndex = startIndex + limitNum;
-    
-    const paginatedProducts = products.slice(startIndex, endIndex);
+    // Thực hiện query
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(parseInt(limit))
+        .lean(),
+      Product.countDocuments(filter)
+    ]);
 
-    // Thêm thông tin danh mục
-    const productsWithCategory = paginatedProducts.map(product => {
-      const categoryInfo = categories.find(c => c.id === product.categoryId);
-      return {
-        ...product,
-        category: categoryInfo || null
-      };
-    });
+    // Thêm URL cho hình ảnh
+    const productsWithImages = products.map(product => ({
+      ...product,
+      images: product.images?.map(img => ({
+        ...img,
+        url: img.gridfsId ? `/api/files/${img.gridfsId}` : null
+      })) || []
+    }));
 
     res.json({
-      products: productsWithCategory,
+      success: true,
+      data: productsWithImages,
       pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(products.length / limitNum),
-        totalItems: products.length,
-        itemsPerPage: limitNum,
-        hasNext: endIndex < products.length,
-        hasPrev: pageNum > 1
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit)),
+        totalProducts: total,
+        hasNext: skip + products.length < total,
+        hasPrev: parseInt(page) > 1
       }
     });
 
   } catch (error) {
-    console.error('Get products error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi lấy danh sách sản phẩm:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy danh sách sản phẩm'
+    });
   }
 });
 
-// GET /products/:id - Lấy chi tiết một sản phẩm
-router.get('/:id', (req, res) => {
+// GET /products/:id - Lấy chi tiết sản phẩm
+router.get('/:id', async (req, res) => {
   try {
-    const productId = parseInt(req.params.id);
-    const products = readJsonFile('products.json') || [];
-    const categories = readJsonFile('categories.json') || [];
-    const comments = readJsonFile('comments.json') || [];
+    const product = await Product.findById(req.params.id).lean();
     
-    const product = products.find(p => p.id === productId);
-    if (!product) {
-      return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
+    if (!product || !product.isActive) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sản phẩm'
+      });
     }
 
-    // Tăng số lượt xem
-    product.viewCount = (product.viewCount || 0) + 1;
-    product.updatedAt = new Date().toISOString();
-    writeJsonFile('products.json', products);
-
-    // Lấy thông tin danh mục
-    const categoryInfo = categories.find(c => c.id === product.categoryId);
-    
-    // Lấy bình luận/đánh giá sản phẩm
-    const productComments = comments
-      .filter(c => c.productId === productId && c.status === 'approved')
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    const productWithDetails = {
+    // Thêm URL cho hình ảnh
+    const productWithImages = {
       ...product,
-      category: categoryInfo || null,
-      comments: productComments
+      images: product.images?.map(img => ({
+        ...img,
+        url: img.gridfsId ? `/api/files/${img.gridfsId}` : null
+      })) || []
     };
 
-    res.json(productWithDetails);
+    res.json({
+      success: true,
+      data: productWithImages
+    });
+
   } catch (error) {
-    console.error('Get product error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi lấy chi tiết sản phẩm:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy chi tiết sản phẩm'
+    });
   }
 });
 
-// POST /products - Thêm sản phẩm mới (Chỉ Admin)
-router.post('/', authenticateToken, requireAdmin, (req, res) => {
+// POST /products - Tạo sản phẩm mới (Admin only)
+router.post('/', upload.array('images', 5), uploadToGridFS, async (req, res) => {
   try {
-    const products = readJsonFile('products.json') || [];
-    
     const {
-      name, slug, categoryId, price, originalPrice, description, 
-      shortDescription, duration, benefits, procedures, tags, 
-      featured, trending, bestseller, status
+      name,
+      description,
+      price,
+      originalPrice,
+      category,
+      duration,
+      benefits,
+      suitableFor,
+      ingredients
     } = req.body;
 
-    if (!name || !categoryId || !price || !description) {
-      return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin bắt buộc' });
+    // Xử lý hình ảnh đã upload
+    const images = [];
+    if (req.uploadedFiles && req.uploadedFiles.length > 0) {
+      req.uploadedFiles.forEach(file => {
+        images.push({
+          filename: file.filename,
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          gridfsId: file.id
+        });
+      });
     }
 
-    const newProduct = {
-      id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
+    const product = new Product({
       name,
-      slug: slug || name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'),
-      categoryId: parseInt(categoryId),
-      price: parseInt(price),
-      originalPrice: originalPrice ? parseInt(originalPrice) : parseInt(price),
-      discount: originalPrice ? Math.round((1 - price / originalPrice) * 100) : 0,
       description,
-      shortDescription: shortDescription || '',
-      duration: duration || 0,
-      images: [],
-      thumbnail: '',
-      benefits: benefits || [],
-      procedures: procedures || [],
-      tags: tags || [],
-      status: status || 'active',
-      featured: featured || false,
-      trending: trending || false,
-      bestseller: bestseller || false,
-      rating: 0,
-      reviewCount: 0,
-      viewCount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+      price: parseFloat(price),
+      originalPrice: originalPrice ? parseFloat(originalPrice) : null,
+      category,
+      duration: duration ? parseInt(duration) : 60,
+      benefits: benefits ? JSON.parse(benefits) : [],
+      suitableFor: suitableFor ? JSON.parse(suitableFor) : [],
+      ingredients: ingredients ? JSON.parse(ingredients) : [],
+      images
+    });
 
-    products.push(newProduct);
-    writeJsonFile('products.json', products);
+    await product.save();
 
-    res.status(201).json(newProduct);
+    res.status(201).json({
+      success: true,
+      message: 'Tạo sản phẩm thành công',
+      data: product
+    });
+
   } catch (error) {
-    console.error('Create product error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi tạo sản phẩm:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi tạo sản phẩm',
+      error: error.message
+    });
   }
 });
 
-// PUT /products/:id - Cập nhật sản phẩm
-router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
+// PUT /products/:id - Cập nhật sản phẩm (Admin only)
+router.put('/:id', upload.array('images', 5), uploadToGridFS, async (req, res) => {
   try {
-    const productId = parseInt(req.params.id);
-    const products = readJsonFile('products.json') || [];
+    const {
+      name,
+      description,
+      price,
+      originalPrice,
+      category,
+      duration,
+      benefits,
+      suitableFor,
+      ingredients
+    } = req.body;
+
+    const product = await Product.findById(req.params.id);
     
-    const productIndex = products.findIndex(p => p.id === productId);
-    if (productIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sản phẩm'
+      });
     }
 
-    const updatedProduct = {
-      ...products[productIndex],
-      ...req.body,
-      id: productId,
-      updatedAt: new Date().toISOString()
-    };
+    // Cập nhật thông tin cơ bản
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price) product.price = parseFloat(price);
+    if (originalPrice) product.originalPrice = parseFloat(originalPrice);
+    if (category) product.category = category;
+    if (duration) product.duration = parseInt(duration);
+    if (benefits) product.benefits = JSON.parse(benefits);
+    if (suitableFor) product.suitableFor = JSON.parse(suitableFor);
+    if (ingredients) product.ingredients = JSON.parse(ingredients);
 
-    products[productIndex] = updatedProduct;
-    writeJsonFile('products.json', products);
+    // Xử lý hình ảnh mới (nếu có)
+    if (req.uploadedFiles && req.uploadedFiles.length > 0) {
+      const newImages = req.uploadedFiles.map(file => ({
+        filename: file.filename,
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        gridfsId: file.id
+      }));
 
-    res.json(updatedProduct);
+      // Thêm hình ảnh mới vào danh sách hiện tại
+      product.images = [...(product.images || []), ...newImages];
+    }
+
+    await product.save();
+
+    res.json({
+      success: true,
+      message: 'Cập nhật sản phẩm thành công',
+      data: product
+    });
+
   } catch (error) {
-    console.error('Update product error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi cập nhật sản phẩm:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi cập nhật sản phẩm',
+      error: error.message
+    });
   }
 });
 
-// DELETE /products/:id - Xóa sản phẩm
-router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
+// DELETE /products/:id - Xóa sản phẩm (Admin only)
+router.delete('/:id', async (req, res) => {
   try {
-    const productId = parseInt(req.params.id);
-    const products = readJsonFile('products.json') || [];
+    const product = await Product.findById(req.params.id);
     
-    const productIndex = products.findIndex(p => p.id === productId);
-    if (productIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy sản phẩm'
+      });
     }
 
-    products.splice(productIndex, 1);
-    writeJsonFile('products.json', products);
+    // Soft delete - chỉ đánh dấu isActive = false
+    product.isActive = false;
+    await product.save();
 
-    res.json({ message: 'Xóa sản phẩm thành công' });
+    res.json({
+      success: true,
+      message: 'Xóa sản phẩm thành công'
+    });
+
   } catch (error) {
-    console.error('Delete product error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi xóa sản phẩm:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi xóa sản phẩm'
+    });
+  }
+});
+
+// GET /products/categories/list - Lấy danh sách categories
+router.get('/categories/list', async (req, res) => {
+  try {
+    const categories = await Category.find({ isActive: true })
+      .select('name description icon')
+      .sort({ sortOrder: 1, name: 1 })
+      .lean();
+
+    res.json({
+      success: true,
+      data: categories
+    });
+
+  } catch (error) {
+    console.error('❌ Lỗi lấy danh sách categories:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy danh sách categories'
+    });
   }
 });
 

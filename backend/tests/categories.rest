@@ -1,0 +1,72 @@
+### Categories API Tests
+
+# Lấy tất cả danh mục
+GET http://localhost:3000/api/categories
+
+###
+
+# Lấy danh mục với phân trang
+GET http://localhost:3000/api/categories?page=1&limit=10
+
+###
+
+# Lấy chi tiết danh mục theo ID
+GET http://localhost:3000/api/categories/674b2f8e123456789abcdef1
+
+###
+
+# Tạo danh mục mới (với file upload)
+POST http://localhost:3000/api/categories
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Spa & Massage
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Các dịch vụ spa và massage thư giãn
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="slug"
+
+spa-massage
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# Tạo danh mục mới (JSON)
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+  "name": "Chăm sóc da",
+  "description": "Các dịch vụ chăm sóc và làm đẹp da",
+  "slug": "cham-soc-da"
+}
+
+###
+
+# Cập nhật danh mục
+PUT http://localhost:3000/api/categories/674b2f8e123456789abcdef1
+Content-Type: application/json
+
+{
+  "name": "Spa & Wellness",
+  "description": "Các dịch vụ spa và chăm sóc sức khỏe toàn diện"
+}
+
+###
+
+# Xóa danh mục
+DELETE http://localhost:3000/api/categories/674b2f8e123456789abcdef1
+
+###
+
+# Lấy sản phẩm theo danh mục
+GET http://localhost:3000/api/categories/674b2f8e123456789abcdef1/products
+
+###
+
+# Lấy danh mục đang hoạt động
+GET http://localhost:3000/api/categories/active

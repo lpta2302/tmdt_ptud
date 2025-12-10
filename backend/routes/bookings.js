@@ -1,405 +1,294 @@
 import express from 'express';
-import { readJsonFile, writeJsonFile, generateId } from '../helpers/fileHelper.js';
-import { authenticateToken, requireAdmin } from './auth.js';
+import Booking from '../models/Booking.js';
+import Customer from '../models/Customer.js';
+// Bỏ authentication - tất cả API public
 
 const router = express.Router();
 
-// GET /bookings - Lấy tất cả đơn đặt lịch (Admin hoặc của khách)
-router.get('/', authenticateToken, (req, res) => {
+// GET /bookings - Lấy tất cả đơn đặt lịch
+router.get('/', async (req, res) => {
   try {
-    const { status, customerId, page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
-    
-    let bookings = readJsonFile('bookings.json') || [];
+    const { 
+      status, 
+      customerId, 
+      page = 1, 
+      limit = 10, 
+      sortBy = 'createdAt', 
+      sortOrder = 'desc' 
+    } = req.query;
 
-    // Lọc theo khách hàng nếu không phải admin
-    if (req.user.type === 'customer') {
-      bookings = bookings.filter(b => b.customerId === req.user.id);
-    } else if (customerId && req.user.type === 'admin') {
-      bookings = bookings.filter(b => b.customerId === parseInt(customerId));
-    }
+    // Xây dựng bộ lọc
+    let filter = {};
+    if (status) filter.status = status;
+    if (customerId) filter.customerId = customerId;
 
-    // Lọc theo trạng thái
-    if (status) {
-      bookings = bookings.filter(b => b.status === status);
-    }
+    // Tính toán phân trang
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const sortDirection = sortOrder === 'asc' ? 1 : -1;
 
-    // Sắp xếp đơn đặt lịch
-    bookings.sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    // Truy vấn bookings với populate customer info
+    const bookings = await Booking.find(filter)
+      .populate('customerId', 'name email phone')
+      .sort({ [sortBy]: sortDirection })
+      .skip(skip)
+      .limit(parseInt(limit));
 
-    // Phân trang
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-    const startIndex = (pageNum - 1) * limitNum;
-    const endIndex = startIndex + limitNum;
-    
-    const paginatedBookings = bookings.slice(startIndex, endIndex);
+    // Đếm tổng số bookings
+    const total = await Booking.countDocuments(filter);
 
     res.json({
-      bookings: paginatedBookings,
+      bookings,
       pagination: {
-        currentPage: pageNum,
-        totalPages: Math.ceil(bookings.length / limitNum),
-        totalItems: bookings.length,
-        itemsPerPage: limitNum
+        current: parseInt(page),
+        pages: Math.ceil(total / parseInt(limit)),
+        total,
+        limit: parseInt(limit)
       }
     });
-
   } catch (error) {
-    console.error('Get bookings error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy danh sách booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy danh sách booking' });
   }
 });
 
-// GET /bookings/:id - Lấy chi tiết đơn đặt lịch
-router.get('/:id', authenticateToken, (req, res) => {
+// GET /bookings/:id - Lấy thông tin một đặt lịch cụ thể
+router.get('/:id', async (req, res) => {
   try {
-    const bookingId = parseInt(req.params.id);
-    const bookings = readJsonFile('bookings.json') || [];
-    
-    const booking = bookings.find(b => b.id === bookingId);
-    if (!booking) {
-      return res.status(404).json({ error: 'Không tìm thấy đơn đặt lịch' });
-    }
+    const booking = await Booking.findById(req.params.id)
+      .populate('customerId', 'name email phone address');
 
-    // Kiểm tra quyền truy cập đơn đặt lịch
-    if (req.user.type === 'customer' && booking.customerId !== req.user.id) {
-      return res.status(403).json({ error: 'Không có quyền truy cập' });
+    if (!booking) {
+      return res.status(404).json({ error: 'Không tìm thấy đặt lịch' });
     }
 
     res.json(booking);
-
   } catch (error) {
-    console.error('Get booking error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi lấy booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy thông tin booking' });
   }
 });
 
 // POST /bookings - Tạo đơn đặt lịch mới
-router.post('/', authenticateToken, (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const {
-      items,
-      customerInfo,
-      paymentMethod = 'cash',
-      notes = '',
-      discountCode
+      customerId,
+      services,
+      appointmentDate,
+      appointmentTime,
+      notes,
+      totalAmount
     } = req.body;
 
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return res.status(400).json({ error: 'Vui lòng chọn ít nhất một dịch vụ' });
+    // Kiểm tra dữ liệu đầu vào
+    if (!customerId || !services || !appointmentDate || !appointmentTime) {
+      return res.status(400).json({ 
+        error: 'Vui lòng điền đầy đủ thông tin: khách hàng, dịch vụ, ngày và giờ' 
+      });
     }
 
-    if (!customerInfo || !customerInfo.name || !customerInfo.phone) {
-      return res.status(400).json({ error: 'Vui lòng điền đầy đủ thông tin khách hàng' });
+    // Kiểm tra khách hàng tồn tại
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ error: 'Không tìm thấy khách hàng' });
     }
 
-    const products = readJsonFile('products.json') || [];
-    const promotions = readJsonFile('promotions.json') || [];
-    const bookings = readJsonFile('bookings.json') || [];
-
-    // Validate and calculate order
-    let subtotal = 0;
-    const validatedItems = [];
-
-    for (const item of items) {
-      const product = products.find(p => p.id === item.productId && p.status === 'active');
-      if (!product) {
-        return res.status(400).json({ error: `Sản phẩm ID ${item.productId} không tồn tại` });
-      }
-
-      if (!item.appointmentDate || !item.appointmentTime) {
-        return res.status(400).json({ error: `Vui lòng chọn ngày giờ cho dịch vụ ${product.name}` });
-      }
-
-      const validatedItem = {
-        id: validatedItems.length + 1,
-        productId: product.id,
-        productName: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        quantity: item.quantity || 1,
-        total: product.price * (item.quantity || 1),
-        appointmentDate: item.appointmentDate,
-        appointmentTime: item.appointmentTime
-      };
-
-      validatedItems.push(validatedItem);
-      subtotal += validatedItem.total;
-    }
-
-    // Apply discount if provided
-    let discount = 0;
-    let discountAmount = 0;
-    let appliedPromotion = null;
-
-    if (discountCode) {
-      const promotion = promotions.find(p => 
-        p.code === discountCode && 
-        p.status === 'active' &&
-        new Date(p.startDate) <= new Date() &&
-        new Date(p.endDate) >= new Date() &&
-        p.usedCount < p.usageLimit
-      );
-
-      if (promotion && subtotal >= promotion.minOrderValue) {
-        if (promotion.type === 'percentage') {
-          discountAmount = Math.min(
-            subtotal * (promotion.value / 100), 
-            promotion.maxDiscount
-          );
-        } else if (promotion.type === 'fixed') {
-          discountAmount = Math.min(promotion.value, subtotal);
-        }
-        
-        appliedPromotion = promotion;
-        
-        // Update promotion usage count
-        promotion.usedCount += 1;
-        writeJsonFile('promotions.json', promotions);
-      }
-    }
-
-    const total = subtotal - discountAmount;
-    const orderNumber = `ORD${String(bookings.length + 1).padStart(3, '0')}`;
-
-    // Create new booking
-    const newBooking = {
-      id: bookings.length > 0 ? Math.max(...bookings.map(b => b.id)) + 1 : 1,
-      orderNumber,
-      customerId: req.user.type === 'customer' ? req.user.id : null,
-      customerInfo: {
-        name: customerInfo.name,
-        phone: customerInfo.phone,
-        email: customerInfo.email || ''
-      },
-      items: validatedItems,
-      subtotal,
-      discount: discountAmount,
-      discountCode: appliedPromotion ? appliedPromotion.code : null,
-      shippingFee: 0,
-      total,
-      paymentMethod,
-      paymentStatus: paymentMethod === 'cash' ? 'pending' : 'pending',
-      status: 'confirmed',
-      notes,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    bookings.push(newBooking);
-    writeJsonFile('bookings.json', bookings);
-
-    // Update customer order count and total spent if customer is logged in
-    if (req.user.type === 'customer') {
-      const customers = readJsonFile('customers.json') || [];
-      const customerIndex = customers.findIndex(c => c.id === req.user.id);
-      if (customerIndex >= 0) {
-        customers[customerIndex].orderCount += 1;
-        customers[customerIndex].totalSpent += total;
-        customers[customerIndex].updatedAt = new Date().toISOString();
-        writeJsonFile('customers.json', customers);
-      }
-    }
-
-    res.status(201).json({
-      message: 'Đặt lịch thành công',
-      booking: newBooking
+    // Tạo booking mới
+    const newBooking = new Booking({
+      customerId,
+      services,
+      appointmentDate: new Date(appointmentDate),
+      appointmentTime,
+      notes: notes || '',
+      totalAmount: totalAmount || 0,
+      status: 'pending',
+      paymentStatus: 'unpaid',
+      createdAt: new Date()
     });
 
+    await newBooking.save();
+
+    // Lấy booking với thông tin customer để trả về
+    const bookingWithCustomer = await Booking.findById(newBooking._id)
+      .populate('customerId', 'name email phone');
+
+    res.status(201).json({
+      message: 'Tạo đặt lịch thành công',
+      booking: bookingWithCustomer
+    });
   } catch (error) {
-    console.error('Create booking error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi tạo booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi tạo đặt lịch' });
   }
 });
 
-// PUT /bookings/:id/status - Update booking status (Admin only)
-router.put('/:id/status', authenticateToken, requireAdmin, (req, res) => {
+// PUT /bookings/:id/status - Cập nhật trạng thái đặt lịch
+router.put('/:id/status', async (req, res) => {
   try {
-    const bookingId = parseInt(req.params.id);
-    const { status, notes } = req.body;
+    const { status } = req.body;
 
     if (!status) {
-      return res.status(400).json({ error: 'Vui lòng chọn trạng thái' });
+      return res.status(400).json({ error: 'Vui lòng cung cấp trạng thái' });
     }
 
-    const validStatuses = ['pending', 'confirmed', 'processing', 'completed', 'cancelled'];
+    const validStatuses = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'];
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ error: 'Trạng thái không hợp lệ' });
+      return res.status(400).json({ 
+        error: 'Trạng thái không hợp lệ. Các trạng thái hợp lệ: ' + validStatuses.join(', ') 
+      });
     }
 
-    const bookings = readJsonFile('bookings.json') || [];
-    const bookingIndex = bookings.findIndex(b => b.id === bookingId);
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id, 
+      { status, updatedAt: new Date() },
+      { new: true }
+    ).populate('customerId', 'name email phone');
 
-    if (bookingIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy đơn đặt lịch' });
+    if (!booking) {
+      return res.status(404).json({ error: 'Không tìm thấy đặt lịch' });
     }
-
-    const booking = bookings[bookingIndex];
-    booking.status = status;
-    booking.updatedAt = new Date().toISOString();
-
-    if (notes) {
-      booking.adminNotes = notes;
-    }
-
-    if (status === 'completed') {
-      booking.completedAt = new Date().toISOString();
-      booking.paymentStatus = 'paid';
-    }
-
-    writeJsonFile('bookings.json', bookings);
 
     res.json({
       message: 'Cập nhật trạng thái thành công',
       booking
     });
-
   } catch (error) {
-    console.error('Update booking status error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật trạng thái booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật trạng thái' });
   }
 });
 
-// PUT /bookings/:id/payment - Update payment status (Admin only)
-router.put('/:id/payment', authenticateToken, requireAdmin, (req, res) => {
+// PUT /bookings/:id/payment - Cập nhật trạng thái thanh toán
+router.put('/:id/payment', async (req, res) => {
   try {
-    const bookingId = parseInt(req.params.id);
     const { paymentStatus, paymentMethod } = req.body;
 
     if (!paymentStatus) {
-      return res.status(400).json({ error: 'Vui lòng chọn trạng thái thanh toán' });
+      return res.status(400).json({ error: 'Vui lòng cung cấp trạng thái thanh toán' });
     }
 
-    const validPaymentStatuses = ['pending', 'paid', 'refunded', 'failed'];
+    const validPaymentStatuses = ['unpaid', 'paid', 'refunded'];
     if (!validPaymentStatuses.includes(paymentStatus)) {
-      return res.status(400).json({ error: 'Trạng thái thanh toán không hợp lệ' });
+      return res.status(400).json({ 
+        error: 'Trạng thái thanh toán không hợp lệ. Các trạng thái hợp lệ: ' + validPaymentStatuses.join(', ') 
+      });
     }
 
-    const bookings = readJsonFile('bookings.json') || [];
-    const bookingIndex = bookings.findIndex(b => b.id === bookingId);
-
-    if (bookingIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy đơn đặt lịch' });
-    }
-
-    const booking = bookings[bookingIndex];
-    booking.paymentStatus = paymentStatus;
-    booking.updatedAt = new Date().toISOString();
-
+    const updateData = { 
+      paymentStatus, 
+      updatedAt: new Date() 
+    };
+    
     if (paymentMethod) {
-      booking.paymentMethod = paymentMethod;
+      updateData.paymentMethod = paymentMethod;
     }
 
     if (paymentStatus === 'paid') {
-      booking.paidAt = new Date().toISOString();
+      updateData.paidAt = new Date();
     }
 
-    writeJsonFile('bookings.json', bookings);
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }
+    ).populate('customerId', 'name email phone');
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Không tìm thấy đặt lịch' });
+    }
 
     res.json({
       message: 'Cập nhật thanh toán thành công',
       booking
     });
-
   } catch (error) {
-    console.error('Update payment status error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi cập nhật thanh toán booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi cập nhật thanh toán' });
   }
 });
 
-// DELETE /bookings/:id - Cancel booking
-router.delete('/:id', authenticateToken, (req, res) => {
+// DELETE /bookings/:id - Xóa đặt lịch
+router.delete('/:id', async (req, res) => {
   try {
-    const bookingId = parseInt(req.params.id);
-    const bookings = readJsonFile('bookings.json') || [];
-    
-    const bookingIndex = bookings.findIndex(b => b.id === bookingId);
-    if (bookingIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy đơn đặt lịch' });
+    const booking = await Booking.findByIdAndDelete(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Không tìm thấy đặt lịch' });
     }
 
-    const booking = bookings[bookingIndex];
+    res.json({ message: 'Xóa đặt lịch thành công' });
+  } catch (error) {
+    console.error('Lỗi xóa booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi xóa đặt lịch' });
+  }
+});
 
-    // Check permissions
-    if (req.user.type === 'customer' && booking.customerId !== req.user.id) {
-      return res.status(403).json({ error: 'Không có quyền truy cập' });
-    }
+// GET /bookings/stats/overview - Thống kê tổng quan đặt lịch
+router.get('/stats/overview', async (req, res) => {
+  try {
+    // Thống kê theo trạng thái
+    const statusStats = await Booking.aggregate([
+      { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
 
-    // Only allow cancellation if booking is not completed
-    if (booking.status === 'completed') {
-      return res.status(400).json({ error: 'Không thể hủy đơn đã hoàn thành' });
-    }
+    // Thống kê theo trạng thái thanh toán
+    const paymentStats = await Booking.aggregate([
+      { $group: { _id: '$paymentStatus', count: { $sum: 1 } } }
+    ]);
 
-    booking.status = 'cancelled';
-    booking.cancelledAt = new Date().toISOString();
-    booking.updatedAt = new Date().toISOString();
+    // Tổng doanh thu
+    const revenueStats = await Booking.aggregate([
+      { 
+        $match: { paymentStatus: 'paid' }
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$totalAmount' },
+          totalPaidBookings: { $sum: 1 }
+        }
+      }
+    ]);
 
-    writeJsonFile('bookings.json', bookings);
+    // Thống kê theo tháng (6 tháng gần nhất)
+    const monthlyStats = await Booking.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(new Date().setMonth(new Date().getMonth() - 6))
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          count: { $sum: 1 },
+          revenue: {
+            $sum: {
+              $cond: [
+                { $eq: ['$paymentStatus', 'paid'] },
+                '$totalAmount',
+                0
+              ]
+            }
+          }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } }
+    ]);
 
     res.json({
-      message: 'Hủy đơn đặt lịch thành công',
-      booking
+      statusDistribution: statusStats,
+      paymentDistribution: paymentStats,
+      revenue: revenueStats[0] || { totalRevenue: 0, totalPaidBookings: 0 },
+      monthlyTrends: monthlyStats
     });
-
   } catch (error) {
-    console.error('Cancel booking error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
-  }
-});
-
-// GET /bookings/stats - Get booking statistics (Admin only)
-router.get('/stats/overview', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const bookings = readJsonFile('bookings.json') || [];
-    const { period = 'month' } = req.query;
-
-    const now = new Date();
-    let startDate;
-
-    switch (period) {
-      case 'week':
-        startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-        break;
-      case 'month':
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        break;
-      case 'year':
-        startDate = new Date(now.getFullYear(), 0, 1);
-        break;
-      default:
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    }
-
-    const periodBookings = bookings.filter(b => 
-      new Date(b.createdAt) >= startDate && new Date(b.createdAt) <= now
-    );
-
-    const stats = {
-      totalBookings: periodBookings.length,
-      totalRevenue: periodBookings
-        .filter(b => b.paymentStatus === 'paid')
-        .reduce((sum, b) => sum + b.total, 0),
-      completedBookings: periodBookings.filter(b => b.status === 'completed').length,
-      pendingBookings: periodBookings.filter(b => b.status === 'pending').length,
-      cancelledBookings: periodBookings.filter(b => b.status === 'cancelled').length,
-      averageOrderValue: periodBookings.length > 0 ? 
-        periodBookings.reduce((sum, b) => sum + b.total, 0) / periodBookings.length : 0
-    };
-
-    res.json(stats);
-
-  } catch (error) {
-    console.error('Get booking stats error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('Lỗi thống kê booking:', error);
+    res.status(500).json({ error: 'Lỗi server khi lấy thống kê' });
   }
 });
 

@@ -1,0 +1,81 @@
+### Bookings API Tests
+
+# Lấy tất cả đặt lịch
+GET http://localhost:3000/api/bookings
+
+###
+
+# Lấy đặt lịch với phân trang và lọc
+GET http://localhost:3000/api/bookings?page=1&limit=10&status=pending&customerId=674b2f8e123456789abcdef2
+
+###
+
+# Lấy chi tiết đặt lịch theo ID
+GET http://localhost:3000/api/bookings/674b2f8e123456789abcdef3
+
+###
+
+# Tạo đặt lịch mới
+POST http://localhost:3000/api/bookings
+Content-Type: application/json
+
+{
+  "customerId": "674b2f8e123456789abcdef2",
+  "services": [
+    {
+      "name": "Massage thư giãn",
+      "price": 500000,
+      "duration": 60
+    },
+    {
+      "name": "Chăm sóc da mặt",
+      "price": 300000,
+      "duration": 45
+    }
+  ],
+  "appointmentDate": "2025-12-15",
+  "appointmentTime": "14:00",
+  "notes": "Khách hàng có da nhạy cảm",
+  "totalAmount": 800000
+}
+
+###
+
+# Cập nhật trạng thái đặt lịch
+PUT http://localhost:3000/api/bookings/674b2f8e123456789abcdef3/status
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+###
+
+# Cập nhật trạng thái thanh toán
+PUT http://localhost:3000/api/bookings/674b2f8e123456789abcdef3/payment
+Content-Type: application/json
+
+{
+  "paymentStatus": "paid",
+  "paymentMethod": "cash"
+}
+
+###
+
+# Xóa đặt lịch
+DELETE http://localhost:3000/api/bookings/674b2f8e123456789abcdef3
+
+###
+
+# Thống kê tổng quan đặt lịch
+GET http://localhost:3000/api/bookings/stats/overview
+
+###
+
+# Lấy lịch đặt theo ngày
+GET http://localhost:3000/api/bookings?appointmentDate=2025-12-15
+
+###
+
+# Lấy đặt lịch theo khách hàng
+GET http://localhost:3000/api/bookings?customerId=674b2f8e123456789abcdef2&sortBy=appointmentDate&order=asc

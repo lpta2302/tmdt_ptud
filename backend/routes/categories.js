@@ -1,172 +1,215 @@
 import express from 'express';
-import { readJsonFile, writeJsonFile } from '../helpers/fileHelper.js';
-import { authenticateToken, requireAdmin } from './auth.js';
+import Category from '../models/Category.js';
+// Bỏ authentication - tất cả API public
+import { upload, uploadToGridFS } from '../middleware/upload.js';
 
 const router = express.Router();
 
 // GET /categories - Lấy tất cả danh mục
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { status = 'active', includeCount = false } = req.query;
-    
-    let categories = readJsonFile('categories.json') || [];
-    
-    // Lọc theo trạng thái
-    if (status) {
-      categories = categories.filter(c => c.status === status);
-    }
+    const categories = await Category.find({ isActive: true })
+      .sort({ sortOrder: 1, name: 1 })
+      .lean();
 
-    // Thêm số lượng sản phẩm nếu được yêu cầu
-    if (includeCount === 'true') {
-      const products = readJsonFile('products.json') || [];
-      categories = categories.map(category => ({
-        ...category,
-        productCount: products.filter(p => p.categoryId === category.id && p.status === 'active').length
-      }));
-    }
+    // Thêm URL cho hình ảnh
+    const categoriesWithImages = categories.map(category => ({
+      ...category,
+      imageUrl: category.image?.gridfsId ? `/api/files/${category.image.gridfsId}` : null
+    }));
 
-    // Sắp xếp theo sortOrder
-    categories.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
-
-    res.json(categories);
+    res.json({
+      success: true,
+      data: categoriesWithImages
+    });
 
   } catch (error) {
-    console.error('Get categories error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi lấy danh sách danh mục:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy danh sách danh mục'
+    });
   }
 });
 
 // GET /categories/:id - Lấy chi tiết danh mục
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const categoryId = parseInt(req.params.id);
-    const categories = readJsonFile('categories.json') || [];
-    const products = readJsonFile('products.json') || [];
+    const category = await Category.findById(req.params.id).lean();
     
-    const category = categories.find(c => c.id === categoryId);
-    if (!category) {
-      return res.status(404).json({ error: 'Không tìm thấy danh mục' });
-    }
-
-    // Lấy sản phẩm thuộc danh mục
-    const categoryProducts = products.filter(p => 
-      p.categoryId === categoryId && p.status === 'active'
-    );
-
-    const categoryWithProducts = {
-      ...category,
-      products: categoryProducts,
-      productCount: categoryProducts.length
-    };
-
-    res.json(categoryWithProducts);
-
-  } catch (error) {
-    console.error('Get category error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
-  }
-});
-
-// POST /categories - Tạo danh mục mới (chỉ Admin)
-router.post('/', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const { name, slug, description, sortOrder, status } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ error: 'Vui lòng nhập tên danh mục' });
-    }
-
-    const categories = readJsonFile('categories.json') || [];
-
-    // Kiểm tra tên danh mục đã tồn tại chưa
-    const existingCategory = categories.find(c => 
-      c.name.toLowerCase() === name.toLowerCase()
-    );
-    if (existingCategory) {
-      return res.status(400).json({ error: 'Tên danh mục đã tồn tại' });
-    }
-
-    const newCategory = {
-      id: categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1,
-      name,
-      slug: slug || name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-'),
-      description: description || '',
-      image: '',
-      status: status || 'active',
-      sortOrder: sortOrder || 0,
-      productCount: 0,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-
-    categories.push(newCategory);
-    writeJsonFile('categories.json', categories);
-
-    res.status(201).json(newCategory);
-
-  } catch (error) {
-    console.error('Create category error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
-  }
-});
-
-// PUT /categories/:id - Update category (Admin only)
-router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const categoryId = parseInt(req.params.id);
-    const categories = readJsonFile('categories.json') || [];
-    
-    const categoryIndex = categories.findIndex(c => c.id === categoryId);
-    if (categoryIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy danh mục' });
-    }
-
-    const updatedCategory = {
-      ...categories[categoryIndex],
-      ...req.body,
-      id: categoryId,
-      updatedAt: new Date().toISOString()
-    };
-
-    categories[categoryIndex] = updatedCategory;
-    writeJsonFile('categories.json', categories);
-
-    res.json(updatedCategory);
-
-  } catch (error) {
-    console.error('Update category error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
-  }
-});
-
-// DELETE /categories/:id - Delete category (Admin only)
-router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
-  try {
-    const categoryId = parseInt(req.params.id);
-    const categories = readJsonFile('categories.json') || [];
-    const products = readJsonFile('products.json') || [];
-    
-    const categoryIndex = categories.findIndex(c => c.id === categoryId);
-    if (categoryIndex === -1) {
-      return res.status(404).json({ error: 'Không tìm thấy danh mục' });
-    }
-
-    // Check if category has products
-    const categoryProducts = products.filter(p => p.categoryId === categoryId);
-    if (categoryProducts.length > 0) {
-      return res.status(400).json({ 
-        error: 'Không thể xóa danh mục có sản phẩm. Vui lòng xóa hoặc chuyển sản phẩm sang danh mục khác trước.' 
+    if (!category || !category.isActive) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy danh mục'
       });
     }
 
-    categories.splice(categoryIndex, 1);
-    writeJsonFile('categories.json', categories);
+    // Thêm URL cho hình ảnh
+    const categoryWithImage = {
+      ...category,
+      imageUrl: category.image?.gridfsId ? `/api/files/${category.image.gridfsId}` : null
+    };
 
-    res.json({ message: 'Xóa danh mục thành công' });
+    res.json({
+      success: true,
+      data: categoryWithImage
+    });
 
   } catch (error) {
-    console.error('Delete category error:', error);
-    res.status(500).json({ error: 'Lỗi server' });
+    console.error('❌ Lỗi lấy chi tiết danh mục:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi lấy chi tiết danh mục'
+    });
+  }
+});
+
+// POST /categories - Tạo danh mục mới (Admin only)
+router.post('/', upload.single('image'), uploadToGridFS, async (req, res) => {
+  try {
+    const { name, description, icon, sortOrder } = req.body;
+
+    // Kiểm tra tên danh mục đã tồn tại chưa
+    const existingCategory = await Category.findOne({ 
+      name: { $regex: new RegExp(`^${name}$`, 'i') }
+    });
+
+    if (existingCategory) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tên danh mục đã tồn tại'
+      });
+    }
+
+    // Xử lý hình ảnh đã upload
+    let image = null;
+    if (req.uploadedFile) {
+      image = {
+        filename: req.uploadedFile.filename,
+        originalname: req.uploadedFile.originalname,
+        mimetype: req.uploadedFile.mimetype,
+        size: req.uploadedFile.size,
+        gridfsId: req.uploadedFile.id
+      };
+    }
+
+    const category = new Category({
+      name,
+      description: description || '',
+      icon: icon || 'fas fa-spa',
+      sortOrder: sortOrder ? parseInt(sortOrder) : 0,
+      image
+    });
+
+    await category.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'Tạo danh mục thành công',
+      data: category
+    });
+
+  } catch (error) {
+    console.error('❌ Lỗi tạo danh mục:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi tạo danh mục',
+      error: error.message
+    });
+  }
+});
+
+// PUT /categories/:id - Cập nhật danh mục (Admin only)
+router.put('/:id', upload.single('image'), uploadToGridFS, async (req, res) => {
+  try {
+    const { name, description, icon, sortOrder } = req.body;
+
+    const category = await Category.findById(req.params.id);
+    
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy danh mục'
+      });
+    }
+
+    // Kiểm tra tên danh mục trùng (trừ chính nó)
+    if (name && name !== category.name) {
+      const existingCategory = await Category.findOne({ 
+        name: { $regex: new RegExp(`^${name}$`, 'i') },
+        _id: { $ne: req.params.id }
+      });
+
+      if (existingCategory) {
+        return res.status(400).json({
+          success: false,
+          message: 'Tên danh mục đã tồn tại'
+        });
+      }
+    }
+
+    // Cập nhật thông tin
+    if (name) category.name = name;
+    if (description !== undefined) category.description = description;
+    if (icon) category.icon = icon;
+    if (sortOrder !== undefined) category.sortOrder = parseInt(sortOrder);
+
+    // Xử lý hình ảnh mới (nếu có)
+    if (req.uploadedFile) {
+      category.image = {
+        filename: req.uploadedFile.filename,
+        originalname: req.uploadedFile.originalname,
+        mimetype: req.uploadedFile.mimetype,
+        size: req.uploadedFile.size,
+        gridfsId: req.uploadedFile.id
+      };
+    }
+
+    await category.save();
+
+    res.json({
+      success: true,
+      message: 'Cập nhật danh mục thành công',
+      data: category
+    });
+
+  } catch (error) {
+    console.error('❌ Lỗi cập nhật danh mục:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi cập nhật danh mục',
+      error: error.message
+    });
+  }
+});
+
+// DELETE /categories/:id - Xóa danh mục (Admin only)
+router.delete('/:id', async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: 'Không tìm thấy danh mục'
+      });
+    }
+
+    // Soft delete - chỉ đánh dấu isActive = false
+    category.isActive = false;
+    await category.save();
+
+    res.json({
+      success: true,
+      message: 'Xóa danh mục thành công'
+    });
+
+  } catch (error) {
+    console.error('❌ Lỗi xóa danh mục:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi server khi xóa danh mục'
+    });
   }
 });
 
