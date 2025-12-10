@@ -43,7 +43,7 @@ Content-Disposition: form-data; name="originalPrice"
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="category"
 
-674b2f8e123456789abcdef1
+6939bf432dfe6bca31679d7d
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="duration"
 
@@ -60,8 +60,12 @@ Content-Disposition: form-data; name="suitableFor"
 Content-Disposition: form-data; name="ingredients"
 
 ["Tinh dầu lavender", "Tinh dầu eucalyptus", "Dầu dừa"]
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="spa1.jpg"
+Content-Type: image/jpeg
 
+< ./images/spa1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
 ###
 
 # Tạo sản phẩm mới (JSON)
@@ -111,7 +115,7 @@ Content-Type: application/json
 ###
 
 # Xóa sản phẩm (soft delete - set isActive = false)
-DELETE http://localhost:3000/api/products/674b2f8e123456789abcdef0
+DELETE http://localhost:3000/api/products/6939c3e6a52e0364d557b604
 
 ###
 

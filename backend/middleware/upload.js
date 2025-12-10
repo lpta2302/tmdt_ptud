@@ -142,14 +142,14 @@ const upload = multer({
 });
 
 // Middleware để xử lý upload và lưu vào GridFS
-const uploadToGridFS = async (req, res, next) => {
+const uploadToGridFS = async (req, res, next) => {    
   try {
     if (req.files && req.files.length > 0) {
       const uploadPromises = req.files.map(async (file) => {
         const filename = `${uuidv4()}-${file.originalname}`;
         return await gridFSStorage.uploadFile(file, filename);
       });
-
+      
       req.uploadedFiles = await Promise.all(uploadPromises);
     } else if (req.file) {
       const filename = `${uuidv4()}-${req.file.originalname}`;
