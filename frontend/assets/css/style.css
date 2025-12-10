@@ -1,0 +1,733 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    padding-top: var(--header-height, 80px);
+    overflow-x: hidden;
+}
+
+/* Utils */
+.bg-blobs {
+    background:
+        radial-gradient(circle at 25% 30%, rgb(var(--color-secondary-400)) 0%, transparent 60%),
+        radial-gradient(circle at 75% 70%, rgb(var(--color-primary-300)) 0%, transparent 60%),
+        white;
+}
+
+/* Custom animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px)
+    }
+
+    50% {
+        transform: translateY(-10px)
+    }
+
+    100% {
+        transform: translateY(0px)
+    }
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(236, 72, 153, 0.3)
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.6)
+    }
+
+    100% {
+        box-shadow: 0 0 5px rgba(236, 72, 153, 0.3)
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1)
+    }
+
+    50% {
+        transform: scale(1.05)
+    }
+
+    100% {
+        transform: scale(1)
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Navigation styles */
+.nav-link {
+    @apply text-gray-700 font-medium transition-all duration-300 hover:text-primary-300 relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ec4899, #a855f7);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* Hero Slider Styles */
+.hero-slider {
+    width: 100vw;
+    min-width: 100vw;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+}
+
+.hero-slide {
+    position: relative;
+    width: 100vw;
+    min-width: 100vw;
+    height: calc(100vh - var(--header-height, 80px));
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.hero-content .hero-content-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(236, 72, 153, 0.8), rgba(168, 85, 247, 0.8));
+}
+
+.splide__arrow {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #ec4899 !important;
+    border: none !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease !important;
+}
+
+.splide__arrow:hover {
+    background: white !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3) !important;
+}
+
+.splide__pagination__page {
+    background: rgba(255, 255, 255, 0.5) !important;
+    transition: all 0.3s ease !important;
+}
+
+.splide__pagination__page.is-active {
+    background: white !important;
+    transform: scale(1.2) !important;
+}
+
+/* Product Card Styles */
+.product-card {
+    @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 group;
+}
+
+.product-card .product-image {
+    @apply relative overflow-hidden w-full;
+    height: 240px;
+}
+
+.product-card .product-image img {
+    @apply w-full object-cover transition-transform duration-500 group-hover:scale-110;
+}
+
+.product-badge-container {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.product-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 9999px;
+}
+
+.product-badge.trending {
+    background: linear-gradient(to right, rgb(var(--color-primary-300)), rgb(var(--color-primary-400)));
+}
+
+.product-badge.bestseller {
+    background: linear-gradient(to right, rgb(var(--color-secondary-400)), rgb(var(--color-secondary-500)));
+}
+
+.product-badge.discount {
+    background: linear-gradient(to right, #ef4444, #dc2626);
+}
+
+.product-actions {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    transform: translateX(0.5rem);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.product-card:hover .product-actions,
+.product-card:focus .product-actions {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.product-action-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #fff;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.product-action-btn:hover {
+    background: rgb(var(--color-primary-50));
+    color: rgb(var(--color-primary-300));
+    transform: scale(1.1);
+}
+
+.price-section .original-price {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    text-decoration: line-through;
+}
+
+.price-section .current-price {
+    color: rgb(var(--color-primary-300));
+    font-weight: bold;
+    font-size: 1.125rem;
+}
+
+.price-section .discount-percent {
+    color: #16a34a;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Rating Stars */
+.rating-stars {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rating-stars .star {
+    color: #facc15;
+}
+
+.rating-stars .star.empty {
+    color: #d1d5db;
+}
+
+/* Button Styles */
+.btn-primary {
+    /* background: linear-gradient(to right, rgb(var(--color-secondary-400)), rgb(var(--color-primary-300))); */
+    background:
+        radial-gradient(circle at 25% 30%, rgb(var(--color-secondary-400)) 0%, transparent 60%),
+        radial-gradient(circle at 75% 70%, rgb(var(--color-primary-300)) 0%, transparent 60%),
+        white;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 25px rgba(var(--color-primary-300), 0.3);
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    border: 2px solid rgb(var(--color-secondary-400));
+    color: rgb(var(--color-secondary-400));
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    background: transparent;
+    transition: background 0.3s, color 0.3s;
+}
+
+.btn-secondary:hover {
+    background: rgb(var(--color-secondary-400));
+    color: #fff;
+}
+
+.btn-outline {
+    border: 1px solid #d1d5db;
+    color: #374151;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: transparent;
+    transition: border 0.3s, color 0.3s;
+}
+
+.btn-outline:hover {
+    border-color: rgb(var(--color-primary-300));
+    color: rgb(var(--color-primary-300));
+}
+
+/* Testimonial Card */
+.testimonial-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.testimonial-content {
+    color: #4b5563;
+    font-size: 1.125rem;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.testimonial-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+
+/* Loading Animation */
+.loading {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #d1d5db;
+    border-top: 2px solid #ec4899;
+    border-radius: 9999px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hover Effects */
+.hover-glow:hover {
+    animation: glow 2s infinite;
+}
+
+.hover-float:hover {
+    animation: float 2s ease-in-out infinite;
+}
+
+.hover-pulse:hover {
+    animation: pulse 1s infinite;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    transition: all 0.3s ease;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+/* Search Bar Animation */
+.search-bar {
+    animation: slideInUp 0.3s ease;
+}
+
+/* Mobile Menu Animation */
+.mobile-menu {
+    animation: slideInUp 0.3s ease;
+}
+
+/* Cart Sidebar */
+.cart-sidebar.show {
+    transform: translateX(0);
+}
+
+.cart-overlay.show {
+    display: block;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+    .hero-slide {
+        height: 400px;
+    }
+
+    .hero-content {
+        padding: 1rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .testimonial-card {
+        margin: 0 1rem;
+        padding: 1.5rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #ec4899, #a855f7);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #db2777, #9333ea);
+}
+
+/* Filter and Sort Styles */
+.filter-group {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.filter-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.filter-option:hover {
+    color: rgb(var(--color-primary-300));
+}
+
+.filter-checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #ec4899;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+}
+
+.sort-dropdown {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.sort-dropdown:focus {
+    border-color: #ec4899;
+}
+
+/* Zoom Effect for Product Images */
+.zoom-container {
+    position: relative;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+.zoom-lens {
+    position: absolute;
+    border: 2px solid #ec4899;
+    cursor: none;
+    pointer-events: none;
+}
+
+.zoom-result {
+    position: absolute;
+    border: 1px solid #ccc;
+    background: white;
+    z-index: 1000;
+}
+
+/* Animation Classes */
+.animate-slide-up {
+    animation: slideInUp 0.6s ease;
+}
+
+.animate-slide-right {
+    animation: slideInRight 0.6s ease;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.form-input:focus {
+    border-color: rgb(var(--color-primary-300));
+    box-shadow: 0 0 0 1px rgb(var(--color-primary-300));
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+    resize: none;
+}
+
+.form-textarea:focus {
+    border-color: rgb(var(--color-primary-300));
+    box-shadow: 0 0 0 1px rgb(var(--color-primary-300));
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    background: #fff;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.form-select:focus {
+    border-color: rgb(var(--color-primary-300));
+    box-shadow: 0 0 0 1px rgb(var(--color-primary-300));
+}
+
+.form-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Success Message */
+.success-message {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+/* Error Message */
+.error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    background: #e5e7eb;
+    border-radius: 9999px;
+    height: 0.5rem;
+}
+
+.progress-fill {
+    background: linear-gradient(to right, #ec4899, #a855f7);
+    height: 0.5rem;
+    border-radius: 9999px;
+    transition: width 0.3s;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    max-width: 28rem;
+    width: 100%;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.modal-enter {
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+.modal-enter-active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    max-width: 24rem;
+    width: 100%;
+    background: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+    z-index: 50;
+    transition: transform 0.3s;
+}
+
+.notification.success {
+    border-left: 4px solid #22c55e;
+}
+
+.notification.error {
+    border-left: 4px solid #ef4444;
+}
+
+.notification.info {
+    border-left: 4px solid #3b82f6;
+}
+
+.notification-enter {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.notification-enter-active {
+    transform: translateX(0);
+    opacity: 1;
+}
