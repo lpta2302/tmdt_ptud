@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Products</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div id="header"></div>
+
+  <main class="container">
+    <h1 class="page-title">Quản lý sản phẩm</h1>
+
+    <div class="row between">
+      <input id="product-search" placeholder="Tìm sản phẩm..." />
+      <div>
+        <button class="btn" onclick="openProductForm()">+ Thêm</button>
+        <button class="btn muted" onclick="seedReset()">Reset dữ liệu</button>
+      </div>
+    </div>
+
+    <section class="card mt">
+      <table class="table" id="product-table"></table>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <!-- modal form -->
+  <div id="modal-product" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modal-product-title">Thêm sản phẩm</h3>
+      <div class="form-row">
+        <label>Tên sản phẩm<input id="p-name" /></label>
+        <label>Giá (VND)<input id="p-price" type="number" /></label>
+        <label>Danh mục
+          <select id="p-category"></select>
+        </label>
+        <label>Khuyến mãi
+          <select id="p-promo"></select>
+        </label>
+        <label>Stock<input id="p-stock" type="number" /></label>
+      </div>
+
+      <div class="row right">
+        <button class="btn muted" onclick="closeProductForm()">Hủy</button>
+        <button class="btn primary" onclick="saveProduct()">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/products.js"></script>
+  <script>
+    fetch("layouts/header.html").then(r=>r.text()).then(t=>document.querySelector("#header").innerHTML = t);
+    fetch("layouts/footer.html").then(r=>r.text()).then(t=>document.querySelector("#footer").innerHTML = t);
+
+    // init page
+    renderProductsTable();
+    document.getElementById('product-search').addEventListener('input', (e)=>{
+      renderProductsTable(e.target.value);
+    });
+  </script>
+</body>
+</html>
