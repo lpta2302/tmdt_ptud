@@ -1,4 +1,5 @@
-// JavaScript chính cho Edora
+import { loadSampleProductCard } from "./sample-data.js";
+// JavaScript chính cho ứng dụng Elora
 
 // Biến toàn cục
 let cartItems = [];
@@ -7,7 +8,7 @@ let products = [];
 let categories = [];
 let banners = [];
 
-// Cấu hình API
+// Cấu hình đường dẫn API
 const API_BASE = 'http://localhost:3000/api';
 
 // Các phần tử DOM
@@ -24,14 +25,14 @@ const elements = {
     mobileMenu: document.querySelector('.mobile-menu')
 };
 
-// Khởi tạo ứng dụng
-document.addEventListener('DOMContentLoaded', function() {
+// Khởi tạo ứng dụng khi trang đã tải
+document.addEventListener('DOMContentLoaded', function () {
     initializeApp();
 });
 
 async function initializeApp() {
     try {
-        // Khởi tạo hiệu ứng AOS
+        // Khởi tạo thư viện hiệu ứng AOS
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
@@ -39,22 +40,22 @@ async function initializeApp() {
             offset: 100
         });
 
-        // Tải dữ liệu
+        // Tải dữ liệu từ API
         await loadData();
-        
-        // Khởi tạo các thành phần
+
+        // Khởi tạo các thành phần giao diện
         initializeSliders();
         initializeEventListeners();
         initializeScrollEffects();
-        
-        // Hiển thị nội dung
+
+        // Hiển thị nội dung trang
         renderHeroSlider();
         renderProducts();
         renderTestimonials();
-        
-        // Cập nhật hiển thị giỏ hàng
+
+        // Cập nhật số lượng giỏ hàng
         updateCartDisplay();
-        
+
         console.log('App initialized successfully');
     } catch (error) {
         console.error('Error initializing app:', error);
@@ -62,7 +63,7 @@ async function initializeApp() {
     }
 }
 
-// Tải dữ liệu từ API
+// Tải dữ liệu từ API hoặc localStorage
 async function loadData() {
     try {
         const [productsRes, categoriesRes, bannersRes] = await Promise.all([
@@ -78,94 +79,26 @@ async function loadData() {
         products = await productsRes.json();
         categories = await categoriesRes.json();
         banners = await bannersRes.json();
-        
-        // Tải giỏ hàng từ localStorage
+
+        // Khôi phục giỏ hàng từ localStorage
         const savedCart = localStorage.getItem('spa_cart');
         if (savedCart) {
             cartItems = JSON.parse(savedCart);
         }
-        
-        // Tải danh sách yêu thích từ localStorage
+
+        // Khôi phục danh sách yêu thích từ localStorage
         const savedWishlist = localStorage.getItem('spa_wishlist');
         if (savedWishlist) {
             wishlistItems = JSON.parse(savedWishlist);
         }
-        
+
     } catch (error) {
-        console.error('Error loading data:', error);
-        // Tải dữ liệu mẫu nếu lỗi
-        loadSampleData();
+        console.error('Lỗi khi tải dữ liệu:', error);
+        // Sử dụng dữ liệu mẫu khi API thất bại
+        const sampleData = loadSampleProductCard();
+        banners = sampleData.banners;
+        products = sampleData.products;
     }
-}
-
-// Tải dữ liệu mẫu nếu lỗi
-function loadSampleData() {
-    banners = [
-        {
-            id: 1,
-            title: "Ưu đãi Giáng Sinh 2024",
-            subtitle: "Giảm giá lên đến 20% cho tất cả dịch vụ",
-            description: "Chào đón mùa Giáng Sinh với những ưu đãi hấp dẫn nhất trong năm",
-            image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&h=600&fit=crop",
-            buttonText: "Đặt lịch ngay",
-            buttonLink: "/booking",
-            backgroundColor: "#c41e3a",
-            textColor: "#ffffff"
-        },
-        {
-            id: 2,
-            title: "Edora Spa & Massage Premium",
-            subtitle: "Trải nghiệm dịch vụ 5 sao với không gian sang trọng",
-            description: "Thư giãn hoàn toàn với các liệu trình massage chuyên nghiệp",
-            image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=1200&h=600&fit=crop",
-            buttonText: "Khám phá ngay",
-            buttonLink: "/products",
-            backgroundColor: "#2c5530",
-            textColor: "#ffffff"
-        }
-    ];
-
-    products = [
-        {
-            id: 1,
-            name: "Massage Thư Giãn Toàn Thân",
-            price: 300000,
-            originalPrice: 350000,
-            discount: 14,
-            image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=300&fit=crop",
-            rating: 4.8,
-            reviewCount: 127,
-            trending: true,
-            bestseller: true,
-            duration: 60
-        },
-        {
-            id: 2,
-            name: "Chăm Sóc Da Mặt Cơ Bản",
-            price: 250000,
-            originalPrice: 300000,
-            discount: 17,
-            image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=300&fit=crop",
-            rating: 4.6,
-            reviewCount: 89,
-            trending: true,
-            bestseller: false,
-            duration: 45
-        },
-        {
-            id: 3,
-            name: "Tẩy Tế Bào Chết Toàn Thân",
-            price: 400000,
-            originalPrice: 450000,
-            discount: 11,
-            image: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=400&h=300&fit=crop",
-            rating: 4.7,
-            reviewCount: 156,
-            trending: false,
-            bestseller: true,
-            duration: 90
-        }
-    ];
 }
 
 // Khởi tạo slider
@@ -205,50 +138,39 @@ function initializeSliders() {
 function initializeEventListeners() {
     // Hiệu ứng cuộn cho header
     window.addEventListener('scroll', handleScroll);
-    
+
     // Bật/tắt thanh tìm kiếm
     const searchToggle = document.querySelector('.search-toggle');
     if (searchToggle) {
         searchToggle.addEventListener('click', toggleSearch);
     }
-    
+
     // Bật/tắt giỏ hàng
     const cartToggle = document.querySelector('.cart-toggle');
     if (cartToggle) {
         cartToggle.addEventListener('click', toggleCart);
     }
-    
-    // Đóng giỏ hàng
-    const cartClose = document.querySelector('.cart-close');
-    if (cartClose) {
-        cartClose.addEventListener('click', closeCart);
-    }
-    
-    // Lớp phủ giỏ hàng
-    if (elements.cartOverlay) {
-        elements.cartOverlay.addEventListener('click', closeCart);
-    }
-    
+
     // Bật/tắt menu người dùng
     const userToggle = document.querySelector('.user-toggle');
     if (userToggle) {
         userToggle.addEventListener('click', toggleUserMenu);
     }
-    
+
     // Bật/tắt menu di động
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     if (mobileMenuToggle) {
         mobileMenuToggle.addEventListener('click', toggleMobileMenu);
     }
-    
+
     // Nút lên đầu trang
     if (elements.backToTop) {
         elements.backToTop.addEventListener('click', scrollToTop);
     }
-    
+
     // Sự kiện click vào thẻ danh mục
     document.querySelectorAll('.category-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const categoryName = this.querySelector('h3').textContent;
             window.location.href = `services.html?category=${encodeURIComponent(categoryName)}`;
         });
@@ -277,7 +199,7 @@ function initializeScrollEffects() {
 // Xử lý sự kiện cuộn trang
 function handleScroll() {
     const scrollY = window.scrollY;
-    
+
     // Đổi nền header khi cuộn
     if (elements.header) {
         if (scrollY > 100) {
@@ -286,7 +208,7 @@ function handleScroll() {
             elements.header.classList.remove('backdrop-blur-md', 'bg-white/95');
         }
     }
-    
+
     // Hiển thị nút lên đầu trang
     if (elements.backToTop) {
         if (scrollY > 500) {
@@ -294,52 +216,6 @@ function handleScroll() {
         } else {
             elements.backToTop.classList.remove('show');
         }
-    }
-}
-
-// Bật/tắt thanh tìm kiếm
-function toggleSearch() {
-    if (elements.searchBar) {
-        elements.searchBar.classList.toggle('hidden');
-        if (!elements.searchBar.classList.contains('hidden')) {
-            const searchInput = elements.searchBar.querySelector('input');
-            if (searchInput) {
-                setTimeout(() => searchInput.focus(), 100);
-            }
-        }
-    }
-}
-
-// Bật/tắt sidebar giỏ hàng
-function toggleCart() {
-    if (elements.cartSidebar && elements.cartOverlay) {
-        elements.cartSidebar.classList.toggle('show');
-        elements.cartOverlay.classList.toggle('show');
-        document.body.classList.toggle('overflow-hidden');
-    }
-}
-
-// Đóng sidebar giỏ hàng
-function closeCart() {
-    if (elements.cartSidebar && elements.cartOverlay) {
-        elements.cartSidebar.classList.remove('show');
-        elements.cartOverlay.classList.remove('show');
-        document.body.classList.remove('overflow-hidden');
-    }
-}
-
-// Bật/tắt menu người dùng
-function toggleUserMenu() {
-    const userMenu = document.querySelector('.user-menu');
-    if (userMenu) {
-        userMenu.classList.toggle('hidden');
-    }
-}
-
-// Bật/tắt menu di động
-function toggleMobileMenu() {
-    if (elements.mobileMenu) {
-        elements.mobileMenu.classList.toggle('hidden');
     }
 }
 
@@ -354,25 +230,31 @@ function scrollToTop() {
 // Hiển thị slider hero
 function renderHeroSlider() {
     const heroSlides = document.getElementById('hero-slides');
-    if (!heroSlides || !banners.length) return;
+    if (!heroSlides || !banners?.banners.length) return;
 
-    const slidesHTML = banners.map(banner => `
+    const slidesHTML = banners.banners.map(banner => {
+        const thumbnail = banner?.image ? `${API_BASE}/files/${banner.image.gridfsId}` : banner.image;
+
+        return `
         <li class="splide__slide">
-            <div class="hero-slide" style="background-image: url('${banner.image}')">
+            <div class="hero-slide" style="background-image: url('${thumbnail}')">
                 <div class="hero-content relative z-10">
                     <div class="hero-content-overlay"></div>
-                    <h1 class="text-4xl lg:text-6xl font-display font-bold mb-4 animate-slide-up">
+                    <h1 class="text-2xl lg:text-4xl font-display font-bold mb-4 animate-slide-up">
                         ${banner.title}
                     </h1>
-                    <p class="text-xl lg:text-2xl font-light mb-6 animate-slide-up" style="animation-delay: 0.2s">
-                        ${banner.subtitle}
-                    </p>
+                    ${
+                        banner.subtitle ?
+                        `<p class="text-xl lg:text-2xl font-light mb-6 animate-slide-up" style="animation-delay: 0.2s">
+                            ${banner.subtitle}
+                        </p>` : ''
+                    }
                     <p class="text-lg mb-8 opacity-90 animate-slide-up" style="animation-delay: 0.4s">
                         ${banner.description}
                     </p>
                     <div class="space-x-4 animate-slide-up" style="animation-delay: 0.6s">
                         <a href="${banner.buttonLink}" class="btn-primary inline-block hover-glow">
-                            ${banner.buttonText}
+                            ${banner.buttonText ? `${banner.buttonText}` : "Khám Phá Ngay"}
                         </a>
                         <a href="services.html" class="btn-secondary inline-block">
                             Xem Dịch Vụ
@@ -381,10 +263,11 @@ function renderHeroSlider() {
                 </div>
             </div>
         </li>
-    `).join('');
+    `;
+    }).join('');
 
     heroSlides.innerHTML = slidesHTML;
-    
+
     // Khởi động slider
     if (elements.heroSlider) {
         elements.heroSlider.mount();
@@ -400,11 +283,10 @@ function renderProducts() {
 // Hiển thị sản phẩm xu hướng
 function renderTrendingProducts() {
     const container = document.getElementById('trending-products');
-    if (!container) return;
 
-    const trendingProducts = products.filter(product => product.trending).slice(0, 6);
+    const trendingProducts = Array.from(products.data).sort((a, b) => b.trending - a.trending).slice(0, 6);
     container.innerHTML = trendingProducts.map(product => createProductCard(product, 'trending')).join('');
-    
+
     // Thêm sự kiện cho sản phẩm
     addProductEventListeners(container);
 }
@@ -414,9 +296,9 @@ function renderBestsellerProducts() {
     const container = document.getElementById('bestseller-products');
     if (!container) return;
 
-    const bestsellerProducts = products.filter(product => product.bestseller).slice(0, 6);
+    const bestsellerProducts = Array.from(products.data).sort((a, b) => b.boughtCount - a.boughtCount).slice(0, 6);
     container.innerHTML = bestsellerProducts.map(product => createProductCard(product, 'bestseller')).join('');
-    
+
     // Thêm sự kiện cho sản phẩm
     addProductEventListeners(container);
 }
@@ -424,11 +306,13 @@ function renderBestsellerProducts() {
 // Tạo HTML cho thẻ sản phẩm
 function createProductCard(product, badgeType = '') {
     const discountPercent = product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-    
+    const thumbnail = product?.images?.length ? `${API_BASE}${product.images[0].url.substring(4)}` : product.image;
+    console.log("🚀 ~ createProductCard ~ product:", product._id)
+
     return `
-        <div class="product-card" data-product-id="${product.id}" data-aos="fade-up">
+        <div class="product-card lg:min-w-[400px] min-w-full" data-product-id="${product._id}" data-aos="fade-up">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                <img src="${thumbnail}" alt="${product.name}" loading="lazy">
                 <div class="product-badge-container">
                     ${badgeType ? `<span class="product-badge ${badgeType}">${badgeType === 'trending' ? 'Xu Hướng' : 'Bán Chạy'}</span>` : ''}
                     ${discountPercent > 0 ? `<span class="product-badge discount">-${discountPercent}%</span>` : ''}
@@ -466,13 +350,17 @@ function createProductCard(product, badgeType = '') {
                     ${product.duration ? `<span class="text-sm text-gray-500 ml-4">${product.duration} phút</span>` : ''}
                 </div>
                 <div class="flex space-x-2 mt-2">
-                    <button class="add-to-cart-btn flex-1 btn-primary text-sm py-2" data-product-id="${product.id}">
-                        <i class="fas fa-calendar-plus mr-2"></i>
-                        Đặt Lịch
-                    </button>
-                    <button class="view-details-btn btn-outline text-sm py-2 px-4" data-product-id="${product.id}">
-                        Chi Tiết
-                    </button>
+                    <a href="booking.html?id=${product._id}">
+                        <button class="flex-1 btn-primary text-sm py-2" data-product-id="${product._id}">
+                            <i class="fas fa-calendar-plus mr-2"></i>
+                            Đặt Lịch
+                        </button>
+                    </a>
+                    <a href="product-detail.html?id=${product._id}">
+                        <button class="btn-outline text-sm py-2 px-4" data-product-id="${product._id}">
+                            Chi Tiết
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -484,24 +372,24 @@ function generateStarRating(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
+
     let starsHTML = '';
-    
+
     // Sao đầy
     for (let i = 0; i < fullStars; i++) {
         starsHTML += '<i class="fas fa-star star"></i>';
     }
-    
+
     // Sao nửa
     if (hasHalfStar) {
         starsHTML += '<i class="fas fa-star-half-alt star"></i>';
     }
-    
+
     // Sao rỗng
     for (let i = 0; i < emptyStars; i++) {
         starsHTML += '<i class="far fa-star star empty"></i>';
     }
-    
+
     return starsHTML;
 }
 
@@ -509,37 +397,27 @@ function generateStarRating(rating) {
 function addProductEventListeners(container) {
     // Nút thêm vào giỏ hàng
     container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = parseInt(this.dataset.productId);
             addToCart(productId);
         });
     });
-    
-    // Nút xem chi tiết
-    container.querySelectorAll('.view-details-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const productId = this.dataset.productId;
-            viewProductDetails(productId);
-        });
-    });
-    
+
     // Nút yêu thích
     container.querySelectorAll('.wishlist-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = parseInt(this.dataset.productId);
             toggleWishlist(productId);
         });
     });
-    
+
     // Click vào thẻ sản phẩm
     container.querySelectorAll('.product-card').forEach(card => {
-        card.addEventListener('click', function(e) {
+        card.addEventListener('click', function (e) {
             if (!e.target.closest('button')) {
                 const productId = this.dataset.productId;
                 viewProductDetails(productId);
@@ -552,9 +430,9 @@ function addProductEventListeners(container) {
 function addToCart(productId, quantity = 1) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-    
+
     const existingItem = cartItems.find(item => item.id === productId);
-    
+
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
@@ -567,11 +445,11 @@ function addToCart(productId, quantity = 1) {
             duration: product.duration || 60
         });
     }
-    
+
     saveCart();
     updateCartDisplay();
     showNotification(`${product.name} đã được thêm vào giỏ hàng`, 'success');
-    
+
     // Hiệu ứng khi thêm sản phẩm
     const btn = document.querySelector(`[data-product-id="${productId}"]`);
     if (btn) {
@@ -584,9 +462,9 @@ function addToCart(productId, quantity = 1) {
 function toggleWishlist(productId) {
     const product = products.find(p => p.id === productId);
     if (!product) return;
-    
+
     const index = wishlistItems.findIndex(item => item.id === productId);
-    
+
     if (index > -1) {
         wishlistItems.splice(index, 1);
         showNotification(`${product.name} đã được xóa khỏi danh sách yêu thích`, 'info');
@@ -600,7 +478,7 @@ function toggleWishlist(productId) {
         });
         showNotification(`${product.name} đã được thêm vào danh sách yêu thích`, 'success');
     }
-    
+
     saveWishlist();
     updateWishlistButton(productId);
 }
@@ -627,12 +505,12 @@ function updateCartDisplay() {
         elements.cartCount.textContent = totalItems;
         elements.cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
     }
-    
+
     if (elements.cartTotal) {
         const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         elements.cartTotal.textContent = formatPrice(total);
     }
-    
+
     renderCartItems();
 }
 
@@ -640,7 +518,7 @@ function updateCartDisplay() {
 function renderCartItems() {
     const cartItemsContainer = document.querySelector('.cart-items');
     if (!cartItemsContainer) return;
-    
+
     if (cartItems.length === 0) {
         cartItemsContainer.innerHTML = `
             <div class="empty-cart text-center py-12">
@@ -676,7 +554,7 @@ function renderCartItems() {
                 </button>
             </div>
         `).join('');
-        
+
         // Thêm sự kiện cho các nút giỏ hàng
         addCartEventListeners();
     }
@@ -686,16 +564,16 @@ function renderCartItems() {
 function addCartEventListeners() {
     // Nút tăng/giảm số lượng
     document.querySelectorAll('.quantity-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const itemId = parseInt(this.dataset.id);
             const isIncrease = this.classList.contains('increase');
             updateCartQuantity(itemId, isIncrease ? 1 : -1);
         });
     });
-    
+
     // Nút xóa sản phẩm
     document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const itemId = parseInt(this.dataset.id);
             removeFromCart(itemId);
         });
@@ -706,9 +584,9 @@ function addCartEventListeners() {
 function updateCartQuantity(itemId, change) {
     const item = cartItems.find(item => item.id === itemId);
     if (!item) return;
-    
+
     item.quantity += change;
-    
+
     if (item.quantity <= 0) {
         removeFromCart(itemId);
     } else {
@@ -736,7 +614,7 @@ function renderTestimonials() {
 
     const testimonials = [
         {
-            content: "Dịch vụ massage tại Edora thật tuyệt vời! Tôi cảm thấy rất thư giãn và thoải mái sau buổi trải nghiệm. Nhân viên chuyên nghiệp và thân thiện.",
+            content: "Dịch vụ massage tại Elora thật tuyệt vời! Tôi cảm thấy rất thư giãn và thoải mái sau buổi trải nghiệm. Nhân viên chuyên nghiệp và thân thiện.",
             author: "Nguyễn Thị Lan",
             role: "Khách hàng VIP",
             avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face",
@@ -750,7 +628,7 @@ function renderTestimonials() {
             rating: 5
         },
         {
-            content: "Tôi đã thử nhiều spa khác nhưng Edora là nơi tôi cảm thấy hài lòng nhất. Dịch vụ chuyên nghiệp, giá cả hợp lý và hiệu quả rõ rệt.",
+            content: "Tôi đã thử nhiều spa khác nhưng Elora là nơi tôi cảm thấy hài lòng nhất. Dịch vụ chuyên nghiệp, giá cả hợp lý và hiệu quả rõ rệt.",
             author: "Lê Văn Đức",
             role: "Doanh nhân",
             avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
@@ -779,7 +657,7 @@ function renderTestimonials() {
     `).join('');
 
     testimonialSlides.innerHTML = slidesHTML;
-    
+
     // Khởi động slider đánh giá
     if (elements.testimonialSlider) {
         elements.testimonialSlider.mount();
@@ -808,7 +686,7 @@ function formatPrice(price) {
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification ${type} notification-enter`;
-    
+
     notification.innerHTML = `
         <div class="p-4">
             <div class="flex items-start">
@@ -826,20 +704,20 @@ function showNotification(message, type = 'info') {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Hiệu ứng xuất hiện
     setTimeout(() => {
         notification.classList.remove('notification-enter');
         notification.classList.add('notification-enter-active');
     }, 10);
-    
+
     // Nút đóng thông báo
     notification.querySelector('.notification-close').addEventListener('click', () => {
         removeNotification(notification);
     });
-    
+
     // Tự động ẩn sau 5 giây
     setTimeout(() => {
         removeNotification(notification);
@@ -858,7 +736,7 @@ function getNotificationIcon(type) {
 function removeNotification(notification) {
     notification.classList.add('notification-enter');
     notification.classList.remove('notification-enter-active');
-    
+
     setTimeout(() => {
         if (notification.parentNode) {
             notification.parentNode.removeChild(notification);
@@ -878,29 +756,3 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
-
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    }
-}
-
-// Xuất các hàm để dùng ở file khác
-window.SpaApp = {
-    addToCart,
-    removeFromCart,
-    toggleWishlist,
-    viewProductDetails,
-    formatPrice,
-    showNotification,
-    products,
-    cartItems,
-    wishlistItems
-};

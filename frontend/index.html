@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edora - Trang Chủ</title>
+    <title>Elora - Trang Chủ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/tailwind.config.spa.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
@@ -23,97 +23,7 @@
 
 <body class="font-sans  min-h-screen">
     <!-- Phần đầu trang -->
-    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300"
-        id="header">
-        <nav class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo Spa -->
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-r from-secondary-500 to-primary-400 rounded-full flex items-center justify-center">
-                        <i class="fas fa-spa text-white text-lg"></i>
-                    </div>
-                    <h1
-                        class="text-2xl font-display font-bold bg-gradient-to-r from-secondary-500 to-primary-400 bg-clip-text text-transparent">
-                        Edora
-                    </h1>
-                </div>
-
-                <!-- Thanh điều hướng -->
-                <ul class="hidden lg:flex items-center space-x-8">
-                    <li><a href="#" class="nav-link active">Trang Chủ</a></li>
-                    <li><a href="services.html" class="nav-link">Dịch Vụ</a></li>
-                    <li><a href="booking.html" class="nav-link">Đặt Lịch</a></li>
-                    <li><a href="about.html" class="nav-link">Giới Thiệu</a></li>
-                    <li><a href="contact.html" class="nav-link">Liên Hệ</a></li>
-                </ul>
-
-                <!-- Các nút người dùng -->
-                <div class="flex items-center space-x-4">
-                    <!-- Tìm kiếm -->
-                    <button class="search-toggle p-2 text-gray-600 hover:text-primary-300 transition-colors">
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                    <!-- Giỏ hàng -->
-                    <button class="cart-toggle relative p-2 text-gray-600 hover:text-primary-300 transition-colors">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span
-                            class="cart-count absolute -top-1 -right-1 bg-primary-300 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                    </button>
-
-                    <!-- Người dùng -->
-                    <div class="relative">
-                        <a href="login.html" class="user-toggle text-gray-600 hover:text-primary-300 transition-colors">
-                            <i class="fas fa-user text-xl"></i>
-                        </a>
-                        <div
-                            class="user-menu absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl w-48 py-2 hidden">
-                            <a href="login.html"
-                                class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Nhập</a>
-                            <a href="register.html"
-                                class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Ký</a>
-                            <a href="booking.html"
-                                class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đặt Lịch</a>
-                        </div>
-                    </div>
-
-                    <!-- Menu di động -->
-                    <button class="lg:hidden mobile-menu-toggle p-2 text-gray-600">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Điều hướng di động -->
-            <div class="mobile-menu lg:hidden hidden mt-4 pb-4 border-t border-gray-200">
-                <ul class="space-y-2 mt-4">
-                    <li><a href="index.html" class="block py-2 text-primary-300 font-semibold">Trang Chủ</a></li>
-                    <li><a href="services.html" class="block py-2 text-gray-700 hover:text-primary-300">Dịch Vụ</a></li>
-                    <li><a href="booking.html" class="block py-2 text-gray-700 hover:text-primary-300">Đặt Lịch</a></li>
-                    <li><a href="contact.html" class="block py-2 text-gray-700 hover:text-primary-300">Liên Hệ</a></li>
-                    <li><a href="booking.html" class="block py-2 text-gray-700 hover:text-primary-300">Đặt Lịch</a></li>
-                    <li><a href="about.html" class="block py-2 text-gray-700 hover:text-primary-300">Giới Thiệu</a></li>
-                    <li><a href="contact.html" class="block py-2 text-gray-700 hover:text-primary-300">Liên Hệ</a></li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Thanh tìm kiếm -->
-        <div class="search-bar hidden bg-white border-t border-gray-200">
-            <div class="container mx-auto px-4 py-4">
-                <div class="relative max-w-md mx-auto">
-                    <input type="text" placeholder="Tìm kiếm dịch vụ..."
-                        class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-full focus:outline-none focus:border-primary-300">
-                    <button
-                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-primary-300">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
+    <header id="header" class="absolute top-0 left-0 right-0 z-50"></header>
     <!-- Phần hero -->
     <section class="container mx-auto px-4">
         <!-- Slider ảnh hero -->
@@ -141,11 +51,11 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-4xl lg:text-5xl font-display font-bold text-gray-800 mb-4">
-                    Dịch Vụ <span class="bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">Nổi
+                    Dịch Vụ <span style="background-image: var(--gradient-primary);" class=" bg-clip-text text-transparent">Nổi
                         Bật</span>
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Khám phá những dịch vụ spa hàng đầu được yêu thích nhất tại Edora
+                    Khám phá những dịch vụ spa hàng đầu được yêu thích nhất tại Elora
                 </p>
             </div>
 
@@ -155,7 +65,7 @@
                     <div
                         class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div
-                            class="w-16 h-16 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            style="background: var(--gradient-primary);" class="w-16 h-16  rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                             <i class="fas fa-spa text-white text-xl"></i>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Massage & Spa</h3>
@@ -167,7 +77,7 @@
                     <div
                         class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div
-                            class="w-16 h-16 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            style="background: var(--gradient-primary);" class="w-16 h-16  rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                             <i class="fas fa-leaf text-white text-xl"></i>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Chăm Sóc Da</h3>
@@ -179,7 +89,7 @@
                     <div
                         class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div
-                            class="w-16 h-16 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            style="background: var(--gradient-primary);" class="w-16 h-16  rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                             <i class="fas fa-cut text-white text-xl"></i>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Chăm Sóc Tóc</h3>
@@ -191,7 +101,7 @@
                     <div
                         class="bg-gradient-to-br from-primary-100 to-secondary-100 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
                         <div
-                            class="w-16 h-16 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            style="background: var(--gradient-primary);" class="w-16 h-16  rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                             <i class="fas fa-hand-sparkles text-white text-xl"></i>
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Chăm Sóc Nail</h3>
@@ -204,14 +114,14 @@
             <div class="mb-16">
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-3xl font-display font-bold text-gray-800" data-aos="fade-right">
-                        Xu Hướng <span class="text-primary-300">Hot</span>
+                        Xu Hướng <span class="text-primary-500">Hot</span>
                     </h3>
-                    <a href="services.html" class="text-primary-300 hover:text-primary-400 font-medium" data-aos="fade-left">
+                    <a href="services.html" class="text-primary-500 hover:text-primary-400 font-medium" data-aos="fade-left">
                         Xem tất cả <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="trending-products">
+                <div class="flex gap-8 w-full overflow-x-scroll py-2" id="trending-products">
                     <!-- Sản phẩm thịnh hành sẽ được tải động -->
                 </div>
             </div>
@@ -228,7 +138,7 @@
                     </a>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="bestseller-products">
+                <div class="flex gap-8 w-full overflow-x-scroll py-2" id="bestseller-products">
                     <!-- Sản phẩm bán chạy sẽ được tải động -->
                 </div>
             </div>
@@ -241,7 +151,7 @@
             <div class="text-center mb-16" data-aos="fade-up">
                 <h2 class="text-4xl lg:text-5xl font-display font-bold text-gray-800 mb-4">
                     Khách Hàng <span
-                        class="bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">Nói Gì</span>
+                        class="logo-text-gradient">Nói Gì</span>
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Những phản hồi tích cực từ khách hàng đã trải nghiệm dịch vụ tại spa
@@ -266,10 +176,10 @@
                 <div data-aos="fade-up">
                     <div class="flex items-center space-x-3 mb-6">
                         <div
-                            class="w-10 h-10 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center">
+                            style="background: var(--gradient-primary);" class="w-10 h-10  rounded-full flex items-center justify-center">
                             <i class="fas fa-spa text-white"></i>
                         </div>
-                        <h3 class="text-xl font-display font-bold">Edora</h3>
+                        <h3 class="text-xl font-display font-bold">Elora</h3>
                     </div>
                     <p class="text-gray-400 mb-6">
                         Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp,
@@ -277,19 +187,19 @@
                     </p>
                     <div class="flex space-x-4">
                         <a href="#"
-                            class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-facebook-f"></i>
                         </a>
                         <a href="#"
-                            class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-instagram"></i>
                         </a>
                         <a href="#"
-                            class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-youtube"></i>
                         </a>
                         <a href="#"
-                            class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-tiktok"></i>
                         </a>
                     </div>
@@ -332,19 +242,19 @@
                     <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3">
-                            <i class="fas fa-map-marker-alt text-primary-300 mt-1"></i>
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
                             <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-phone text-primary-300"></i>
+                            <i class="fas fa-phone text-primary-500"></i>
                             <span class="text-gray-400">0123 456 789</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-envelope text-primary-300"></i>
-                            <span class="text-gray-400">info@edora.vn</span>
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@elora.vn</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-clock text-primary-300"></i>
+                            <i class="fas fa-clock text-primary-500"></i>
                             <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
                         </div>
                     </div>
@@ -355,7 +265,7 @@
             <div class="border-t border-gray-800 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                        © 2024 Edora. Tất cả quyền được bảo lưu.
+                        © 2024 Elora. Tất cả quyền được bảo lưu.
                     </p>
                     <div class="flex space-x-6 text-sm">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
@@ -384,7 +294,7 @@
                 <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
                 <p class="text-gray-500">Giỏ hàng của bạn đang trống</p>
                 <a href="services.html"
-                    class="inline-block mt-4 bg-gradient-to-r from-primary-300 to-secondary-400 text-white px-6 py-3 rounded-full hover:shadow-lg transition-all">
+                    style="background: var(--gradient-primary);" class="inline-block mt-4  text-white px-6 py-3 rounded-full hover:shadow-lg transition-all">
                     Khám Phá Dịch Vụ
                 </a>
             </div>
@@ -393,10 +303,10 @@
         <div class="cart-footer p-6 border-t">
             <div class="flex justify-between items-center mb-4">
                 <span class="font-semibold">Tổng cộng:</span>
-                <span class="cart-total font-bold text-lg text-primary-300">0đ</span>
+                <span class="cart-total font-bold text-lg text-primary-500">0đ</span>
             </div>
             <button
-                class="w-full bg-gradient-to-r from-primary-300 to-secondary-400 text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all">
+                style="background: var(--gradient-primary);" class="w-full  text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all">
                 Thanh Toán
             </button>
         </div>
@@ -407,13 +317,15 @@
 
     <!-- Nút lên đầu trang -->
     <button
-        class="back-to-top fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-primary-300 to-secondary-400 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+        style="background: var(--gradient-primary);" class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- Script JS -->
+    <script src="assets/js/sample-data.js" type="module"></script>
     <script src="assets/js/navigation.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/main.js" type="module"></script>
+    <script src="assets/js/header.js"></script>
 </body>
 
 </html>

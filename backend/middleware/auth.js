@@ -14,7 +14,7 @@ export const authenticateCustomer = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'edora_spa_secret_key_2024');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'elora_spa_secret_key_2024');
     
     // Kiểm tra xem đây có phải token của customer không
     if (decoded.type !== 'customer') {
@@ -56,7 +56,7 @@ export const authenticateAdmin = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'edora_spa_secret_key_2024');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'elora_spa_secret_key_2024');
     
     // Kiểm tra xem đây có phải token của admin không
     if (decoded.type !== 'admin') {
@@ -113,7 +113,7 @@ export const optionalAuth = async (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
     if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'edora_spa_secret_key_2024');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'elora_spa_secret_key_2024');
       
       if (decoded.type === 'customer') {
         const customer = await Customer.findById(decoded.id).select('-password');

@@ -1,135 +1,78 @@
-// Product Detail page JavaScript
+import { API_BASE } from './config.js';
+// JavaScript cho trang Chi tiết sản phẩm
 let currentProduct = null;
+let currentProductCategory = null;
 let currentImageIndex = 0;
 let productImages = [];
 let relatedSlider = null;
 let selectedRating = 0;
 
-// Initialize product detail page
+// Khởi tạo trang chi tiết sản phẩm
 document.addEventListener('DOMContentLoaded', function() {
-    if (typeof SpaApp !== 'undefined') {
-        initializeProductDetail();
-    } else {
-        // Wait for main.js to load
-        setTimeout(initializeProductDetail, 500);
-    }
+    initializeProductDetail();
 });
 
 async function initializeProductDetail() {
     try {
-        // Initialize AOS
+        // Khởi tạo AOS
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
             once: true,
             offset: 100
         });
-
-        // Get product ID from URL
+        
+        // Lấy ID sản phẩm từ URL
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id'));
+        const productId = urlParams.get('id');
 
         if (!productId) {
             window.location.href = 'services.html';
             return;
         }
 
-        // Load product data if not available
-        if (!window.SpaApp || !window.SpaApp.products) {
-            await loadProductData();
-        }
-
-        // Find current product
-        currentProduct = window.SpaApp.products.find(p => p.id === productId);
+        await loadProductData(productId);
         
         if (!currentProduct) {
             window.location.href = 'services.html';
             return;
         }
 
-        // Initialize components
+        // Khởi tạo các thành phần
         setupEventListeners();
         renderProduct();
         initializeImageZoom();
-        loadRelatedProducts();
         loadComboProducts();
+        loadSampleReviews();
         
+        await loadRelatedProducts();
         console.log('Product detail page initialized');
     } catch (error) {
         console.error('Error initializing product detail page:', error);
     }
 }
 
-async function loadProductData() {
+async function loadProductData(productId) {
     try {
-        // Try to load from API
-        const response = await fetch('http://localhost:3000/api/products');
+        // Thử tải từ API
+        const response = await fetch(`${API_BASE}/products/${productId}`);
+        const categoriesResponse = await fetch(`${API_BASE}/categories`);
         if (response.ok) {
-            const products = await response.json();
-            if (window.SpaApp) {
-                window.SpaApp.products = products;
-            }
+            currentProduct = await response.json();
+            currentProduct = currentProduct.data;
+            currentProductCategory = categoriesResponse.ok ? (await categoriesResponse.json()).data.find(cat => cat.id === currentProduct.categoryId) : null;
+            console.log("🚀 ~ loadProductData ~ currentProductCategory:", currentProductCategory)
+            console.log("🚀 ~ loadProductData ~ currentProduct:", currentProduct)
         }
     } catch (error) {
-        console.error('Error loading product data:', error);
-        // Use sample data as fallback
+        console.error('Lỗi khi tải dữ liệu sản phẩm:', error);
+        // Sử dụng dữ liệu mẫu
         loadSampleProductData();
     }
 }
 
-function loadSampleProductData() {
-    const sampleProducts = [
-        {
-            id: 1,
-            name: "Massage Thư Giãn Toàn Thân",
-            price: 300000,
-            originalPrice: 350000,
-            discount: 14,
-            images: [
-                "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop",
-                "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&h=600&fit=crop"
-            ],
-            rating: 4.8,
-            reviewCount: 127,
-            viewCount: 1524,
-            trending: true,
-            bestseller: true,
-            featured: true,
-            duration: 60,
-            categoryId: 1,
-            category: "Massage & Spa",
-            description: "Liệu trình massage toàn thân giúp giảm stress, thư giãn cơ bắp và phục hồi năng lượng. Sử dụng các kỹ thuật massage chuyên nghiệp kết hợp với tinh dầu thiên nhiên cao cấp để mang lại cảm giác thư giãn tuyệt đối. Phù hợp cho những ai thường xuyên căng thẳng, làm việc nhiều hoặc muốn tận hưởng khoảnh khắc thư giãn sau những ngày dài mệt mỏi.",
-            benefits: [
-                "Giảm căng thẳng và stress hiệu quả",
-                "Thư giãn cơ bắp, giảm đau nhức",
-                "Cải thiện tuần hoàn máu và limph",
-                "Tăng cường sức khỏe tổng thể",
-                "Cải thiện chất lượng giấc ngủ",
-                "Tăng cường hệ miễn dịch tự nhiên"
-            ],
-            procedures: [
-                "Tư vấn và kiểm tra tình trạng sức khỏe",
-                "Chuẩn bị không gian thư giãn với nhạc nhẹ",
-                "Massage toàn thân với tinh dầu thiên nhiên",
-                "Xoa bóp các huyệt đạo quan trọng",
-                "Thư giãn và nghỉ ngơi sau liệu trình",
-                "Tư vấn chế độ chăm sóc tại nhà"
-            ],
-            tags: ["massage", "thư giãn", "giảm stress", "chăm sóc sức khỏe"]
-        }
-    ];
-
-    if (window.SpaApp) {
-        window.SpaApp.products = sampleProducts;
-    } else {
-        window.SpaApp = { products: sampleProducts };
-    }
-}
-
 function setupEventListeners() {
-    // Quantity controls
+    // Điều khiển số lượng
     const decreaseBtn = document.getElementById('decrease-qty');
     const increaseBtn = document.getElementById('increase-qty');
     const quantityInput = document.getElementById('quantity');
@@ -140,7 +83,7 @@ function setupEventListeners() {
         quantityInput.addEventListener('change', validateQuantity);
     }
 
-    // Action buttons
+    // Các nút thao tác
     const addToCartBtn = document.getElementById('add-to-cart');
     const addToWishlistBtn = document.getElementById('add-to-wishlist');
     const shareBtn = document.getElementById('share-product');
@@ -217,7 +160,7 @@ function renderProduct() {
     if (!currentProduct) return;
 
     // Update document title
-    document.title = `${currentProduct.name} - Edora`;
+    document.title = `${currentProduct.name} - Elora`;
 
     // Update breadcrumb
     const breadcrumbCategory = document.getElementById('breadcrumb-category');
@@ -247,7 +190,7 @@ function updateProductInfo() {
         tags: document.getElementById('product-tags')
     };
 
-    if (elements.category) elements.category.textContent = currentProduct.category || 'Dịch vụ';
+    if (elements.category) elements.category.textContent = currentProductCategory ? currentProductCategory.name : 'Dịch vụ';
     if (elements.name) elements.name.textContent = currentProduct.name;
     if (elements.rating) elements.rating.innerHTML = generateStarRating(currentProduct.rating || 0);
     if (elements.ratingValue) elements.ratingValue.textContent = (currentProduct.rating || 0).toFixed(1);
@@ -258,11 +201,11 @@ function updateProductInfo() {
     if (elements.viewCount) elements.viewCount.textContent = `${(currentProduct.viewCount || 0).toLocaleString('vi-VN')} lượt xem`;
     if (elements.duration) elements.duration.textContent = currentProduct.duration || 60;
     if (elements.durationInfo) elements.durationInfo.textContent = `${currentProduct.duration || 60} phút`;
-    if (elements.bookingCount) elements.bookingCount.textContent = '2.340+';
+    if (elements.bookingCount) elements.bookingCount.textContent = `${(currentProduct.boughtCount || 0).toLocaleString('vi-VN')}+`;
 
     // Update tags
-    if (elements.tags && currentProduct.tags) {
-        elements.tags.innerHTML = currentProduct.tags.map(tag => 
+    if (elements.tags && currentProduct.benefits) {
+        elements.tags.innerHTML = currentProduct.benefits.map(tag => 
             `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">#${tag}</span>`
         ).join('');
     }
@@ -275,7 +218,7 @@ function updateProductImages() {
     // Update main image
     const mainImage = document.getElementById('main-image');
     if (mainImage) {
-        mainImage.src = productImages[0];
+        mainImage.src = productImages[0].gridfsId ? `${API_BASE}/files/${productImages[0].gridfsId}` : productImages[0];
         mainImage.alt = currentProduct.name;
     }
 
@@ -284,7 +227,7 @@ function updateProductImages() {
     if (thumbnailContainer) {
         thumbnailContainer.innerHTML = productImages.map((img, index) => `
             <div class="thumbnail ${index === 0 ? 'active' : ''} cursor-pointer rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-300 transition-all" data-index="${index}">
-                <img src="${img}" alt="${currentProduct.name}" class="w-full h-20 object-cover">
+                <img src="${API_BASE}/files/${img.gridfsId}" alt="${currentProduct.name}" class="w-full h-20 object-cover">
             </div>
         `).join('');
 
@@ -328,6 +271,8 @@ function updatePricing() {
 function updateProductTabs() {
     // Description
     const descriptionEl = document.getElementById('product-description');
+    const tabContent = document.querySelector('.tab-content');
+    tabContent.classList.add('active');
     if (descriptionEl) {
         descriptionEl.innerHTML = `
             <p class="text-lg text-gray-700 leading-relaxed mb-6">${currentProduct.description || 'Thông tin chi tiết sẽ được cập nhật sớm.'}</p>
@@ -547,13 +492,14 @@ function initializeImageZoom() {
     });
 }
 
-function loadRelatedProducts() {
-    if (!window.SpaApp?.products || !currentProduct) return;
+async function loadRelatedProducts() {
+    if (!currentProduct?.category || !currentProductCategory) return;
 
     // Find related products (same category, excluding current)
-    const relatedProducts = window.SpaApp.products
-        .filter(p => p.id !== currentProduct.id && p.categoryId === currentProduct.categoryId)
-        .slice(0, 6);
+    const relatedProducts = await fetch(`${API_BASE}/products?category=${currentProduct.category}&limit=10`)
+        .then(res => res.ok ? res.json() : [])
+        .then(data => data.data.filter(p => p._id !== currentProduct._id))
+        .catch(() => []);
 
     const relatedContainer = document.getElementById('related-products');
     if (!relatedContainer) return;
@@ -605,10 +551,10 @@ function loadRelatedProducts() {
         pauseOnHover: true,
         pagination: false,
         breakpoints: {
-            768: {
+            1024: {
                 perPage: 2,
             },
-            640: {
+            768: {
                 perPage: 1,
             }
         }
@@ -731,13 +677,7 @@ function validateQuantity() {
 function handleAddToCart() {
     if (!currentProduct) return;
 
-    const quantity = parseInt(document.getElementById('quantity').value) || 1;
-    
-    if (window.SpaApp && window.SpaApp.addToCart) {
-        for (let i = 0; i < quantity; i++) {
-            window.SpaApp.addToCart(currentProduct.id);
-        }
-    }
+    window.location.href = 'booking.html?service=' + currentProduct._id;
 }
 
 function handleAddToWishlist() {
@@ -811,13 +751,16 @@ function switchTab(tabName) {
         activePane.classList.add('active');
 
         // Trigger AOS animation for the active pane
-        AOS.refresh();
+        // AOS.refresh();
     }
 
-    // Smooth scroll to tab content
+    // Smooth scroll to tab content with offset
     const tabContent = document.querySelector('.tab-content');
+    
     if (tabContent) {
-        tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const yOffset = -240; // Offset 90px from top
+        const y = tabContent.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
     }
 }
 

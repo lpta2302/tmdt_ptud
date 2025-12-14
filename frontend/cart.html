@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ Hàng - Edora</title>
+    <title>Giỏ Hàng - Elora</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/tailwind.config.spa.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,82 +16,16 @@
         tailwind.config = window.tailwindConfigSpa;
     </script>
 </head>
-<body class="font-sans bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
+<body class="font-sans min-h-screen" style="background: var(--gradient-primary-br);">
     <!-- Header -->
-    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300" id="header">
-        <nav class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center">
-                        <i class="fas fa-spa text-white text-lg"></i>
-                    </div>
-                    <h1 class="text-2xl font-display font-bold bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">
-                        <a href="index.html">Edora</a>
-                    </h1>
-                </div>
-
-                <!-- Navigation -->
-                <ul class="hidden lg:flex items-center space-x-8">
-                    <li><a href="index.html" class="nav-link">Trang Chủ</a></li>
-                    <li><a href="services.html" class="nav-link">Dịch Vụ</a></li>
-                    <li><a href="booking.html" class="nav-link">Đặt Lịch</a></li>
-                    <li><a href="about.html" class="nav-link">Giới Thiệu</a></li>
-                    <li><a href="contact.html" class="nav-link">Liên Hệ</a></li>
-                </ul>
-
-                <!-- User Actions -->
-                <div class="flex items-center space-x-4">
-                    <!-- Search -->
-                    <button class="search-toggle p-2 text-gray-600 hover:text-primary-300 transition-colors">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    
-                    <!-- Cart -->
-                    <button class="cart-toggle relative p-2 text-primary-300 transition-colors">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span class="cart-count absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
-                    </button>
-                    
-                    <!-- User -->
-                    <div class="relative">
-                        <button class="user-toggle p-2 text-gray-600 hover:text-primary-300 transition-colors">
-                            <i class="fas fa-user"></i>
-                        </button>
-                        <div class="user-menu absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl w-48 py-2 hidden">
-                            <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Nhập</a>
-                            <a href="register.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Ký</a>
-                            <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Hồ Sơ</a>
-                        </div>
-                    </div>
-                    
-                    <!-- Mobile Menu -->
-                    <button class="lg:hidden mobile-menu-toggle p-2 text-gray-600">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Navigation -->
-            <div class="mobile-menu lg:hidden hidden mt-4 pb-4 border-t border-gray-200">
-                <ul class="space-y-2 mt-4">
-                    <li><a href="index.html" class="block py-2 text-gray-700 hover:text-primary-300">Trang Chủ</a></li>
-                    <li><a href="services.html" class="block py-2 text-gray-700 hover:text-primary-300">Dịch Vụ</a></li>
-                    <li><a href="booking.html" class="block py-2 text-gray-700 hover:text-primary-300">Đặt Lịch</a></li>
-                    <li><a href="about.html" class="block py-2 text-gray-700 hover:text-primary-300">Giới Thiệu</a></li>
-                    <li><a href="contact.html" class="block py-2 text-gray-700 hover:text-primary-300">Liên Hệ</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
+    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300" id="header"></header>
     <!-- Breadcrumb -->
-    <section class="pt-32 pb-8">
+    <section class="py-8">
         <div class="container mx-auto px-4">
             <nav class="flex items-center space-x-2 text-sm" data-aos="fade-right">
-                <a href="index.html" class="text-gray-500 hover:text-primary-300 transition-colors">Trang Chủ</a>
+                <a href="index.html" class="text-gray-500 hover:text-primary-500 transition-colors">Trang Chủ</a>
                 <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-primary-300 font-medium">Giỏ Hàng</span>
+                <span class="text-primary-500 font-medium">Giỏ Hàng</span>
             </nav>
         </div>
     </section>
@@ -101,40 +35,121 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-8" data-aos="fade-up">
                 <h1 class="text-4xl lg:text-5xl font-display font-bold text-gray-800 mb-4">
-                    Giỏ Hàng <span class="bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">Của Bạn</span>
+                    Giỏ Hàng & <span style="background-image: var(--gradient-primary);" class=" bg-clip-text text-transparent">Lịch Đặt</span>
                 </h1>
                 <p class="text-lg text-gray-600">
-                    Xem lại các dịch vụ đã chọn và tiến hành đặt lịch
+                    Quản lý giỏ hàng và theo dõi trạng thái đặt lịch của bạn
                 </p>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="mb-8" data-aos="fade-up">
+                <div class="bg-white rounded-2xl shadow-lg p-2 inline-flex space-x-2">
+                    <button class="tab-btn active" data-tab="cart">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                        Giỏ Hiện Tại
+                        <span class="tab-badge" id="cart-count">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="pending">
+                        <i class="fas fa-clock mr-2"></i>
+                        Chờ Xác Nhận
+                        <span class="tab-badge" id="pending-count">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="confirmed">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Đã Xác Nhận
+                        <span class="tab-badge" id="confirmed-count">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="completed">
+                        <i class="fas fa-star mr-2"></i>
+                        Đã Hoàn Thành
+                        <span class="tab-badge" id="completed-count">0</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Cart Content -->
             <div class="lg:flex lg:space-x-8">
-                <!-- Cart Items -->
+                <!-- Main Content Area -->
                 <div class="lg:w-2/3 mb-8 lg:mb-0">
-                    <!-- Cart Items Container -->
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-right">
-                        <div class="p-6 border-b border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <h2 class="text-xl font-semibold text-gray-800">
-                                    Dịch Vụ Đã Chọn (<span id="cart-items-count">0</span>)
-                                </h2>
-                                <button id="clear-cart" class="text-gray-500 hover:text-red-500 transition-colors">
-                                    <i class="fas fa-trash mr-2"></i>
-                                    Xóa Tất Cả
-                                </button>
+                    
+                    <!-- Tab: Giỏ Hiện Tại -->
+                    <div class="tab-content active" data-tab-content="cart">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-right">
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <input type="checkbox" id="select-all-cart" 
+                                               class="w-5 h-5 rounded border-gray-300 text-primary-500 focus:ring-primary-300 cursor-pointer">
+                                        <h2 class="text-xl font-semibold text-gray-800">
+                                            Dịch Vụ Đã Chọn (<span id="cart-items-count">0</span>)
+                                        </h2>
+                                    </div>
+                                    <button id="clear-cart" class="text-gray-500 hover:text-red-500 transition-colors">
+                                        <i class="fas fa-trash mr-2"></i>
+                                        Xóa Tất Cả
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div id="cart-items-container">
-                            <!-- Cart items will be loaded here -->
+                            <div id="cart-items-container">
+                                <!-- Cart items will be loaded here -->
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Suggested Products -->
-                    <div class="mt-8 bg-white rounded-2xl shadow-lg p-6" data-aos="fade-right" data-aos-delay="200">
+                    <!-- Tab: Chờ Xác Nhận -->
+                    <div class="tab-content" data-tab-content="pending">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-right">
+                            <div class="p-6 border-b border-gray-200">
+                                <h2 class="text-xl font-semibold text-gray-800">
+                                    <i class="fas fa-clock text-yellow-500 mr-2"></i>
+                                    Đang Chờ Xác Nhận
+                                </h2>
+                                <p class="text-sm text-gray-600 mt-1">Các lịch đặt đang chờ spa xác nhận</p>
+                            </div>
+                            <div id="pending-bookings-container">
+                                <!-- Pending bookings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Đã Xác Nhận -->
+                    <div class="tab-content" data-tab-content="confirmed">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-right">
+                            <div class="p-6 border-b border-gray-200">
+                                <h2 class="text-xl font-semibold text-gray-800">
+                                    <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                    Đã Xác Nhận
+                                </h2>
+                                <p class="text-sm text-gray-600 mt-1">Các lịch đã được xác nhận và sẵn sàng phục vụ</p>
+                            </div>
+                            <div id="confirmed-bookings-container">
+                                <!-- Confirmed bookings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Đã Hoàn Thành -->
+                    <div class="tab-content" data-tab-content="completed">
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden" data-aos="fade-right">
+                            <div class="p-6 border-b border-gray-200">
+                                <h2 class="text-xl font-semibold text-gray-800">
+                                    <i class="fas fa-star text-primary-500 mr-2"></i>
+                                    Đã Hoàn Thành
+                                </h2>
+                                <p class="text-sm text-gray-600 mt-1">Lịch sử các dịch vụ đã sử dụng</p>
+                            </div>
+                            <div id="completed-bookings-container">
+                                <!-- Completed bookings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Suggested Products (only show in cart tab) -->
+                    <div class="mt-8 bg-white rounded-2xl shadow-lg p-6 suggested-products-section" data-aos="fade-right" data-aos-delay="200">
                         <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                            <i class="fas fa-heart text-primary-300 mr-2"></i>
+                            <i class="fas fa-heart text-primary-500 mr-2"></i>
                             Gợi Ý Mua Kèm
                         </h3>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="suggested-products">
@@ -165,7 +180,7 @@
                             <div class="border-t border-gray-200 pt-4">
                                 <div class="flex justify-between text-lg">
                                     <span class="font-semibold text-gray-800">Tổng cộng:</span>
-                                    <span class="font-bold text-primary-300" id="total-amount">0đ</span>
+                                    <span class="font-bold text-primary-500" id="total-amount">0đ</span>
                                 </div>
                             </div>
                         </div>
@@ -199,9 +214,9 @@
 
                         <!-- Continue Shopping -->
                         <div class="text-center mt-4">
-                            <a href="services.html" class="text-primary-300 hover:text-primary-400 font-medium">
+                            <a href="services.html" class="text-primary-500 hover:text-primary-400 font-medium">
                                 <i class="fas fa-arrow-left mr-2"></i>
-                                Tiếp Tục Mua Sắm
+                                Tiếp Tục Đặt Lịch
                             </a>
                         </div>
 
@@ -248,7 +263,7 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-12" data-aos="fade-up">
                 <h2 class="text-3xl lg:text-4xl font-display font-bold text-gray-800 mb-4">
-                    Sản Phẩm <span class="bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">Đã Xem</span>
+                    Sản Phẩm <span style="background-image: var(--gradient-primary);" class=" bg-clip-text text-transparent">Đã Xem</span>
                 </h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                     Những dịch vụ bạn đã quan tâm gần đây
@@ -268,26 +283,26 @@
                 <!-- Company Info -->
                 <div data-aos="fade-up">
                     <div class="flex items-center space-x-3 mb-6">
-                        <div class="w-10 h-10 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center">
+                        <div style="background-image: var(--gradient-primary);" class="w-10 h-10  rounded-full flex items-center justify-center">
                             <i class="fas fa-spa text-white"></i>
                         </div>
-                        <h3 class="text-xl font-display font-bold">Edora</h3>
+                        <h3 class="text-xl font-display font-bold">Elora</h3>
                     </div>
                     <p class="text-gray-400 mb-6">
                         Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp, 
                         mang đến trải nghiệm chăm sóc sức khỏe và sắc đẹp hoàn hảo.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-youtube"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-primary-300 rounded-full flex items-center justify-center hover:bg-primary-400 transition-colors">
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
                             <i class="fab fa-tiktok"></i>
                         </a>
                     </div>
@@ -322,19 +337,19 @@
                     <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
                     <div class="space-y-4">
                         <div class="flex items-start space-x-3">
-                            <i class="fas fa-map-marker-alt text-primary-300 mt-1"></i>
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
                             <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-phone text-primary-300"></i>
+                            <i class="fas fa-phone text-primary-500"></i>
                             <span class="text-gray-400">0123 456 789</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-envelope text-primary-300"></i>
-                            <span class="text-gray-400">info@edora.vn</span>
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@elora.vn</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-clock text-primary-300"></i>
+                            <i class="fas fa-clock text-primary-500"></i>
                             <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
                         </div>
                     </div>
@@ -345,7 +360,7 @@
             <div class="border-t border-gray-800 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                        © 2024 Edora. Tất cả quyền được bảo lưu.
+                        © 2024 Elora. Tất cả quyền được bảo lưu.
                     </p>
                     <div class="flex space-x-6 text-sm">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
@@ -378,13 +393,13 @@
     </div>
 
     <!-- Back to Top -->
-    <button class="back-to-top fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-primary-300 to-secondary-400 text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+    <button style="background-image: var(--gradient-primary);" class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- Scripts -->
     <script src="assets/js/navigation.js"></script>
-    <script src="assets/js/cart.js"></script>
-    <script src="assets/js/cart.js"></script>
+    <script src="assets/js/header.js" type="module"></script>
+    <script src="assets/js/cart.js" type="module"></script>
 </body>
 </html>

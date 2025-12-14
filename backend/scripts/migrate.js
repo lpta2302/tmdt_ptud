@@ -191,7 +191,7 @@ const createDefaultAdmin = async () => {
     if (!existingAdmin) {
       const admin = new Admin({
         username: 'admin',
-        email: 'admin@edora.vn',
+        email: 'admin@elora.vn',
         password: 'admin123',
         firstName: 'Super',
         lastName: 'Admin',

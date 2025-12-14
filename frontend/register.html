@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký - Edora</title>
+    <title>Đăng Ký - Elora</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/tailwind.config.spa.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -16,20 +16,20 @@
         tailwind.config = window.tailwindConfigSpa;
     </script>
 </head>
-<body class="bg-gradient-to-br from-primary-50 via-secondary-50 to-indigo-50 min-h-screen">
+<body class="min-h-screen" style="background: var(--gradient-primary-br);">
     <!-- Header -->
     <header class="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
         <div class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <a href="index.html" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center">
+                    <div class="logo-icon">
                         <i class="fas fa-spa text-white text-lg"></i>
                     </div>
-                    <span class="text-2xl font-display font-bold bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">
-                        Edora
+                    <span class="logo-text">
+                        Elora
                     </span>
                 </a>
-                <a href="index.html" class="text-gray-600 hover:text-primary-300 transition-colors">
+                <a href="index.html" class="text-gray-600 hover:text-primary-500 transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Về trang chủ
                 </a>
@@ -45,11 +45,11 @@
                 <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden" data-aos="fade-up">
                     <div class="p-8">
                         <div class="text-center mb-8">
-                            <div class="w-16 h-16 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background: var(--gradient-primary);">
                                 <i class="fas fa-user-plus text-white text-2xl"></i>
                             </div>
                             <h1 class="text-3xl font-display font-bold text-gray-800 mb-2">Đăng Ký</h1>
-                            <p class="text-gray-600">Tạo tài khoản Edora để trải nghiệm dịch vụ tốt nhất</p>
+                            <p class="text-gray-600">Tạo tài khoản Elora để trải nghiệm dịch vụ tốt nhất</p>
                         </div>
 
                         <!-- Register Form -->
@@ -119,32 +119,32 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Giới tính</label>
                                 <div class="grid grid-cols-3 gap-2">
                                     <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="gender" value="male" class="text-primary-300 focus:ring-primary-300">
+                                        <input type="radio" name="gender" value="male" class="text-primary-500 focus:ring-primary-300">
                                         <span class="ml-2 text-sm">Nam</span>
                                     </label>
                                     <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="gender" value="female" class="text-primary-300 focus:ring-primary-300">
+                                        <input type="radio" name="gender" value="female" class="text-primary-500 focus:ring-primary-300">
                                         <span class="ml-2 text-sm">Nữ</span>
                                     </label>
                                     <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
-                                        <input type="radio" name="gender" value="other" class="text-primary-300 focus:ring-primary-300">
+                                        <input type="radio" name="gender" value="other" class="text-primary-500 focus:ring-primary-300">
                                         <span class="ml-2 text-sm">Khác</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="flex items-start">
-                                <input type="checkbox" id="terms" required class="mt-1 rounded border-gray-300 text-primary-300 focus:ring-primary-300">
+                                <input type="checkbox" id="terms" required class="mt-1 rounded border-gray-300 text-primary-500 focus:ring-primary-300">
                                 <label for="terms" class="ml-2 text-sm text-gray-600">
                                     Tôi đồng ý với 
-                                    <a href="#" class="text-primary-300 hover:text-primary-400 font-medium">Điều khoản dịch vụ</a> 
+                                    <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Điều khoản dịch vụ</a> 
                                     và 
-                                    <a href="#" class="text-primary-300 hover:text-primary-400 font-medium">Chính sách bảo mật</a>
+                                    <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Chính sách bảo mật</a>
                                 </label>
                             </div>
 
                             <button type="submit" 
-                                    class="w-full bg-gradient-to-r from-primary-300 to-secondary-400 text-white py-3 px-6 rounded-xl font-semibold hover:from-primary-400 hover:to-secondary-500 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                    style="background: var(--gradient-primary);" class="w-full  text-white py-3 px-6 rounded-xl font-semibold hover:from-primary-400 hover:to-secondary-500 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
                                 <i class="fas fa-user-plus mr-2"></i>
                                 Tạo Tài Khoản
                             </button>
@@ -177,7 +177,7 @@
                         <div class="mt-8 text-center">
                             <p class="text-gray-600">
                                 Đã có tài khoản? 
-                                <a href="login.html" class="text-primary-300 hover:text-primary-400 font-semibold">Đăng nhập ngay</a>
+                                <a href="login.html" class="text-primary-500 hover:text-primary-400 font-semibold">Đăng nhập ngay</a>
                             </p>
                         </div>
                     </div>
@@ -187,81 +187,7 @@
     </main>
 
     <!-- Scripts -->
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-
-        // Toggle password visibility
-        function togglePassword(inputId) {
-            const passwordInput = document.getElementById(inputId);
-            const eyeIcon = document.getElementById(inputId === 'password' ? 'eye-icon-1' : 'eye-icon-2');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.className = 'fas fa-eye-slash';
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.className = 'fas fa-eye';
-            }
-        }
-
-        // Register form handler
-        document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            // Validate password match
-            if (password !== confirmPassword) {
-                alert('Mật khẩu xác nhận không khớp!');
-                return;
-            }
-            
-            // Validate password strength
-            if (password.length < 8) {
-                alert('Mật khẩu phải có ít nhất 8 ký tự!');
-                return;
-            }
-            
-            const formData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                password: password,
-                gender: document.querySelector('input[name="gender"]:checked')?.value
-            };
-            
-            // Simulate registration process
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang tạo tài khoản...';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                // Simulate successful registration
-                alert('Đăng ký thành công! Vui lòng đăng nhập.');
-                window.location.href = 'login.html';
-            }, 2000);
-        });
-
-        // Real-time password validation
-        document.getElementById('confirmPassword').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            
-            if (confirmPassword && password !== confirmPassword) {
-                this.classList.add('border-red-500');
-                this.classList.remove('border-gray-300');
-            } else {
-                this.classList.remove('border-red-500');
-                this.classList.add('border-gray-300');
-            }
-        });
-    </script>
+    <script src="assets/js/config.js" type="module"></script>
+    <script src="assets/js/register.js" type="module"></script>
 </body>
 </html>

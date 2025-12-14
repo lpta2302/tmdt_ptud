@@ -1,9 +1,12 @@
-// Services page JavaScript
+import { API_BASE } from "./config.js";
+
+// JavaScript cho trang Dịch vụ
 let currentView = 'grid';
 let currentSort = 'default';
 let currentPage = 1;
 let itemsPerPage = 9;
 let filteredProducts = [];
+let products = [];
 let activeFilters = {
     category: [],
     price: [],
@@ -13,19 +16,19 @@ let activeFilters = {
     search: ''
 };
 
-// Initialize services page
-document.addEventListener('DOMContentLoaded', function() {
+// Khởi tạo trang dịch vụ
+document.addEventListener('DOMContentLoaded', function () {
     if (typeof SpaApp !== 'undefined') {
         initializeServicesPage();
     } else {
-        // Wait for main.js to load
+        // Chờ main.js tải xong
         setTimeout(initializeServicesPage, 500);
     }
 });
 
 async function initializeServicesPage() {
     try {
-        // Initialize AOS
+        // Khởi tạo AOS
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
@@ -33,17 +36,16 @@ async function initializeServicesPage() {
             offset: 100
         });
 
-        // Load data if not available
-        if (!window.SpaApp || !window.SpaApp.products) {
-            await loadServicesData();
-        }
+        // Tải dữ liệu nếu chưa có
+        await loadServicesData();
 
-        // Get URL parameters
+
+        // Lấy tham số URL
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
         const searchParam = urlParams.get('search');
 
-        // Set initial filters from URL
+        // Thiết lập bộ lọc ban đầu từ URL
         if (categoryParam) {
             activeFilters.category = [categoryParam];
         }
@@ -52,13 +54,13 @@ async function initializeServicesPage() {
             document.getElementById('search-input').value = searchParam;
         }
 
-        // Initialize components
+        // Khởi tạo các thành phần
         renderCategoryFilters();
         setupEventListeners();
-        
-        // Apply initial filters and render
+
+        // Áp dụng bộ lọc ban đầu và hiển thị
         applyFilters();
-        
+
         console.log('Services page initialized');
     } catch (error) {
         console.error('Error initializing services page:', error);
@@ -67,17 +69,21 @@ async function initializeServicesPage() {
 
 async function loadServicesData() {
     try {
-        // Try to load from API
-        const response = await fetch('http://localhost:3000/api/products');
+        // Thử tải từ API
+        const response = await fetch(`${API_BASE}/products`);
+        const categoryResponse = await fetch(`${API_BASE}/categories`);
         if (response.ok) {
-            const products = await response.json();
-            if (window.SpaApp) {
-                window.SpaApp.products = products;
-            }
+            const data = await response.json();
+            products = data?.data;
+            const categoriesData = await categoryResponse.json();
+            products.forEach(product => {
+                const category = categoriesData.data.find(cat => cat._id === product.category);
+                product.category = category ? category.name : 'Khác';
+            });
         }
     } catch (error) {
-        console.error('Error loading services data:', error);
-        // Use sample data as fallback
+        console.error('Lỗi khi tải dữ liệu dịch vụ:', error);
+        // Sử dụng dữ liệu mẫu nếu thất bại
         loadSampleServicesData();
     }
 }
@@ -237,14 +243,14 @@ function setupEventListeners() {
 
     // View toggles
     document.querySelectorAll('.view-toggle').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const view = this.dataset.view;
             switchView(view);
         });
     });
 
     // Filter checkboxes
-    document.addEventListener('change', function(e) {
+    document.addEventListener('change', function (e) {
         if (e.target.classList.contains('filter-checkbox')) {
             handleFilterChange(e.target);
         }
@@ -282,15 +288,15 @@ function handleSort(e) {
 
 function handleFilterChange(checkbox) {
     const filterType = checkbox.classList.contains('category-filter') ? 'category' :
-                      checkbox.classList.contains('price-filter') ? 'price' :
-                      checkbox.classList.contains('duration-filter') ? 'duration' :
-                      checkbox.classList.contains('rating-filter') ? 'rating' :
-                      checkbox.classList.contains('special-filter') ? 'special' : null;
+        checkbox.classList.contains('price-filter') ? 'price' :
+            checkbox.classList.contains('duration-filter') ? 'duration' :
+                checkbox.classList.contains('rating-filter') ? 'rating' :
+                    checkbox.classList.contains('special-filter') ? 'special' : null;
 
     if (!filterType) return;
 
     const value = checkbox.value;
-    
+
     if (checkbox.checked) {
         if (!activeFilters[filterType].includes(value)) {
             activeFilters[filterType].push(value);
@@ -305,7 +311,7 @@ function handleFilterChange(checkbox) {
 
 function switchView(view) {
     currentView = view;
-    
+
     // Update button states
     document.querySelectorAll('.view-toggle').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.view === view);
@@ -325,16 +331,14 @@ function switchView(view) {
 }
 
 function applyFilters() {
-    if (!window.SpaApp?.products) return;
-
     showLoading(true);
 
     // Start with all products
-    let filtered = [...window.SpaApp.products];
+    let filtered = [...products];
 
     // Apply search filter
     if (activeFilters.search) {
-        filtered = filtered.filter(product => 
+        filtered = filtered.filter(product =>
             product.name.toLowerCase().includes(activeFilters.search) ||
             product.description?.toLowerCase().includes(activeFilters.search) ||
             product.tags?.some(tag => tag.toLowerCase().includes(activeFilters.search))
@@ -343,7 +347,7 @@ function applyFilters() {
 
     // Apply category filter
     if (activeFilters.category.length > 0) {
-        filtered = filtered.filter(product => 
+        filtered = filtered.filter(product =>
             activeFilters.category.includes(product.category)
         );
     }
@@ -353,7 +357,7 @@ function applyFilters() {
         filtered = filtered.filter(product => {
             return activeFilters.price.some(range => {
                 if (range === '1000000+') return product.price >= 1000000;
-                
+
                 const [min, max] = range.split('-').map(Number);
                 return product.price >= min && product.price <= max;
             });
@@ -364,10 +368,10 @@ function applyFilters() {
     if (activeFilters.duration.length > 0) {
         filtered = filtered.filter(product => {
             if (!product.duration) return false;
-            
+
             return activeFilters.duration.some(range => {
                 if (range === '90+') return product.duration >= 90;
-                
+
                 const [min, max] = range.split('-').map(Number);
                 return product.duration >= min && product.duration <= max;
             });
@@ -378,7 +382,7 @@ function applyFilters() {
     if (activeFilters.rating.length > 0) {
         filtered = filtered.filter(product => {
             if (!product.rating) return false;
-            
+
             return activeFilters.rating.some(range => {
                 const minRating = parseFloat(range.replace('+', ''));
                 return product.rating >= minRating;
@@ -427,7 +431,7 @@ function applyFilters() {
 
 function sortProducts(products, sortType) {
     const sorted = [...products];
-    
+
     switch (sortType) {
         case 'price-asc':
             return sorted.sort((a, b) => a.price - b.price);
@@ -480,24 +484,25 @@ function renderProducts() {
 }
 
 function createProductCard(product) {
-    const discountPercent = product.originalPrice ? 
+    const discountPercent = product.originalPrice ?
         Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-    
+    const thumbnail = product.images && product.images.length > 0 ? `${API_BASE}/files/${product?.images[0]?.gridfsId}` : 'https://via.placeholder.com/400x300?text=No+Image';
+
     return `
-        <div class="product-card" data-product-id="${product.id}" data-aos="fade-up">
+        <div class="product-card" data-product-id="${product._id}" data-aos="fade-up">
             <div class="product-image">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
+                <img src="${thumbnail}" alt="${product.name}" loading="lazy">
                 ${product.trending ? '<span class="product-badge trending">Xu Hướng</span>' : ''}
                 ${product.bestseller ? '<span class="product-badge bestseller">Bán Chạy</span>' : ''}
                 ${discountPercent > 0 ? `<span class="product-badge discount">-${discountPercent}%</span>` : ''}
                 <div class="product-actions">
-                    <button class="product-action-btn wishlist-btn" title="Thêm vào yêu thích" data-product-id="${product.id}">
+                    <button class="product-action-btn wishlist-btn" title="Thêm vào yêu thích" data-product-id="${product._id}">
                         <i class="fas fa-heart"></i>
                     </button>
-                    <button class="product-action-btn quick-view-btn" title="Xem nhanh" data-product-id="${product.id}">
+                    <button class="product-action-btn quick-view-btn" title="Xem nhanh" data-product-id="${product._id}">
                         <i class="fas fa-eye"></i>
                     </button>
-                    <button class="product-action-btn compare-btn" title="So sánh" data-product-id="${product.id}">
+                    <button class="product-action-btn compare-btn" title="So sánh" data-product-id="${product._id}">
                         <i class="fas fa-balance-scale"></i>
                     </button>
                 </div>
@@ -527,11 +532,11 @@ function createProductCard(product) {
                     ${discountPercent > 0 ? `<div class="discount-percent">Tiết kiệm ${discountPercent}%</div>` : ''}
                 </div>
                 <div class="flex space-x-2">
-                    <button class="add-to-cart-btn flex-1 btn-primary text-sm py-2" data-product-id="${product.id}">
+                    <button class="add-to-cart-btn flex-1 btn-primary text-sm py-2" data-product-id="${product._id}">
                         <i class="fas fa-calendar-plus mr-2"></i>
                         Đặt Lịch
                     </button>
-                    <button class="view-details-btn btn-outline text-sm py-2 px-4" data-product-id="${product.id}">
+                    <button class="view-details-btn btn-outline text-sm py-2 px-4" data-product-id="${product._id}">
                         Chi Tiết
                     </button>
                 </div>
@@ -541,14 +546,15 @@ function createProductCard(product) {
 }
 
 function createProductListItem(product) {
-    const discountPercent = product.originalPrice ? 
+    const discountPercent = product.originalPrice ?
         Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 0;
-    
+    const thumbnail = product.images && product.images.length > 0 ? `${API_BASE}/files/${product?.images[0]?.gridfsId}` : 'https://via.placeholder.com/400x300?text=No+Image';
+
     return `
-        <div class="product-list-item bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300" data-product-id="${product.id}">
+        <div class="product-list-item bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300" data-product-id="${product._id}">
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
                 <div class="relative flex-shrink-0">
-                    <img src="${product.image}" alt="${product.name}" class="w-full md:w-48 h-48 object-cover rounded-lg">
+                    <img src="${thumbnail}" alt="${product.name}" class="w-full md:w-48 h-48 object-cover rounded-lg">
                     ${product.trending ? '<span class="absolute top-2 left-2 product-badge trending">Xu Hướng</span>' : ''}
                     ${product.bestseller ? '<span class="absolute top-2 left-2 product-badge bestseller">Bán Chạy</span>' : ''}
                     ${discountPercent > 0 ? `<span class="absolute top-2 right-2 product-badge discount">-${discountPercent}%</span>` : ''}
@@ -585,14 +591,14 @@ function createProductListItem(product) {
                         </div>
                         
                         <div class="flex space-x-2">
-                            <button class="product-action-btn wishlist-btn" title="Thêm vào yêu thích" data-product-id="${product.id}">
+                            <button class="product-action-btn wishlist-btn" title="Thêm vào yêu thích" data-product-id="${product._id}">
                                 <i class="fas fa-heart"></i>
                             </button>
-                            <button class="add-to-cart-btn btn-primary px-6 py-2" data-product-id="${product.id}">
+                            <button class="add-to-cart-btn btn-primary px-6 py-2" data-product-id="${product._id}">
                                 <i class="fas fa-calendar-plus mr-2"></i>
                                 Đặt Lịch
                             </button>
-                            <button class="view-details-btn btn-outline px-4 py-2" data-product-id="${product.id}">
+                            <button class="view-details-btn btn-outline px-4 py-2" data-product-id="${product._id}">
                                 Chi Tiết
                             </button>
                         </div>
@@ -606,7 +612,7 @@ function createProductListItem(product) {
 function updateActiveFiltersDisplay() {
     const activeFiltersEl = document.getElementById('active-filters');
     const activeFiltersListEl = document.getElementById('active-filters-list');
-    
+
     if (!activeFiltersEl || !activeFiltersListEl) return;
 
     const filters = [];
@@ -637,7 +643,7 @@ function updateActiveFiltersDisplay() {
             const [min, max] = price.split('-').map(Number);
             label = `${formatPrice(min)} - ${formatPrice(max)}`;
         }
-        
+
         filters.push({
             type: 'price',
             label: label,
@@ -652,7 +658,7 @@ function updateActiveFiltersDisplay() {
         else if (duration.includes('-')) {
             label = duration.replace('-', ' - ') + ' phút';
         }
-        
+
         filters.push({
             type: 'duration',
             label: label,
@@ -678,7 +684,7 @@ function updateActiveFiltersDisplay() {
             case 'bestseller': label = 'Bán chạy'; break;
             case 'featured': label = 'Nổi bật'; break;
         }
-        
+
         filters.push({
             type: 'special',
             label: label,
@@ -700,7 +706,7 @@ function updateActiveFiltersDisplay() {
 
         // Add event listeners to remove filter tags
         activeFiltersListEl.querySelectorAll('.active-filter-tag').forEach(tag => {
-            tag.addEventListener('click', function() {
+            tag.addEventListener('click', function () {
                 const type = this.dataset.type;
                 const value = this.dataset.value;
                 removeFilter(type, value);
@@ -715,7 +721,7 @@ function removeFilter(type, value) {
         document.getElementById('search-input').value = '';
     } else if (activeFilters[type]) {
         activeFilters[type] = activeFilters[type].filter(v => v !== value);
-        
+
         // Update corresponding checkboxes
         const checkbox = document.querySelector(`input[value="${value}"]`);
         if (checkbox) {
@@ -762,11 +768,11 @@ function renderPagination() {
     const prevPageEl = document.getElementById('prev-page');
     const nextPageEl = document.getElementById('next-page');
     const pageNumbersEl = document.getElementById('page-numbers');
-    
+
     if (!paginationEl || !prevPageEl || !nextPageEl || !pageNumbersEl) return;
 
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    
+
     if (totalPages <= 1) {
         paginationEl.style.display = 'none';
         return;
@@ -800,7 +806,7 @@ function renderPagination() {
 
     // Add event listeners to page numbers
     pageNumbersEl.querySelectorAll('.pagination-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const page = parseInt(this.dataset.page);
             changePage(page);
         });
@@ -809,7 +815,7 @@ function renderPagination() {
 
 function changePage(page) {
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    
+
     if (page < 1 || page > totalPages) return;
 
     currentPage = page;
@@ -833,7 +839,7 @@ function updateResultsCount() {
 function showLoading(show) {
     const loadingEl = document.getElementById('loading');
     const containerEl = document.getElementById('products-container');
-    
+
     if (show) {
         if (loadingEl) loadingEl.classList.remove('hidden');
         if (containerEl) containerEl.style.opacity = '0.5';
@@ -847,7 +853,7 @@ function showNoResults(show) {
     const noResultsEl = document.getElementById('no-results');
     const containerEl = document.getElementById('products-container');
     const paginationEl = document.getElementById('pagination');
-    
+
     if (show) {
         if (noResultsEl) noResultsEl.classList.remove('hidden');
         if (containerEl) containerEl.classList.add('hidden');
@@ -863,21 +869,21 @@ function generateStarRating(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 !== 0;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
+
     let starsHTML = '';
-    
+
     for (let i = 0; i < fullStars; i++) {
         starsHTML += '<i class="fas fa-star star"></i>';
     }
-    
+
     if (hasHalfStar) {
         starsHTML += '<i class="fas fa-star-half-alt star"></i>';
     }
-    
+
     for (let i = 0; i < emptyStars; i++) {
         starsHTML += '<i class="far fa-star star empty"></i>';
     }
-    
+
     return starsHTML;
 }
 
@@ -891,19 +897,19 @@ function formatPrice(price) {
 function addProductEventListeners(container) {
     // Add to cart buttons
     container.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            const productId = parseInt(this.dataset.productId);
+            const productId = this.dataset.productId;
             if (window.SpaApp && window.SpaApp.addToCart) {
                 window.SpaApp.addToCart(productId);
             }
         });
     });
-    
+
     // View details buttons
     container.querySelectorAll('.view-details-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = this.dataset.productId;
@@ -912,10 +918,10 @@ function addProductEventListeners(container) {
             }
         });
     });
-    
+
     // Wishlist buttons
     container.querySelectorAll('.wishlist-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             const productId = parseInt(this.dataset.productId);
@@ -924,10 +930,10 @@ function addProductEventListeners(container) {
             }
         });
     });
-    
+
     // Product card/item click
     container.querySelectorAll('.product-card, .product-list-item').forEach(item => {
-        item.addEventListener('click', function(e) {
+        item.addEventListener('click', function (e) {
             if (!e.target.closest('button')) {
                 const productId = this.dataset.productId;
                 if (window.SpaApp && window.SpaApp.viewProductDetails) {

@@ -14,10 +14,7 @@ const bannerSchema = new mongoose.Schema({
     originalname: String,
     mimetype: String,
     size: Number,
-    gridfsId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true
-    }
+    gridfsId: mongoose.Schema.Types.ObjectId // ID của file trong GridFS
   },
   link: {
     url: String,

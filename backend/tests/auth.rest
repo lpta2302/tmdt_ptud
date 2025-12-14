@@ -26,8 +26,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "123456"
+  "identifier": "090999999",
+  "password": "111111"
 }
 
 ###
@@ -66,7 +66,7 @@ Content-Type: application/json
 ###
 
 # Đổi mật khẩu
-PUT http://localhost:3000/api/auth/change-password/674b2f8e123456789abcdef2
+PUT http://localhost:3000/api/auth/change-password/693e33beffd64b48d1d94559
 Content-Type: application/json
 
 {

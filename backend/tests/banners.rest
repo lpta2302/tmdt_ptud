@@ -47,6 +47,12 @@ Content-Disposition: form-data; name="order"
 Content-Disposition: form-data; name="isActive"
 
 true
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="banner-sample1.jpg"
+Content-Type: image/jpeg
+
+< ./images/banner-sample1.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###

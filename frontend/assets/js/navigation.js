@@ -1,4 +1,4 @@
-// Navigation Manager - Quản lý các liên kết navigation
+// Quản lý điều hướng - Quản lý các liên kết điều hướng
 class NavigationManager {
     constructor() {
         this.currentPage = this.getCurrentPage();
@@ -18,7 +18,7 @@ class NavigationManager {
     }
 
     updateActiveNavigation() {
-        // Cập nhật trạng thái active cho navigation links
+        // Cập nhật trạng thái active cho các liên kết điều hướng
         const navLinks = document.querySelectorAll('nav a, .nav-link');
         navLinks.forEach(link => {
             const href = link.getAttribute('href');
@@ -44,9 +44,9 @@ class NavigationManager {
         const userToggles = document.querySelectorAll('.user-toggle');
 
         if (isLoggedIn && userInfo.name) {
-            // Người dùng đã đăng nhập
+            // Người dùng đã đăng nhập - Hiển thị thông tin
             userToggles.forEach(toggle => {
-                if (toggle.querySelector('.user-name')) return; // Đã được cập nhật
+                if (toggle.querySelector('.user-name')) return; // Đã cập nhật rồi
                 
                 toggle.innerHTML = `
                     <div class="flex items-center space-x-2">

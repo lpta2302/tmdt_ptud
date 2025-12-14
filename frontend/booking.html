@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt Lịch - Edora</title>
+    <title>Đặt Lịch - Elora</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/tailwind.config.spa.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/color-variables.css">
@@ -16,41 +19,10 @@
         tailwind.config = window.tailwindConfigSpa;
     </script>
 </head>
-<body class="bg-gradient-to-br from-primary-50 via-secondary-50 to-indigo-50">
+
+<body data-page="booking" style="background: var(--gradient-primary-br);">
     <!-- Header -->
     <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <a href="index.html" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-primary-300 to-secondary-400 rounded-full flex items-center justify-center">
-                        <i class="fas fa-spa text-white text-lg"></i>
-                    </div>
-                    <span class="text-2xl font-display font-bold bg-gradient-to-r from-primary-300 to-secondary-400 bg-clip-text text-transparent">
-                        Edora
-                    </span>
-                </a>
-
-                <!-- Navigation -->
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-gray-600 hover:text-primary-300 transition-colors">Trang Chủ</a>
-                    <a href="services.html" class="text-gray-600 hover:text-primary-300 transition-colors">Dịch Vụ</a>
-                    <a href="booking.html" class="text-primary-300 font-semibold">Đặt Lịch</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-300 transition-colors">Liên Hệ</a>
-                </nav>
-
-                <!-- User Actions -->
-                <div class="flex items-center space-x-4">
-                    <a href="cart.html" class="relative text-gray-600 hover:text-primary-300 transition-colors">
-                        <i class="fas fa-shopping-bag text-xl"></i>
-                        <span class="cart-count absolute -top-2 -right-2 bg-primary-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
-                    </a>
-                    <a href="login.html" class="text-gray-600 hover:text-primary-300 transition-colors">
-                        <i class="fas fa-user text-xl"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
     </header>
 
     <!-- Main Content -->
@@ -70,59 +42,76 @@
                 <div class="grid lg:grid-cols-3 gap-8">
                     <!-- Booking Form -->
                     <div class="lg:col-span-2">
-                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8" data-aos="fade-right">
+                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8"
+                            data-aos="fade-right">
                             <h2 class="text-2xl font-display font-bold text-gray-800 mb-6">Thông Tin Đặt Lịch</h2>
-                            
+
                             <form id="booking-form" class="space-y-6">
                                 <!-- Personal Info -->
                                 <div class="grid md:grid-cols-2 gap-6">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Họ và tên *</label>
-                                        <input type="text" id="fullName" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
-                                               placeholder="Nhập họ và tên">
+                                        <input type="text" id="fullName" name="fullName" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
+                                            placeholder="Nhập họ và tên">
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại *</label>
-                                        <input type="tel" id="phone" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
-                                               placeholder="Nhập số điện thoại">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại
+                                            *</label>
+                                        <input type="tel" id="phone" name="phone" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
+                                            placeholder="Nhập số điện thoại">
                                     </div>
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                                    <input type="email" id="email" required
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
-                                           placeholder="Nhập email">
+                                    <input type="email" id="email" name="email" required
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
+                                        placeholder="Nhập email">
                                 </div>
 
                                 <!-- Service Selection -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Dịch vụ *</label>
-                                    <select id="service" required
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
-                                        <option value="">Chọn dịch vụ</option>
-                                        <option value="massage-toan-than">Massage Thư Giãn Toàn Thân</option>
-                                        <option value="cham-soc-da-mat">Chăm Sóc Da Mặt</option>
-                                        <option value="tay-te-bao-chet">Tẩy Tế Bào Chết</option>
-                                        <option value="massage-da-nong">Massage Đá Nóng</option>
-                                        <option value="cham-soc-chan-tay">Chăm Sóc Chân Tay</option>
-                                        <option value="goi-dau-massage">Gội Đầu Massage</option>
-                                    </select>
+                                    <div class="flex gap-2">
+                                        <select id="service" name="service"
+                                            class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
+                                            <option value="">Chọn dịch vụ</option>
+                                            <option value="massage-toan-than">Massage Thư Giãn Toàn Thân</option>
+                                            <option value="cham-soc-da-mat">Chăm Sóc Da Mặt</option>
+                                            <option value="tay-te-bao-chet">Tẩy Tế Bào Chết</option>
+                                            <option value="massage-da-nong">Massage Đá Nóng</option>
+                                            <option value="cham-soc-chan-tay">Chăm Sóc Chân Tay</option>
+                                            <option value="goi-dau-massage">Gội Đầu Massage</option>
+                                        </select>
+                                        <button type="button" id="add-service-btn"
+                                            class="px-6 py-3 bg-primary-500 text-white rounded-xl hover:bg-primary-600 transition-colors">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Selected Services List -->
+                                    <div id="selected-services" class="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                                        <!-- Services will be added here -->
+                                    </div>
+                                    <div id="no-services-msg" class="mt-2 text-sm text-gray-500 text-center py-4 border-2 border-dashed border-gray-300 rounded-xl">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        Chưa có dịch vụ nào được chọn
+                                    </div>
                                 </div>
 
                                 <!-- Date & Time -->
                                 <div class="grid md:grid-cols-2 gap-6">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Ngày hẹn *</label>
-                                        <input type="date" id="bookingDate" required
-                                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
+                                        <input type="date" id="bookingDate" name="bookingDate" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-2">Giờ hẹn *</label>
-                                        <select id="bookingTime" required
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
+                                        <select id="bookingTime" name="bookingTime" required
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors">
                                             <option value="">Chọn giờ</option>
                                             <option value="08:00">08:00</option>
                                             <option value="09:00">09:00</option>
@@ -141,26 +130,37 @@
                                 <!-- Special Requests -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Yêu cầu đặc biệt</label>
-                                    <textarea id="specialRequests" rows="4"
-                                              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors resize-none"
-                                              placeholder="Nhập yêu cầu đặc biệt (nếu có)"></textarea>
+                                    <textarea id="specialRequests" name="specialRequests" rows="4"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors resize-none"
+                                        placeholder="Nhập yêu cầu đặc biệt (nếu có)"></textarea>
                                 </div>
 
                                 <!-- Terms -->
                                 <div class="flex items-start">
-                                    <input type="checkbox" id="terms" required class="mt-1 rounded border-gray-300 text-primary-300 focus:ring-primary-300">
+                                    <input type="checkbox" id="terms" required
+                                        class="mt-1 rounded border-gray-300 text-primary-500 focus:ring-primary-300">
                                     <label for="terms" class="ml-2 text-sm text-gray-600">
-                                        Tôi đồng ý với <a href="#" class="text-primary-300 hover:text-primary-400 font-medium">điều khoản dịch vụ</a> 
-                                        và <a href="#" class="text-primary-300 hover:text-primary-400 font-medium">chính sách hủy lịch</a>
+                                        Tôi đồng ý với <a href="#"
+                                            class="text-primary-500 hover:text-primary-400 font-medium">điều khoản dịch
+                                            vụ</a>
+                                        và <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">chính
+                                            sách hủy lịch</a>
                                     </label>
                                 </div>
 
-                                <!-- Submit Button -->
-                                <button type="submit" 
-                                        class="w-full bg-gradient-to-r from-primary-300 to-secondary-400 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-primary-400 hover:to-secondary-500 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
-                                    <i class="fas fa-calendar-check mr-2"></i>
-                                    Xác Nhận Đặt Lịch
-                                </button>
+                                <!-- Action Buttons -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <button type="button" id="add-to-cart-btn"
+                                        class="w-full bg-white text-primary-500 border-2 border-primary-500 py-4 px-6 rounded-xl font-semibold text-lg hover:bg-primary-50 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                        <i class="fas fa-shopping-cart mr-2"></i>
+                                        Thêm vào giỏ
+                                    </button>
+                                    <button type="submit" style="background: var(--gradient-primary);"
+                                        class="w-full text-white py-4 px-6 rounded-xl font-semibold text-lg hover:from-primary-400 hover:to-secondary-500 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                        <i class="fas fa-calendar-check mr-2"></i>
+                                        Đặt lịch ngay
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -168,41 +168,44 @@
                     <!-- Booking Summary & Info -->
                     <div class="space-y-8">
                         <!-- Service Info -->
-                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6" data-aos="fade-left">
+                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6"
+                            data-aos="fade-left">
                             <h3 class="text-xl font-display font-bold text-gray-800 mb-4">Thông Tin Dịch Vụ</h3>
                             <div id="service-info" class="space-y-4">
                                 <div class="text-center py-8">
-                                    <i class="fas fa-hand-sparkles text-4xl text-primary-300 mb-4"></i>
+                                    <i class="fas fa-hand-sparkles text-4xl text-primary-500 mb-4"></i>
                                     <p class="text-gray-500">Chọn dịch vụ để xem thông tin chi tiết</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Contact Info -->
-                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6" data-aos="fade-left" data-aos-delay="100">
+                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6"
+                            data-aos="fade-left" data-aos-delay="100">
                             <h3 class="text-xl font-display font-bold text-gray-800 mb-4">Thông Tin Liên Hệ</h3>
                             <div class="space-y-3">
                                 <div class="flex items-center">
-                                    <i class="fas fa-phone text-primary-300 w-5"></i>
+                                    <i class="fas fa-phone text-primary-500 w-5"></i>
                                     <span class="ml-3 text-gray-700">0123 456 789</span>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class="fas fa-envelope text-primary-300 w-5"></i>
+                                    <i class="fas fa-envelope text-primary-500 w-5"></i>
                                     <span class="ml-3 text-gray-700">info@serenityspa.vn</span>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class="fas fa-map-marker-alt text-primary-300 w-5"></i>
+                                    <i class="fas fa-map-marker-alt text-primary-500 w-5"></i>
                                     <span class="ml-3 text-gray-700">123 Đường ABC, Quận 1, TP.HCM</span>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class="fas fa-clock text-primary-300 w-5"></i>
+                                    <i class="fas fa-clock text-primary-500 w-5"></i>
                                     <span class="ml-3 text-gray-700">8:00 - 22:00 hàng ngày</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Policies -->
-                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6" data-aos="fade-left" data-aos-delay="200">
+                        <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-6"
+                            data-aos="fade-left" data-aos-delay="200">
                             <h3 class="text-xl font-display font-bold text-gray-800 mb-4">Chính Sách Đặt Lịch</h3>
                             <div class="space-y-3 text-sm text-gray-600">
                                 <div class="flex items-start">
@@ -230,18 +233,21 @@
     </main>
 
     <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center transform scale-95 transition-transform">
+    <div id="success-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 p-4" style="align-items: center; justify-content: center;">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center transform scale-95 transition-transform" style="margin: auto;">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-check text-green-600 text-2xl"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-800 mb-2">Đặt Lịch Thành Công!</h3>
             <p class="text-gray-600 mb-6">Chúng tôi sẽ liên hệ với bạn trong vòng 15 phút để xác nhận lịch hẹn.</p>
             <div class="space-y-3">
-                <button onclick="closeModal()" class="w-full bg-gradient-to-r from-primary-300 to-secondary-400 text-white py-3 px-6 rounded-xl font-semibold hover:from-primary-400 hover:to-secondary-500 transition-colors">
+                <button onclick="closeModal()" style="background: var(--gradient-primary);"
+                    class="w-full  text-white py-3 px-6 rounded-xl font-semibold hover:from-primary-400 hover:to-secondary-500 transition-colors">
                     Đóng
                 </button>
-                <button onclick="goToHome()" class="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+                <button onclick="goToHome()"
+                    class="w-full border border-gray-300 text-gray-700 py-3 px-6 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
                     Về Trang Chủ
                 </button>
             </div>
@@ -249,136 +255,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="assets/js/navigation.js"></script>
-    <script src="assets/js/main.js"></script>
-    <script>
-        // Service data
-        const services = {
-            'massage-toan-than': {
-                name: 'Massage Thư Giãn Toàn Thân',
-                price: '850.000đ',
-                duration: '90 phút',
-                description: 'Massage toàn thân giúp thư giãn cơ bắp, giảm căng thẳng và cải thiện tuần hoàn máu.',
-                image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=300&h=200&fit=crop'
-            },
-            'cham-soc-da-mat': {
-                name: 'Chăm Sóc Da Mặt',
-                price: '650.000đ',
-                duration: '75 phút',
-                description: 'Làm sạch sâu, tẩy tế bào chết và dưỡng ẩm cho da mặt tươi sáng.',
-                image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=300&h=200&fit=crop'
-            },
-            'tay-te-bao-chet': {
-                name: 'Tẩy Tế Bào Chết',
-                price: '450.000đ',
-                duration: '60 phút',
-                description: 'Loại bỏ tế bào chết, làm mịn và mềm mại làn da toàn thân.',
-                image: 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=300&h=200&fit=crop'
-            },
-            'massage-da-nong': {
-                name: 'Massage Đá Nóng',
-                price: '950.000đ',
-                duration: '100 phút',
-                description: 'Liệu pháp massage bằng đá nóng giúp giảm đau nhức và căng thẳng.',
-                image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop'
-            },
-            'cham-soc-chan-tay': {
-                name: 'Chăm Sóc Chân Tay',
-                price: '350.000đ',
-                duration: '45 phút',
-                description: 'Cắt tỉa, đánh bóng và chăm sóc móng chân tay chuyên nghiệp.',
-                image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=300&h=200&fit=crop'
-            },
-            'goi-dau-massage': {
-                name: 'Gội Đầu Massage',
-                price: '250.000đ',
-                duration: '30 phút',
-                description: 'Massage da đầu, gội sạch và dưỡng tóc chuyên sâu.',
-                image: 'https://images.unsplash.com/photo-1552693673-1bf958298935?w=300&h=200&fit=crop'
-            }
-        };
-
-        // Set minimum date to today
-        document.getElementById('bookingDate').min = new Date().toISOString().split('T')[0];
-
-        // Service selection handler
-        document.getElementById('service').addEventListener('change', function() {
-            const serviceId = this.value;
-            const serviceInfo = document.getElementById('service-info');
-            
-            if (serviceId && services[serviceId]) {
-                const service = services[serviceId];
-                serviceInfo.innerHTML = `
-                    <div class="text-center mb-4">
-                        <img src="${service.image}" alt="${service.name}" class="w-full h-32 object-cover rounded-lg mb-3">
-                        <h4 class="font-semibold text-gray-800">${service.name}</h4>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Giá:</span>
-                            <span class="font-semibold text-primary-300">${service.price}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-600">Thời gian:</span>
-                            <span class="font-semibold">${service.duration}</span>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-3">${service.description}</p>
-                    </div>
-                `;
-            } else {
-                serviceInfo.innerHTML = `
-                    <div class="text-center py-8">
-                        <i class="fas fa-hand-sparkles text-4xl text-primary-300 mb-4"></i>
-                        <p class="text-gray-500">Chọn dịch vụ để xem thông tin chi tiết</p>
-                    </div>
-                `;
-            }
-        });
-
-        // Form submission
-        document.getElementById('booking-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Simulate booking process
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Đang xử lý...';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                // Show success modal
-                document.getElementById('success-modal').classList.remove('hidden');
-                document.querySelector('#success-modal .transform').classList.add('scale-100');
-                document.querySelector('#success-modal .transform').classList.remove('scale-95');
-                
-                // Reset form
-                this.reset();
-                document.getElementById('service-info').innerHTML = `
-                    <div class="text-center py-8">
-                        <i class="fas fa-hand-sparkles text-4xl text-primary-300 mb-4"></i>
-                        <p class="text-gray-500">Chọn dịch vụ để xem thông tin chi tiết</p>
-                    </div>
-                `;
-                
-                submitBtn.innerHTML = '<i class="fas fa-calendar-check mr-2"></i>Xác Nhận Đặt Lịch';
-                submitBtn.disabled = false;
-            }, 2000);
-        });
-
-        // Modal functions
-        function closeModal() {
-            document.getElementById('success-modal').classList.add('hidden');
-        }
-
-        function goToHome() {
-            window.location.href = 'index.html';
-        }
-
-        // Close modal on overlay click
-        document.getElementById('success-modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-    </script>
+    <!-- <script src="assets/js/navigation.js"></script> -->
+    <script src="assets/js/booking.js" type="module"></script>
+    <script src="assets/js/sample-data.js" type="module"></script>
+    <script src="assets/js/header.js"></script>
 </body>
+
 </html>

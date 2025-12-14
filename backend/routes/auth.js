@@ -5,7 +5,7 @@ import Admin from '../models/Admin.js';
 // Bỏ authentication - tất cả API public
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'edora_spa_secret_key_2024';
+const JWT_SECRET = process.env.JWT_SECRET || 'elora_spa_secret_key_2025';
 
 // Đăng ký khách hàng mới
 router.post('/register', async (req, res) => {
@@ -42,6 +42,15 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ 
         success: false,
         message: 'Email đã được sử dụng' 
+      });
+    }
+
+    // Kiểm tra phone đã tồn tại chưa (nếu có)
+    const existingPhone = await Customer.findOne({ phone: phone });
+    if (existingPhone) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Số điện thoại đã được sử dụng' 
       });
     }
 
@@ -94,35 +103,42 @@ router.post('/register', async (req, res) => {
 // Đăng nhập khách hàng
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body; // identifier có thể là email hoặc phone
 
     // Kiểm tra dữ liệu đầu vào
-    if (!email || !password) {
+    if (!identifier || !password) {
       return res.status(400).json({ 
         success: false,
-        message: 'Vui lòng nhập email và mật khẩu' 
+        message: 'Vui lòng nhập số điện thoại/email và mật khẩu' 
       });
     }
 
-    // Tìm khách hàng
-    const customer = await Customer.findOne({ 
-      email: email.toLowerCase(),
-      isActive: true
-    });
+    // Kiểm tra xem identifier là email hay phone
+    const isEmail = identifier.includes('@');
+    const searchQuery = isEmail 
+      ? { email: identifier.toLowerCase(), isActive: true }
+      : { phone: identifier, isActive: true };
+    console.log("🚀 ~ searchQuery:", searchQuery)
 
+    // Tìm khách hàng
+    const customer = await Customer.findOne(searchQuery);
+    console.log("🚀 ~ customer:", customer)
+    console.log("test");
+    
     if (!customer) {
       return res.status(401).json({ 
         success: false,
-        message: 'Email hoặc mật khẩu không đúng' 
+        message: 'Số điện thoại/Email hoặc mật khẩu không đúng' 
       });
     }
 
     // Kiểm tra mật khẩu
     const isValidPassword = await customer.comparePassword(password);
+    console.log("🚀 ~ isValidPassword:", isValidPassword)
     if (!isValidPassword) {
       return res.status(401).json({ 
         success: false,
-        message: 'Email hoặc mật khẩu không đúng' 
+        message: 'Số điện thoại/Email hoặc mật khẩu không đúng' 
       });
     }
 
@@ -152,6 +168,8 @@ router.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error('❌ Lỗi đăng nhập:', error);
+    console.log(error);
+    
     res.status(500).json({
       success: false,
       message: 'Lỗi server khi đăng nhập'
