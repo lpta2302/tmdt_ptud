@@ -58,7 +58,7 @@
     --color-info: #3b82f6;
 
     /* Layout */
-    --header-height: 92px;
+    --header-height: 5.75rem;
     --container-max-width: 1200px;
     --border-radius: 0.5rem;
     --border-radius-lg: 1rem;
@@ -650,6 +650,9 @@ body {
 
 /* Responsive Utilities */
 @media (max-width: 768px) {
+    html {
+        font-size: 12px;
+    }
     .hero-slide {
         height: 400px;
     }

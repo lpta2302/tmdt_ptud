@@ -54,17 +54,17 @@ function createHeader(activePage = 'home') {
                 </div>
             </div>
 
-            <!-- Mobile Navigation -->
-            <div class="mobile-menu lg:hidden hidden mt-4 pb-4 border-t border-gray-200">
-                <ul class="space-y-2 mt-4">
-                    <li><a href="index.html" class="block py-2 ${activePage === 'home' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Trang Chủ</a></li>
-                    <li><a href="services.html" class="block py-2 ${activePage === 'services' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Dịch Vụ</a></li>
-                    <li><a href="booking.html" class="block py-2 ${activePage === 'bookings' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Đặt Lịch</a></li>
-                    <li><a href="about.html" class="block py-2 ${activePage === 'about' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Giới Thiệu</a></li>
-                    <li><a href="contact.html" class="block py-2 ${activePage === 'contact' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Liên Hệ</a></li>
-                </ul>
-            </div>
         </nav>
+        <!-- Mobile Navigation -->
+        <div class="mobile-menu bg-white w-full lg:hidden hidden mt-4 pb-4 px-4 border-t border-gray-200">
+            <ul class="space-y-2 mt-4">
+                <li><a href="index.html" class="block py-2 ${activePage === 'home' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Trang Chủ</a></li>
+                <li><a href="services.html" class="block py-2 ${activePage === 'services' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Dịch Vụ</a></li>
+                <li><a href="booking.html" class="block py-2 ${activePage === 'bookings' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Đặt Lịch</a></li>
+                <li><a href="about.html" class="block py-2 ${activePage === 'about' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Giới Thiệu</a></li>
+                <li><a href="contact.html" class="block py-2 ${activePage === 'contact' ? 'text-primary-500 font-semibold' : 'text-gray-700 hover:text-primary-500'}">Liên Hệ</a></li>
+            </ul>
+        </div>
 
         <!-- Search Bar -->
         <div class="search-bar hidden bg-white border-t border-gray-200">
