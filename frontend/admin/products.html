@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Sản Phẩm - Spa Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <div class="row between" style="margin-bottom: 20px;">
+            <h1 class="page-title">Quản Lý Sản Phẩm</h1>
+            <button class="btn primary" onclick="openProductModal()">
+                <i class="fas fa-plus"></i> Thêm Sản Phẩm
+            </button>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="row">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." 
+                    style="flex: 1; margin-bottom: 10px;" onkeyup="handleSearch()" />
+                <select id="category-filter" onchange="handleSearch()" 
+                    style="width: 200px; margin: 0 0 0 10px;">
+                    <option value="">Tất cả danh mục</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="card">
+            <table class="table" id="products-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">Hình Ảnh</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Danh Mục</th>
+                        <th style="width: 120px;">Giá</th>
+                        <th style="width: 100px;">Thời Gian</th>
+                        <th style="width: 200px;">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="products-tbody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                            <p style="margin-top: 10px;">Đang tải dữ liệu...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Thêm/Sửa Sản Phẩm -->
+    <div class="modal hidden" id="product-modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="row between">
+                <h2 id="modal-title">Thêm Sản Phẩm Mới</h2>
+                <button class="btn" onclick="closeProductModal()" style="width: auto;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="handleSubmit(event)">
+                <input type="hidden" id="product-id" />
+
+                <div class="form-row">
+                    <div>
+                        <label>Tên Sản Phẩm <span style="color: red;">*</span></label>
+                        <input type="text" id="product-name" required />
+                    </div>
+                    <div>
+                        <label>Danh Mục <span style="color: red;">*</span></label>
+                        <select id="product-category" required>
+                            <option value="">-- Chọn danh mục --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Giá (VNĐ) <span style="color: red;">*</span></label>
+                        <input type="number" id="product-price" required min="0" />
+                    </div>
+                    <div>
+                        <label>Giá Gốc (VNĐ)</label>
+                        <input type="number" id="product-original-price" min="0" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Thời Gian (phút) <span style="color: red;">*</span></label>
+                        <input type="number" id="product-duration" required min="0" />
+                    </div>
+                    <div>
+                        <label>Hình Ảnh</label>
+                        <input type="file" id="product-images" accept="image/*" multiple 
+                            style="padding: 6px;" />
+                    </div>
+                </div>
+
+                <div>
+                    <label>Mô Tả <span style="color: red;">*</span></label>
+                    <textarea id="product-description" rows="3" required></textarea>
+                </div>
+
+                <div>
+                    <label>Lợi Ích (ngăn cách bởi dấu phẩy)</label>
+                    <textarea id="product-benefits" rows="2" 
+                        placeholder="Ví dụ: Làm sạch sâu, Thư giãn, Trẻ hóa da"></textarea>
+                </div>
+
+                <div>
+                    <label>Phù Hợp Với (ngăn cách bởi dấu phẩy)</label>
+                    <textarea id="product-suitable-for" rows="2" 
+                        placeholder="Ví dụ: Da khô, Da nhạy cảm, Mọi loại da"></textarea>
+                </div>
+
+                <div>
+                    <label>Thành Phần (ngăn cách bởi dấu phẩy)</label>
+                    <textarea id="product-ingredients" rows="2" 
+                        placeholder="Ví dụ: Vitamin C, Collagen, Aloe Vera"></textarea>
+                </div>
+
+                <div class="row right" style="margin-top: 20px;">
+                    <button type="button" class="btn muted" onclick="closeProductModal()" 
+                        style="width: auto;">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn primary" style="width: auto;">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let allProducts = [];
+        let allCategories = [];
+        let editingProductId = null;
+
+        // Khởi tạo
+        document.addEventListener('DOMContentLoaded', function () {
+            loadHeader();
+            loadCategories();
+            loadProducts();
+        });
+
+        // Load header
+        function loadHeader() {
+            fetch('layouts/header.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('header').innerHTML = html;
+                });
+        }
+
+        // Load danh mục
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/categories`);
+                const data = await response.json();
+                allCategories = data?.data || data || [];
+
+                // Cập nhật filter dropdown
+                const filterSelect = document.getElementById('category-filter');
+                filterSelect.innerHTML = '<option value="">Tất cả danh mục</option>' +
+                    allCategories.map(cat => `<option value="${cat._id}">${cat.name}</option>`).join('');
+
+                // Cập nhật modal dropdown
+                const modalSelect = document.getElementById('product-category');
+                modalSelect.innerHTML = '<option value="">-- Chọn danh mục --</option>' +
+                    allCategories.map(cat => `<option value="${cat._id}">${cat.name}</option>`).join('');
+
+            } catch (error) {
+                console.error('Lỗi khi tải danh mục:', error);
+            }
+        }
+
+        // Load danh sách sản phẩm
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                const data = await response.json();
+                allProducts = data?.data || data || [];
+                renderProducts(allProducts);
+            } catch (error) {
+                console.error('Lỗi khi tải sản phẩm:', error);
+                document.getElementById('products-tbody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: red;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p style="margin-top: 10px;">Không thể tải dữ liệu. Vui lòng kiểm tra kết nối API.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Render bảng sản phẩm
+        function renderProducts(products) {
+            const tbody = document.getElementById('products-tbody');
+
+            if (products.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-box-open" style="font-size: 48px; color: #ccc;"></i>
+                            <p style="margin-top: 10px; color: #999;">Chưa có sản phẩm nào</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = products.map(product => {
+                const category = allCategories.find(c => c._id === product.category);
+                const imageUrl = product.images && product.images.length > 0 
+                    ? `${API_BASE}/files/${product.images[0]?.gridfsId}`
+                    : "";
+
+                return `
+                    <tr>
+                        <td>
+                            <img src="${imageUrl}" alt="${product.name}" 
+                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"/>
+                        </td>
+                        <td>
+                            <strong>${product.name}</strong>
+                            <p style="font-size: 0.85rem; color: #666; margin-top: 4px;">
+                                ${product.description ? product.description.substring(0, 60) + '...' : ''}
+                            </p>
+                        </td>
+                        <td>${category ? category.name : '-'}</td>
+                        <td>
+                            <strong style="color: var(--color-primary);">
+                                ${formatPrice(product.price)}
+                            </strong>
+                            ${product.originalPrice ? `<br><span style="text-decoration: line-through; font-size: 0.85rem; color: #999;">${formatPrice(product.originalPrice)}</span>` : ''}
+                        </td>
+                        <td>${product.duration} phút</td>
+                        <td>
+                            <button class="btn" onclick="editProduct('${product._id}')" 
+                                style="width: auto; margin-bottom: 6px;">
+                                <i class="fas fa-edit"></i> Sửa
+                            </button>
+                            <button class="btn danger" onclick="deleteProduct('${product._id}')" 
+                                style="width: auto;">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Tìm kiếm và lọc
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('category-filter').value;
+
+            const filtered = allProducts.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
+                    (product.description && product.description.toLowerCase().includes(searchTerm));
+                const matchesCategory = !categoryFilter || product.category === categoryFilter;
+
+                return matchesSearch && matchesCategory;
+            });
+
+            renderProducts(filtered);
+        }
+
+        // Mở modal thêm sản phẩm
+        function openProductModal(productId = null) {
+            editingProductId = productId;
+            const modal = document.getElementById('product-modal');
+            const form = document.getElementById('product-form');
+            
+            form.reset();
+            document.getElementById('product-id').value = '';
+
+            if (productId) {
+                document.getElementById('modal-title').textContent = 'Chỉnh Sửa Sản Phẩm';
+                loadProductData(productId);
+            } else {
+                document.getElementById('modal-title').textContent = 'Thêm Sản Phẩm Mới';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Load dữ liệu sản phẩm để edit
+        async function loadProductData(productId) {
+            const product = allProducts.find(p => p._id === productId);
+            if (!product) return;
+
+            document.getElementById('product-id').value = product._id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-original-price').value = product.originalPrice || '';
+            document.getElementById('product-duration').value = product.duration;
+            document.getElementById('product-description').value = product.description;
+            document.getElementById('product-benefits').value = product.benefits ? product.benefits.join(', ') : '';
+            document.getElementById('product-suitable-for').value = product.suitableFor ? product.suitableFor.join(', ') : '';
+            document.getElementById('product-ingredients').value = product.ingredients ? product.ingredients.join(', ') : '';
+        }
+
+        // Đóng modal
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+            editingProductId = null;
+        }
+
+        // Xử lý submit form
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const productId = document.getElementById('product-id').value;
+            const formData = new FormData();
+
+            // Thu thập dữ liệu
+            formData.append('name', document.getElementById('product-name').value);
+            formData.append('category', document.getElementById('product-category').value);
+            formData.append('price', document.getElementById('product-price').value);
+            formData.append('originalPrice', document.getElementById('product-original-price').value || '');
+            formData.append('duration', document.getElementById('product-duration').value);
+            formData.append('description', document.getElementById('product-description').value);
+            
+            // Xử lý arrays
+            const benefits = document.getElementById('product-benefits').value
+                .split(',').map(s => s.trim()).filter(s => s);
+            const suitableFor = document.getElementById('product-suitable-for').value
+                .split(',').map(s => s.trim()).filter(s => s);
+            const ingredients = document.getElementById('product-ingredients').value
+                .split(',').map(s => s.trim()).filter(s => s);
+
+            formData.append('benefits', JSON.stringify(benefits));
+            formData.append('suitableFor', JSON.stringify(suitableFor));
+            formData.append('ingredients', JSON.stringify(ingredients));
+
+            // Thêm hình ảnh
+            const files = document.getElementById('product-images').files;
+            for (let i = 0; i < files.length; i++) {
+                formData.append('images', files[i]);
+            }
+
+            try {
+                const url = productId ? `${API_BASE}/products/${productId}` : `${API_BASE}/products`;
+                const method = productId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Không thể lưu sản phẩm');
+                }
+
+                alert(productId ? 'Cập nhật sản phẩm thành công!' : 'Thêm sản phẩm thành công!');
+                closeProductModal();
+                loadProducts();
+
+            } catch (error) {
+                console.error('Lỗi khi lưu sản phẩm:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        }
+
+        // Sửa sản phẩm
+        function editProduct(productId) {
+            openProductModal(productId);
+        }
+
+        // Xóa sản phẩm
+        async function deleteProduct(productId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/products/${productId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Không thể xóa sản phẩm');
+                }
+
+                alert('Xóa sản phẩm thành công!');
+                loadProducts();
+
+            } catch (error) {
+                console.error('Lỗi khi xóa sản phẩm:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        }
+
+        // Format giá
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+    </script>
+</body>
+
+</html>
