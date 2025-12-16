@@ -40,10 +40,8 @@ function createHeader(activePage = 'home') {
                         <button class="user-toggle p-2 text-gray-600 hover:text-primary-500 transition-colors">
                             <i class="fas fa-user text-xl"></i>
                         </button>
-                        <div class="user-menu absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl w-48 py-2 hidden">
-                            <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Nhập</a>
-                            <a href="register.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đăng Ký</a>
-                            <a href="booking.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">Đặt Lịch</a>
+                        <div id="user-menu-content" class="user-menu absolute right-0 top-full mt-2 bg-white rounded-lg shadow-xl w-48 py-2 hidden">
+                            <!-- Menu sẽ được render động -->
                         </div>
                     </div>
 
@@ -93,6 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
         
         // Setup event listeners sau khi header được render
         setupHeaderEventListeners();
+        
+        // Render user menu dựa trên trạng thái đăng nhập
+        renderUserMenu();
     }
 
     // Cập nhật số lượng sản phẩm trong giỏ hàng
@@ -103,6 +104,72 @@ document.addEventListener('DOMContentLoaded', function () {
         element.textContent = totalItems;
     });
 });
+
+// Render menu người dùng dựa trên trạng thái đăng nhập
+function renderUserMenu() {
+    const userMenuContent = document.getElementById('user-menu-content');
+    if (!userMenuContent) return;
+    
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    
+    if (token && user) {
+        // Đã đăng nhập - hiển thị menu đã đăng nhập
+        try {
+            const userData = JSON.parse(user);
+            userMenuContent.innerHTML = `
+                <div class="px-4 py-3 border-b border-gray-200">
+                    <p class="text-sm text-gray-500">Xin chào</p>
+                    <p class="font-semibold text-gray-800 truncate">${`${userData.firstName} ${userData.lastName}` || 'Người dùng'}</p>
+                </div>
+                <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+                    <i class="fas fa-user-circle mr-2"></i>Hồ Sơ
+                </a>
+                <a href="cart.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+                    <i class="fas fa-calendar-alt mr-2"></i>Lịch Đặt
+                </a>
+                <a href="booking.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+                    <i class="fas fa-calendar-plus mr-2"></i>Đặt Lịch Mới
+                </a>
+                <div class="border-t border-gray-200 my-2"></div>
+                <button onclick="handleLogout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Đăng Xuất
+                </button>
+            `;
+        } catch (error) {
+            console.error('Lỗi parse user data:', error);
+            renderGuestMenu(userMenuContent);
+        }
+    } else {
+        // Chưa đăng nhập - hiển thị menu guest
+        renderGuestMenu(userMenuContent);
+    }
+}
+
+// Render menu cho khách (chưa đăng nhập)
+function renderGuestMenu(menuElement) {
+    menuElement.innerHTML = `
+        <a href="login.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+            <i class="fas fa-sign-in-alt mr-2"></i>Đăng Nhập
+        </a>
+        <a href="register.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+            <i class="fas fa-user-plus mr-2"></i>Đăng Ký
+        </a>
+        <a href="booking.html" class="block px-4 py-2 text-gray-700 hover:bg-primary-50 transition-colors">
+            <i class="fas fa-calendar-plus mr-2"></i>Đặt Lịch
+        </a>
+    `;
+}
+
+// Xử lý đăng xuất
+window.handleLogout = function() {
+    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('pendingBooking');
+        window.location.href = 'index.html';
+    }
+};
 
 // Setup event listeners cho header
 function setupHeaderEventListeners() {
