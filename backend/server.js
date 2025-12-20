@@ -168,3 +168,5 @@ app.listen(PORT, () => {
   console.log(`📡 API base URL: http://localhost:${PORT}/api`);
   console.log(`📁 Files URL: http://localhost:${PORT}/api/files/:fileId`);
 });
+
+export default app;
