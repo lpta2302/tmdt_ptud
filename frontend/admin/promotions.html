@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Khuyến Mãi - Spa Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <div class="row between" style="margin-bottom: 20px;">
+            <h1 class="page-title">Quản Lý Khuyến Mãi</h1>
+            <button class="btn primary" onclick="openPromoForm()">
+                <i class="fas fa-plus"></i> Thêm Khuyến Mãi
+            </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="card" style="margin-bottom: 20px;">
+            <input type="text" id="promo-search" placeholder="Tìm kiếm khuyến mãi theo tên hoặc mã..." 
+                style="width: 100%; margin: 0;" onkeyup="handleSearch()" />
+        </div>
+
+        <!-- Promotions Table -->
+        <div class="card">
+            <table class="table" id="promo-table">
+                <thead>
+                    <tr>
+                        <th>Tên Khuyến Mãi</th>
+                        <th style="width: 120px;">Mã Code</th>
+                        <th style="width: 100px;">Giảm Giá</th>
+                        <th style="width: 150px;">Thời Gian</th>
+                        <th style="width: 100px;">Đã Dùng</th>
+                        <th style="width: 200px;">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="promo-tbody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                            <p style="margin-top: 10px;">Đang tải dữ liệu...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Thêm/Sửa Khuyến Mãi -->
+    <div class="modal hidden" id="modal-promo">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="row between">
+                <h2 id="modal-promo-title">Thêm Khuyến Mãi Mới</h2>
+                <button class="btn" onclick="closePromoForm()" style="width: auto;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="promo-form" onsubmit="handleSubmit(event)">
+                <input type="hidden" id="promo-id" />
+
+                <div class="form-row">
+                    <div>
+                        <label>Tên Khuyến Mãi <span style="color: red;">*</span></label>
+                        <input type="text" id="promo-name" required />
+                    </div>
+                    <div>
+                        <label>Mã Code <span style="color: red;">*</span></label>
+                        <input type="text" id="promo-code" required style="text-transform: uppercase;" />
+                    </div>
+                </div>
+
+                <div>
+                    <label>Mô Tả</label>
+                    <textarea id="promo-description" rows="2"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Loại Giảm Giá <span style="color: red;">*</span></label>
+                        <select id="promo-type" required>
+                            <option value="percentage">Phần trăm (%)</option>
+                            <option value="fixed_amount">Số tiền cố định (VNĐ)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Giá Trị <span style="color: red;">*</span></label>
+                        <input type="number" id="promo-discount" required min="0" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Ngày Bắt Đầu <span style="color: red;">*</span></label>
+                        <input type="date" id="promo-start" required />
+                    </div>
+                    <div>
+                        <label>Ngày Kết Thúc <span style="color: red;">*</span></label>
+                        <input type="date" id="promo-end" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Số Lần Sử Dụng Tối Đa</label>
+                        <input type="number" id="promo-limit" min="0" placeholder="Để trống = không giới hạn" />
+                    </div>
+                    <div>
+                        <label>Giá Trị Đơn Tối Thiểu (VNĐ)</label>
+                        <input type="number" id="promo-min" min="0" value="0" />
+                    </div>
+                </div>
+
+                <div class="row right" style="margin-top: 20px;">
+                    <button type="button" class="btn muted" onclick="closePromoForm()" 
+                        style="width: auto;">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn primary" style="width: auto;">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/promotions.js"></script>
+    <script>
+        // Load header
+        function loadHeader() {
+            fetch('layouts/header.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('header').innerHTML = html;
+                });
+        }
+
+        loadHeader();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            renderPromotionsTable();
+        });
+
+        // Search handler
+        function handleSearch() {
+            const searchTerm = document.getElementById('promo-search').value;
+            renderPromotionsTable(searchTerm);
+        }
+    </script>
+</body>
+
+</html>

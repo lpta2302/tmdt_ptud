@@ -1,0 +1,125 @@
+### Banners API Tests
+
+# Lấy tất cả banner
+GET http://localhost:3000/api/banners
+
+###
+
+# Lấy banner với phân trang và lọc
+GET http://localhost:3000/api/banners?page=1&limit=10&type=main_slider&active=true
+
+###
+
+# Lấy chi tiết banner theo ID
+GET http://localhost:3000/api/banners/674b2f8e123456789abcdef7
+
+###
+
+# Tạo banner mới (với file upload)
+POST http://localhost:3000/api/banners
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+Khuyến mãi đặc biệt tháng 12
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Giảm giá lên đến 50% cho tất cả dịch vụ spa
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="type"
+
+main_slider
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="linkUrl"
+
+/promotions/december-sale
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="buttonText"
+
+Đặt lịch ngay
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="order"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="isActive"
+
+true
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="banner-sample1.jpg"
+Content-Type: image/jpeg
+
+< ./images/banner-sample1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# Tạo banner mới (JSON)
+POST http://localhost:3000/api/banners
+Content-Type: application/json
+
+{
+  "title": "Dịch vụ chăm sóc da cao cấp",
+  "description": "Trải nghiệm dịch vụ chăm sóc da với công nghệ hiện đại",
+  "type": "side_banner",
+  "linkUrl": "/services/skincare",
+  "buttonText": "Tìm hiểu thêm",
+  "order": 2,
+  "isActive": true
+}
+
+###
+
+# Cập nhật banner
+PUT http://localhost:3000/api/banners/674b2f8e123456789abcdef7
+Content-Type: application/json
+
+{
+  "title": "Khuyến mãi siêu đặc biệt",
+  "description": "Giảm giá lên đến 60% cho tất cả dịch vụ",
+  "buttonText": "Đặt lịch hôm nay",
+  "order": 0
+}
+
+###
+
+# Xóa banner
+DELETE http://localhost:3000/api/banners/674b2f8e123456789abcdef7
+
+###
+
+# Cập nhật trạng thái banner
+PUT http://localhost:3000/api/banners/674b2f8e123456789abcdef7/status
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+
+###
+
+# Lấy banner cho trang chủ (chỉ active)
+GET http://localhost:3000/api/banners/active/homepage
+
+###
+
+# Cập nhật thứ tự hiển thị banner
+PUT http://localhost:3000/api/banners/674b2f8e123456789abcdef7/order
+Content-Type: application/json
+
+{
+  "order": 5
+}
+
+###
+
+# Lấy banner theo loại
+GET http://localhost:3000/api/banners?type=promotional&active=true
+
+###
+
+# Lấy banner sắp xếp theo thứ tự
+GET http://localhost:3000/api/banners?sortBy=order&order=asc

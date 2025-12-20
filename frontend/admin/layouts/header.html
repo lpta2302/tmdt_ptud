@@ -1,0 +1,58 @@
+<header class="topbar">
+  <div class="container row between">
+    <div class="brand">
+      <img src="assets/img/logo.png" alt="logo" class="logo" onerror="this.style.display='none'"/>
+      <span class="brand-title">Spa Admin</span>
+    </div>
+
+    <nav class="topnav">
+      <a href="index.html" id="nav-dashboard">
+        <i class="fas fa-chart-line"></i> Dashboard
+      </a>
+      <a href="products.html" id="nav-products">
+        <i class="fas fa-spa"></i> Sản Phẩm
+      </a>
+      <a href="categories.html" id="nav-categories">
+        <i class="fas fa-tags"></i> Danh Mục
+      </a>
+      <a href="banners.html" id="nav-banners">
+        <i class="fas fa-images"></i> Banner
+      </a>
+      <a href="promotions.html" id="nav-promotions">
+        <i class="fas fa-ticket-alt"></i> Voucher
+      </a>
+      <a href="orders.html" id="nav-orders">
+        <i class="fas fa-calendar-check"></i> Booking
+      </a>
+      <a href="customers.html" id="nav-customers">
+        <i class="fas fa-users"></i> Khách Hàng
+      </a>
+      <a href="sales.html" id="nav-sales">
+        <i class="fas fa-dollar-sign"></i> Doanh Thu
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+// Đánh dấu trang active
+const activePage = window.location.pathname.split('/').pop() || 'index.html';
+const pageMap = {
+  'index.html': 'nav-dashboard',
+  'products.html': 'nav-products',
+  'categories.html': 'nav-categories',
+  'banners.html': 'nav-banners',
+  'promotions.html': 'nav-promotions',
+  'orders.html': 'nav-orders',
+  'customers.html': 'nav-customers',
+  'sales.html': 'nav-sales'
+};
+const activeNavId = pageMap[activePage];
+if (activeNavId) {
+  const activeLink = document.getElementById(activeNavId);
+  if (activeLink) {
+    activeLink.style.borderBottom = '3px solid white';
+    activeLink.style.paddingBottom = '9px';
+  }
+}
+</script>

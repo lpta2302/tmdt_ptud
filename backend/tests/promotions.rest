@@ -1,0 +1,117 @@
+### Promotions API Tests
+
+# Lấy tất cả khuyến mãi
+GET http://localhost:3000/api/promotions
+
+###
+
+# Lấy khuyến mãi với phân trang và lọc
+GET http://localhost:3000/api/promotions?page=1&limit=10&status=active&active=true
+
+###
+
+# Lấy chi tiết khuyến mãi theo ID
+GET http://localhost:3000/api/promotions/674b2f8e123456789abcdef6
+
+###
+
+# Tạo khuyến mãi mới (percentage)
+POST http://localhost:3000/api/promotions
+Content-Type: application/json
+
+{
+  "name": "Giảm giá 20% cho khách hàng mới",
+  "description": "Chương trình khuyến mãi dành cho khách hàng lần đầu sử dụng dịch vụ",
+  "code": "NEWCUSTOMER20",
+  "type": "percentage",
+  "value": 20,
+  "minOrderValue": 500000,
+  "maxDiscountAmount": 200000,
+  "startDate": "2025-12-01",
+  "endDate": "2025-12-31",
+  "usageLimit": 100
+}
+
+###
+
+# Tạo khuyến mãi mới (fixed amount)
+POST http://localhost:3000/api/promotions
+Content-Type: application/json
+
+{
+  "name": "Giảm 100k cho đơn hàng spa",
+  "description": "Giảm trực tiếp 100,000đ cho các dịch vụ spa",
+  "code": "SPA100K",
+  "type": "fixed_amount",
+  "value": 100000,
+  "minOrderValue": 800000,
+  "startDate": "2025-12-15",
+  "endDate": "2026-01-15",
+  "usageLimit": 50,
+  "applicableCategories": ["674b2f8e123456789abcdef1"]
+}
+
+###
+
+# Cập nhật khuyến mãi
+PUT http://localhost:3000/api/promotions/674b2f8e123456789abcdef6
+Content-Type: application/json
+
+{
+  "name": "Giảm giá 25% cho khách hàng VIP",
+  "value": 25,
+  "maxDiscountAmount": 300000,
+  "status": "active"
+}
+
+###
+
+# Xóa khuyến mãi
+DELETE http://localhost:3000/api/promotions/674b2f8e123456789abcdef6
+
+###
+
+# Validate mã khuyến mãi
+POST http://localhost:3000/api/promotions/NEWCUSTOMER20/validate
+Content-Type: application/json
+
+{
+  "orderValue": 1000000,
+  "productIds": ["674b2f8e123456789abcdef0"],
+  "categoryIds": ["674b2f8e123456789abcdef1"]
+}
+
+###
+
+# Áp dụng mã khuyến mãi
+POST http://localhost:3000/api/promotions/NEWCUSTOMER20/apply
+Content-Type: application/json
+
+{}
+
+###
+
+# Thống kê khuyến mãi
+GET http://localhost:3000/api/promotions/stats/overview
+
+###
+
+# Lấy khuyến mãi đang hoạt động
+GET http://localhost:3000/api/promotions?active=true&status=active
+
+###
+
+# Tìm kiếm khuyến mãi
+GET http://localhost:3000/api/promotions?search=spa&page=1&limit=5
+
+###
+
+# Test validate với đơn hàng không đủ điều kiện
+POST http://localhost:3000/api/promotions/SPA100K/validate
+Content-Type: application/json
+
+{
+  "orderValue": 500000,
+  "productIds": ["674b2f8e123456789abcdef0"],
+  "categoryIds": ["674b2f8e123456789abcdef1"]
+}

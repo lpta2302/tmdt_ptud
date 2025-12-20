@@ -1,0 +1,116 @@
+### Auth API Tests
+
+# Đăng ký khách hàng
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Nguyễn Văn Test",
+  "email": "test@example.com",
+  "password": "123456",
+  "phone": "0987654321",
+  "dateOfBirth": "1990-01-01",
+  "gender": "male",
+  "address": {
+    "street": "123 Test Street",
+    "ward": "Test Ward",
+    "district": "Test District",
+    "city": "Ho Chi Minh City"
+  }
+}
+
+###
+
+# Đăng nhập khách hàng
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "090999999",
+  "password": "111111"
+}
+
+###
+
+# Đăng nhập admin
+POST http://localhost:3000/api/auth/admin/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
+
+###
+
+# Lấy thông tin profile khách hàng
+GET http://localhost:3000/api/auth/profile/674b2f8e123456789abcdef2
+
+###
+
+# Cập nhật profile khách hàng
+PUT http://localhost:3000/api/auth/profile/674b2f8e123456789abcdef2
+Content-Type: application/json
+
+{
+  "name": "Nguyễn Văn Updated",
+  "phone": "0987654322",
+  "address": {
+    "street": "456 Updated Street",
+    "ward": "Updated Ward",
+    "district": "District 1",
+    "city": "Ho Chi Minh City"
+  }
+}
+
+###
+
+# Đổi mật khẩu
+PUT http://localhost:3000/api/auth/change-password/693e33beffd64b48d1d94559
+Content-Type: application/json
+
+{
+  "currentPassword": "123456",
+  "newPassword": "newpassword123"
+}
+
+###
+
+# Forgot password
+POST http://localhost:3000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "test@example.com"
+}
+
+###
+
+# Reset password
+POST http://localhost:3000/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "token": "reset-token-here",
+  "newPassword": "newpassword123"
+}
+
+###
+
+# Verify email
+POST http://localhost:3000/api/auth/verify-email
+Content-Type: application/json
+
+{
+  "token": "verification-token-here"
+}
+
+###
+
+# Refresh token
+POST http://localhost:3000/api/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "refresh-token-here"
+}

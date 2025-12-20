@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - Elora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind.config.spa.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/color-variables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = window.tailwindConfigSpa;
+    </script>
+</head>
+
+<body class="font-sans min-h-screen" style="background: var(--gradient-primary-br);">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300"
+        id="header">
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center space-x-2 text-sm" data-aos="fade-right">
+                <a href="index.html" class="text-gray-500 hover:text-primary-500 transition-colors">Trang Chủ</a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <a href="cart.html" class="text-gray-500 hover:text-primary-500 transition-colors">Giỏ Hàng</a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <span class="text-primary-500 font-medium">Thanh Toán</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Checkout Steps -->
+    <section class="pb-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-center space-x-4 lg:space-x-8" data-aos="fade-up">
+                <div class="flex items-center space-x-2 text-primary-500">
+                    <div
+                        class="w-8 h-8 bg-primary-300 text-white rounded-full flex items-center justify-center text-sm font-semibold">
+                        1</div>
+                    <span class="font-medium">Thông Tin</span>
+                </div>
+                <div class="w-8 h-1 bg-primary-500 rounded-full"></div>
+                <div class="flex items-center space-x-2 text-gray-400">
+                    <div
+                        class="w-8 h-8 border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center text-sm font-semibold">
+                        2</div>
+                    <span class="font-medium">Thanh Toán</span>
+                </div>
+                <div class="w-8 h-1 bg-gray-300 rounded-full"></div>
+                <div class="flex items-center space-x-2 text-gray-400">
+                    <div
+                        class="w-8 h-8 border-2 border-gray-300 text-gray-400 rounded-full flex items-center justify-center text-sm font-semibold">
+                        3</div>
+                    <span class="font-medium">Hoàn Tất</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Form -->
+    <section class="pb-16">
+        <div class="container mx-auto px-4">
+            <div class="lg:flex lg:space-x-8">
+                <!-- Customer Information -->
+                <div class="lg:w-2/3 mb-8 lg:mb-0">
+                    <form id="checkout-form" class="space-y-8">
+                        <!-- Customer Details -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-right">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-user-circle text-primary-500 mr-3"></i>
+                                Thông Tin Khách Hàng
+                            </h2>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="form-label">Họ và Tên <span class="text-red-500">*</span></label>
+                                    <input type="text" id="fullName" name="fullName" required class="form-input"
+                                        placeholder="Nguyễn Văn A">
+                                </div>
+
+                                <div>
+                                    <label class="form-label">Số Điện Thoại <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="phone" name="phone" required class="form-input"
+                                        placeholder="0123 456 789">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="form-label">Email <span class="text-red-500">*</span></label>
+                                    <input type="email" id="email" name="email" required class="form-input"
+                                        placeholder="email@example.com">
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="form-label">Ghi Chú Đặc Biệt</label>
+                                    <textarea id="notes" name="notes" rows="3" class="form-input"
+                                        placeholder="Yêu cầu đặc biệt, dị ứng, hoặc lưu ý khác..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items to Checkout -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-right" data-aos-delay="150">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-shopping-bag text-primary-500 mr-3"></i>
+                                Sản Phẩm & Dịch Vụ
+                            </h2>
+                            <div id="checkout-items-display" class="space-y-4 max-h-96 overflow-y-auto">
+                                <!-- Items will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-right" data-aos-delay="200">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <i class="fas fa-credit-card text-primary-500 mr-3"></i>
+                                Phương Thức Thanh Toán
+                            </h2>
+
+                            <div class="flex flex-col space-y-4">
+                                <!-- Cash Payment -->
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="cash" checked
+                                        class="sr-only payment-radio">
+                                    <div class="payment-card px-4 py-2 rounded-md overflow-hidden">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div
+                                                    class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-800">Thanh Toán Tiền Mặt</h3>
+                                                    <p class="text-sm text-gray-600">Thanh toán trực tiếp tại spa</p>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <!-- Bank Transfer -->
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="transfer"
+                                        class="sr-only payment-radio">
+                                    <div class="payment-card px-4 py-2 ">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div
+                                                    class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-university text-blue-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-800">Chuyển Khoản Ngân Hàng</h3>
+                                                    <p class="text-sm text-gray-600">Chuyển khoản trước khi đến spa</p>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <!-- Credit Card -->
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="credit"
+                                        class="sr-only payment-radio">
+                                    <div class="payment-card px-4 py-2 ">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div
+                                                    class="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-credit-card text-purple-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-800">Thẻ Tín Dụng/Ghi Nợ</h3>
+                                                    <p class="text-sm text-gray-600">Visa, MasterCard, JCB</p>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <!-- E-Wallet -->
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="ewallet"
+                                        class="sr-only payment-radio">
+                                    <div class="payment-card px-4 py-2 ">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div
+                                                    class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-mobile-alt text-orange-600 text-xl"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-gray-800">Ví Điện Tử</h3>
+                                                    <p class="text-sm text-gray-600">MoMo, ZaloPay, VNPay</p>
+                                                </div>
+                                            </div>
+                                            <div class="radio-indicator">
+                                                <i class="fas fa-check"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Payment Details (shown for specific methods) -->
+                            <div id="payment-details" class="mt-6 hidden"></div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-right" data-aos-delay="300">
+                            <div class="space-y-4">
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required
+                                        class="mt-1 w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-300 focus:ring-2">
+                                    <span class="text-gray-700">
+                                        Tôi đồng ý với
+                                        <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Điều
+                                            khoản dịch vụ</a>
+                                        và
+                                        <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Chính
+                                            sách bảo mật</a>
+                                        của Elora
+                                    </span>
+                                </label>
+
+                                <label class="flex items-start space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="newsletter" name="newsletter"
+                                        class="mt-1 w-5 h-5 text-primary-500 border-gray-300 rounded focus:ring-primary-300 focus:ring-2">
+                                    <span class="text-gray-700">
+                                        Tôi muốn nhận thông tin khuyến mãi và ưu đãi từ Elora
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="lg:w-1/3">
+                    <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-32" data-aos="fade-left">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-6">Chi Tiết Thanh Toán</h2>
+
+                        <!-- Order Totals -->
+                        <div class="border-t border-gray-200 pt-6 space-y-4">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Tạm tính:</span>
+                                <span class="font-semibold" id="checkout-subtotal">0đ</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Phí dịch vụ:</span>
+                                <span class="font-semibold" id="checkout-service-fee">30.000đ</span>
+                            </div>
+                            <div class="flex justify-between text-green-600" id="checkout-discount-row"
+                                style="display: none;">
+                                <span>Giảm giá:</span>
+                                <span class="font-semibold" id="checkout-discount">-0đ</span>
+                            </div>
+                            <div class="flex justify-between text-lg border-t border-gray-200 pt-4">
+                                <span class="font-semibold text-gray-800">Tổng cộng:</span>
+                                <span class="font-bold text-primary-500 text-xl" id="checkout-total">0đ</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="mt-8 space-y-4">
+                            <button type="submit" form="checkout-form"
+                                class="w-full btn-primary py-4 text-lg hover-glow" id="submit-order">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Xác Nhận Đặt Lịch
+                            </button>
+
+                            <a href="cart.html" class="w-full btn-outline py-3 text-center block">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Quay Lại Giỏ Hàng
+                            </a>
+                        </div>
+
+                        <!-- Security Info -->
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <div class="flex items-center justify-center space-x-6 text-center">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-shield-alt text-green-500"></i>
+                                    <span class="text-sm text-gray-600">Bảo mật SSL</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-lock text-blue-500"></i>
+                                    <span class="text-sm text-gray-600">Thanh toán an toàn</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div data-aos="fade-up">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div style="background: var(--gradient-primary);"
+                            class="w-10 h-10  rounded-full flex items-center justify-center">
+                            <i class="fas fa-spa text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-display font-bold">Elora</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp,
+                        mang đến trải nghiệm chăm sóc sức khỏe và sắc đẹp hoàn hảo.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-lg font-semibold mb-6">Liên Kết Nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Trang Chủ</a>
+                        </li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-white transition-colors">Dịch Vụ</a>
+                        </li>
+                        <li><a href="booking.html" class="text-gray-400 hover:text-white transition-colors">Đặt Lịch</a>
+                        </li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">Giới Thiệu</a>
+                        </li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Liên Hệ</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-lg font-semibold mb-6">Dịch Vụ Nổi Bật</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Massage Thư Giãn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Da Mặt</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tẩy Tế Bào Chết</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Liệu Trình Trị Mụn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Tóc</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
+                            <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-primary-500"></i>
+                            <span class="text-gray-400">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@elora.vn</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-primary-500"></i>
+                            <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2024 Elora. Tất cả quyền được bảo lưu.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Điều Khoản Sử Dụng</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Hỗ Trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Modal -->
+    <div class="loading-modal modal-overlay hidden">
+        <div class="modal-content max-w-sm text-center">
+            <div class="mb-4">
+                <div
+                    class="loading-spinner w-16 h-16 border-4 border-primary-200 border-t-primary-300 rounded-full animate-spin mx-auto">
+                </div>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Đang Xử Lý...</h3>
+            <p class="text-gray-600">Vui lòng chờ trong giây lát</p>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button style="background: var(--gradient-primary);"
+        class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="assets/js/header.js"></script>
+    <script src="assets/js/checkout.js"></script>
+</body>
+
+</html>

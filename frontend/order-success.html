@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Lịch Thành Công - Elora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind.config.spa.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/color-variables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = window.tailwindConfigSpa;
+    </script>
+</head>
+
+<body class="font-sans bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300"
+        id="header">
+    </header>
+
+    <!-- Success Page -->
+    <section class="pt-32 pb-16 min-h-screen flex items-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Success Animation -->
+                <div class="text-center mb-12" data-aos="zoom-in">
+                    <div class="relative inline-block">
+                        <div
+                            class="w-32 h-32 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                            <i class="fas fa-check text-white text-5xl"></i>
+                        </div>
+                        <div class="absolute -inset-4 bg-green-100 rounded-full animate-ping opacity-75"></div>
+                    </div>
+
+                    <h1 class="text-4xl lg:text-5xl font-display font-bold text-gray-800 mb-4">
+                        Đặt Lịch <span
+                            class="bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent">Thành
+                            Công!</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Cảm ơn bạn đã tin tưởng Elora. Chúng tôi sẽ liên hệ xác nhận lịch hẹn trong thời gian sớm nhất.
+                    </p>
+                </div>
+
+                <!-- Order Information -->
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8" data-aos="fade-up">
+                    <div style="background: var(--gradient-primary);" class=" px-6 py-4">
+                        <h2 class="text-xl font-semibold text-white flex items-center">
+                            <i class="fas fa-receipt mr-3"></i>
+                            Thông Tin Lịch Hẹn
+                        </h2>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <!-- Left Column -->
+                            <div class="space-y-6">
+                                <!-- Order Details -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-info-circle text-primary-500 mr-2"></i>
+                                        Chi Tiết Lịch Hẹn
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Mã đơn hàng:</span>
+                                            <span class="font-semibold text-primary-500" id="order-id">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Ngày đặt:</span>
+                                            <span class="font-medium" id="order-date">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Tổng tiền:</span>
+                                            <span class="font-bold text-lg text-primary-500" id="order-total">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Phương thức thanh toán:</span>
+                                            <span class="font-medium" id="payment-method">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Info -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-user text-primary-500 mr-2"></i>
+                                        Thông Tin Khách Hàng
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Họ tên:</span>
+                                            <span class="font-medium" id="customer-name">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Điện thoại:</span>
+                                            <span class="font-medium" id="customer-phone">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Email:</span>
+                                            <span class="font-medium" id="customer-email">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="space-y-6">
+                                <!-- Booking Info -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-calendar-check text-primary-500 mr-2"></i>
+                                        Thông Tin Lịch Hẹn
+                                    </h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Ngày hẹn:</span>
+                                            <span class="font-medium text-primary-500" id="booking-date">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Giờ hẹn:</span>
+                                            <span class="font-medium text-primary-500" id="booking-time">-</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Nhân viên:</span>
+                                            <span class="font-medium" id="booking-staff">Tự động chọn</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Services -->
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-spa text-primary-500 mr-2"></i>
+                                        Dịch Vụ Đã Đặt
+                                    </h3>
+                                    <div id="ordered-services" class="space-y-3">
+                                        <!-- Services will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 mb-8" data-aos="fade-up"
+                    data-aos-delay="200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <i class="fas fa-list-check text-blue-500 mr-3"></i>
+                        Những Bước Tiếp Theo
+                    </h2>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold">1</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Xác Nhận Lịch Hẹn</h3>
+                                <p class="text-sm text-gray-600">Chúng tôi sẽ gọi điện xác nhận lịch hẹn trong vòng 2
+                                    giờ tới</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold">2</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Chuẩn Bị Đến Spa</h3>
+                                <p class="text-sm text-gray-600">Vui lòng có mặt trước giờ hẹn 15 phút để làm thủ tục
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div
+                                class="w-10 h-10 bg-primary-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <span class="font-bold">3</span>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800 mb-2">Thư Giãn & Tận Hưởng</h3>
+                                <p class="text-sm text-gray-600">Tận hưởng trải nghiệm spa tuyệt vời cùng đội ngũ chuyên
+                                    gia</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="300">
+                    <button onclick="window.print()" class="btn-outline px-8 py-3 flex items-center justify-center">
+                        <i class="fas fa-print mr-2"></i>
+                        In Hóa Đơn
+                    </button>
+
+                    <a href="index.html" class="btn-primary px-8 py-3 text-center">
+                        <i class="fas fa-home mr-2"></i>
+                        Về Trang Chủ
+                    </a>
+
+                    <a href="services.html" class="btn-outline px-8 py-3 text-center">
+                        <i class="fas fa-spa mr-2"></i>
+                        Xem Thêm Dịch Vụ
+                    </a>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="bg-white rounded-2xl shadow-lg p-6 mt-8" data-aos="fade-up" data-aos-delay="400">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4 text-center">
+                        Cần Hỗ Trợ?
+                    </h2>
+                    <div class="grid md:grid-cols-3 gap-6 text-center">
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-phone text-green-600"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Hotline</h3>
+                            <p class="text-sm text-gray-600">0123 456 789</p>
+                        </div>
+
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-envelope text-blue-600"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Email</h3>
+                            <p class="text-sm text-gray-600">support@elora.vn</p>
+                        </div>
+
+                        <div>
+                            <div
+                                class="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fab fa-facebook-messenger text-purple-600"></i>
+                            </div>
+                            <h3 class="font-medium text-gray-800 mb-1">Chat</h3>
+                            <p class="text-sm text-gray-600">Facebook Messenger</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div data-aos="fade-up">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div style="background: var(--gradient-primary);"
+                            class="w-10 h-10  rounded-full flex items-center justify-center">
+                            <i class="fas fa-spa text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-display font-bold">Serenity Spa</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp,
+                        mang đến trải nghiệm chăm sóc sức khỏe và sắc đẹp hoàn hảo.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-lg font-semibold mb-6">Liên Kết Nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Trang Chủ</a>
+                        </li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-white transition-colors">Dịch Vụ</a>
+                        </li>
+                        <li><a href="booking.html" class="text-gray-400 hover:text-white transition-colors">Đặt Lịch</a>
+                        </li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">Giới Thiệu</a>
+                        </li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Liên Hệ</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-lg font-semibold mb-6">Dịch Vụ Nổi Bật</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Massage Thư Giãn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Da Mặt</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tẩy Tế Bào Chết</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Liệu Trình Trị Mụn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Tóc</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
+                            <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-primary-500"></i>
+                            <span class="text-gray-400">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@serenityspa.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-primary-500"></i>
+                            <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2024 Serenity Spa. Tất cả quyền được bảo lưu.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Điều Khoản Sử Dụng</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Hỗ Trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button style="background: var(--gradient-primary);"
+        class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="assets/js/header.js"></script>
+    <script src="assets/js/order-success.js" type="module"></script>
+</body>
+
+</html>

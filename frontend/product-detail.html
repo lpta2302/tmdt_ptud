@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Dịch Vụ - Elora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind.config.spa.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/color-variables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = window.tailwindConfigSpa;
+    </script>
+</head>
+<body class="font-sans bg-gradient-to-br from-primary-50 to-secondary-50 min-h-screen">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 right-0 z-50" id="header">
+    </header>
+
+    <!-- Breadcrumb -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <nav class="flex items-center space-x-2 text-sm" data-aos="fade-right">
+                <a href="index.html" class="text-gray-500 hover:text-primary-500 transition-colors">Trang Chủ</a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <a href="services.html" class="text-gray-500 hover:text-primary-500 transition-colors">Dịch Vụ</a>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <span class="text-gray-800" id="breadcrumb-category">Massage & Spa</span>
+                <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                <span class="text-primary-500 font-medium" id="breadcrumb-product">Chi tiết dịch vụ</span>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Product Detail -->
+    <section class="pb-16">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div class="lg:flex">
+                    <!-- Product Images -->
+                    <div class="lg:w-1/2 p-8">
+                        <div class="sticky top-32">
+                            <!-- Main Image with Zoom -->
+                            <div class="zoom-container relative mb-6 rounded-2xl overflow-hidden bg-gray-100" data-aos="fade-right">
+                                <img id="main-image" src="" alt="" class="w-full h-96 lg:h-[500px] object-cover cursor-zoom-in">
+                                <div class="zoom-lens hidden absolute border-2 border-primary-300 pointer-events-none"></div>
+                                
+                                <!-- Zoom Result -->
+                                <div class="zoom-result hidden absolute right-0 top-0 w-96 h-96 bg-white border border-gray-300 z-10"></div>
+                                
+                                <!-- Image Navigation -->
+                                <div class="absolute top-4 right-4 flex space-x-2">
+                                    <button class="image-nav-btn bg-white/90 backdrop-blur-sm w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all" id="prev-image">
+                                        <i class="fas fa-chevron-left text-gray-600"></i>
+                                    </button>
+                                    <button class="image-nav-btn bg-white/90 backdrop-blur-sm w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all" id="next-image">
+                                        <i class="fas fa-chevron-right text-gray-600"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Full Screen Button -->
+                                <button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-gray-700 hover:bg-white transition-all" id="fullscreen-btn">
+                                    <i class="fas fa-expand mr-2"></i>
+                                    Phóng to
+                                </button>
+                            </div>
+
+                            <!-- Thumbnail Images -->
+                            <div class="grid grid-cols-4 gap-3" id="thumbnail-container" data-aos="fade-up" data-aos-delay="200">
+                                <!-- Thumbnails will be loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="lg:w-1/2 p-8 lg:pl-0">
+                        <div data-aos="fade-left">
+                            <!-- Category & Tags -->
+                            <div class="flex items-center space-x-3 mb-4">
+                                <span class="bg-primary-100 text-primary-500 px-3 py-1 rounded-full text-sm font-medium" id="product-category">
+                                    Massage & Spa
+                                </span>
+                                <div class="flex space-x-2" id="product-tags">
+                                    <!-- Tags will be loaded dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Product Name -->
+                            <h1 class="text-3xl lg:text-4xl font-display font-bold text-gray-800 mb-4" id="product-name">
+                                Massage Thư Giãn Toàn Thân
+                            </h1>
+
+                            <!-- Rating & Reviews -->
+                            <div class="flex items-center space-x-4 mb-6">
+                                <div class="flex items-center">
+                                    <div class="rating-stars mr-2" id="product-rating">
+                                        <!-- Rating stars will be loaded -->
+                                    </div>
+                                    <span class="text-lg font-semibold text-gray-800" id="rating-value">4.8</span>
+                                </div>
+                                <span class="text-gray-500">|</span>
+                                <a href="#reviews" class="text-primary-500 hover:text-primary-400 font-medium" id="review-count">
+                                    127 đánh giá
+                                </a>
+                                <span class="text-gray-500">|</span>
+                                <span class="text-gray-500" id="view-count">1.524 lượt xem</span>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="mb-6">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <span class="text-3xl font-bold text-primary-500" id="current-price">300.000đ</span>
+                                    <span class="text-xl text-gray-400 line-through" id="original-price" style="display: none;">350.000đ</span>
+                                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded-full text-sm font-medium" id="discount-badge" style="display: none;">
+                                        -14%
+                                    </span>
+                                </div>
+                                <p class="text-gray-600">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    Thời gian: <span id="product-duration">60</span> phút
+                                </p>
+                            </div>
+
+                            <!-- Quick Info -->
+                            <div class="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-2xl p-6 mb-6">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <i class="fas fa-clock text-primary-500"></i>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Thời gian</p>
+                                        <p class="font-semibold text-gray-800" id="duration-info">60 phút</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                                            <i class="fas fa-users text-primary-600"></i>
+                                        </div>
+                                        <p class="text-sm text-gray-600">Đã đặt</p>
+                                        <p class="font-semibold text-gray-800" id="booking-count">2.340+</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quantity & Actions -->
+                            <div class="space-y-4 mb-8">
+
+                                <!-- Action Buttons -->
+                                <div class="flex space-x-4">
+                                    <button class="btn-primary flex-1 py-4 text-lg hover-glow" id="add-to-cart">
+                                        <i class="fas fa-calendar-plus mr-2"></i>
+                                        Đặt Lịch Ngay
+                                    </button>
+                                    <button class="border-2 border-primary-300 text-primary-500 px-6 py-4 rounded-full hover:bg-primary-50 transition-all" id="add-to-wishlist">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="border-2 border-gray-300 text-gray-600 px-6 py-4 rounded-full hover:border-gray-400 transition-all" id="share-product">
+                                        <i class="fas fa-share-alt"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Quick Book -->
+                                <button class="w-full bg-gradient-to-r from-secondary-300 to-primary-300 text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all" id="quick-book">
+                                    <i class="fas fa-phone mr-2"></i>
+                                    Gọi Đặt Lịch: 0123 456 789
+                                </button>
+                            </div>
+
+                            <!-- Trust Signals -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div>
+                                        <i class="fas fa-shield-alt text-green-500 text-xl mb-2"></i>
+                                        <p class="text-xs text-gray-600">Đảm bảo<br>chất lượng</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-undo text-blue-500 text-xl mb-2"></i>
+                                        <p class="text-xs text-gray-600">Hoàn tiền<br>100%</p>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-headset text-purple-500 text-xl mb-2"></i>
+                                        <p class="text-xs text-gray-600">Hỗ trợ<br>24/7</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Details Tabs -->
+                <div class="border-t border-gray-200">
+                    <div class="container mx-auto px-8 py-8">
+                        <!-- Tab Navigation -->
+                        <div class="flex flex-wrap border-b border-gray-200 mb-8" data-aos="fade-up">
+                            <button class="tab-btn active mr-8 pb-4 text-lg font-semibold text-gray-600 hover:text-primary-500 border-b-2 border-transparent" data-tab="description">
+                                Mô Tả Chi Tiết
+                            </button>
+                            <button class="tab-btn mr-8 pb-4 text-lg font-semibold text-gray-600 hover:text-primary-500 border-b-2 border-transparent" data-tab="benefits">
+                                Lợi Ích
+                            </button>
+                            <button class="tab-btn mr-8 pb-4 text-lg font-semibold text-gray-600 hover:text-primary-500 border-b-2 border-transparent" data-tab="process">
+                                Quy Trình
+                            </button>
+                            <button class="tab-btn mr-8 pb-4 text-lg font-semibold text-gray-600 hover:text-primary-500 border-b-2 border-transparent" data-tab="reviews">
+                                Đánh Giá (<span id="tab-review-count">127</span>)
+                            </button>
+                        </div>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content">
+                            <!-- Description Tab -->
+                            <div class="tab-pane active" id="description-pane" data-aos="fade-up">
+                                <div class="prose max-w-none">
+                                    <div id="product-description">
+                                        <!-- Description will be loaded dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Benefits Tab -->
+                            <div class="tab-pane hidden" id="benefits-pane" data-aos="fade-up">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Lợi Ích Chính</h3>
+                                        <ul class="space-y-3" id="product-benefits">
+                                            <!-- Benefits will be loaded dynamically -->
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Phù Hợp Cho</h3>
+                                        <ul class="space-y-3" id="suitable-for">
+                                            <li class="flex items-center space-x-3">
+                                                <i class="fas fa-check-circle text-green-500"></i>
+                                                <span>Người thường xuyên căng thẳng, stress</span>
+                                            </li>
+                                            <li class="flex items-center space-x-3">
+                                                <i class="fas fa-check-circle text-green-500"></i>
+                                                <span>Người làm việc văn phòng nhiều</span>
+                                            </li>
+                                            <li class="flex items-center space-x-3">
+                                                <i class="fas fa-check-circle text-green-500"></i>
+                                                <span>Người muốn thư giãn sau ngày dài</span>
+                                            </li>
+                                            <li class="flex items-center space-x-3">
+                                                <i class="fas fa-check-circle text-green-500"></i>
+                                                <span>Người có vấn đề về cơ bắp</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Process Tab -->
+                            <div class="tab-pane hidden" id="process-pane" data-aos="fade-up">
+                                <div class="space-y-6">
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Quy Trình Thực Hiện</h3>
+                                    <div class="space-y-4" id="product-procedures">
+                                        <!-- Procedures will be loaded dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reviews Tab -->
+                            <div class="tab-pane hidden" id="reviews-pane" data-aos="fade-up">
+                                <div class="space-y-8">
+                                    <!-- Review Summary -->
+                                    <div class="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-2xl p-6">
+                                        <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-8">
+                                            <div class="text-center lg:text-left mb-6 lg:mb-0">
+                                                <div class="text-4xl font-bold text-gray-800 mb-2" id="average-rating">4.8</div>
+                                                <div class="rating-stars mb-2" id="average-rating-stars">
+                                                    <!-- Stars will be loaded -->
+                                                </div>
+                                                <div class="text-gray-600" id="total-reviews">Dựa trên 127 đánh giá</div>
+                                            </div>
+                                            
+                                            <div class="flex-1">
+                                                <div class="space-y-2" id="rating-breakdown">
+                                                    <!-- Rating breakdown will be loaded -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Add Review Button -->
+                                    <div class="text-center">
+                                        <button class="btn-primary" id="write-review-btn">
+                                            <i class="fas fa-star mr-2"></i>
+                                            Viết Đánh Giá
+                                        </button>
+                                    </div>
+
+                                    <!-- Reviews List -->
+                                    <div class="space-y-6" id="reviews-list">
+                                        <!-- Reviews will be loaded dynamically -->
+                                    </div>
+
+                                    <!-- Load More Reviews -->
+                                    <div class="text-center">
+                                        <button class="btn-outline" id="load-more-reviews">
+                                            Xem Thêm Đánh Giá
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-3xl lg:text-4xl font-display font-bold text-gray-800 mb-4">
+                    Dịch Vụ <span style="background-image: var(--gradient-primary);" class=" bg-clip-text text-transparent">Liên Quan</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Những dịch vụ khác mà bạn có thể quan tâm
+                </p>
+            </div>
+
+            <div class="splide related-products-slider" id="related-slider" data-aos="fade-up" data-aos-delay="200">
+                <div class="splide__track">
+                    <ul class="splide__list" id="related-products">
+                        <!-- Related products will be loaded dynamically -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Combo Products -->
+    <section class="py-16 bg-gradient-to-br from-primary-50 to-secondary-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-3xl lg:text-4xl font-display font-bold text-gray-800 mb-4">
+                    Mua Kèm <span style="background-image: var(--gradient-primary);" class=" bg-clip-text text-transparent">Tiết Kiệm</span>
+                </h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Kết hợp các dịch vụ để có trải nghiệm tốt nhất với giá ưu đãi
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="combo-products">
+                <!-- Combo products will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div data-aos="fade-up">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div style="background-image: var(--gradient-primary);" class="w-10 h-10  rounded-full flex items-center justify-center">
+                            <i class="fas fa-spa text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-display font-bold">Elora</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp, 
+                        mang đến trải nghiệm chăm sóc sức khỏe và sắc đẹp hoàn hảo.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-lg font-semibold mb-6">Liên Kết Nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Trang Chủ</a></li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-white transition-colors">Dịch Vụ</a></li>
+                        <li><a href="booking.html" class="text-gray-400 hover:text-white transition-colors">Đặt Lịch</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">Giới Thiệu</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Liên Hệ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-lg font-semibold mb-6">Dịch Vụ Nổi Bật</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Massage Thư Giãn</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Da Mặt</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tẩy Tế Bào Chết</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Liệu Trình Trị Mụn</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Tóc</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
+                            <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-primary-500"></i>
+                            <span class="text-gray-400">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@elora.vn</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-primary-500"></i>
+                            <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2024 Elora. Tất cả quyền được bảo lưu.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Điều Khoản Sử Dụng</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Hỗ Trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Image Fullscreen Modal -->
+    <div class="image-modal fixed inset-0 bg-black bg-opacity-90 hidden z-50 flex items-center justify-center">
+        <div class="relative max-w-7xl max-h-full p-4">
+            <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain">
+            <button class="absolute top-4 right-4 text-white text-2xl hover:text-primary-500 transition-colors" id="close-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="absolute top-1/2 left-4 transform -translate-y-1/2">
+                <button class="text-white text-2xl hover:text-primary-500 transition-colors" id="modal-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            <div class="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <button class="text-white text-2xl hover:text-primary-500 transition-colors" id="modal-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="review-modal modal-overlay hidden">
+        <div class="modal-content max-w-lg">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold">Viết Đánh Giá</h3>
+                <button class="close-review-modal text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="review-form" class="space-y-4">
+                <div>
+                    <label class="form-label">Đánh giá của bạn</label>
+                    <div class="flex space-x-1 mb-3">
+                        <button type="button" class="star-rating" data-rating="1">
+                            <i class="far fa-star text-2xl"></i>
+                        </button>
+                        <button type="button" class="star-rating" data-rating="2">
+                            <i class="far fa-star text-2xl"></i>
+                        </button>
+                        <button type="button" class="star-rating" data-rating="3">
+                            <i class="far fa-star text-2xl"></i>
+                        </button>
+                        <button type="button" class="star-rating" data-rating="4">
+                            <i class="far fa-star text-2xl"></i>
+                        </button>
+                        <button type="button" class="star-rating" data-rating="5">
+                            <i class="far fa-star text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tiêu đề đánh giá</label>
+                    <input type="text" class="form-input" placeholder="Nhập tiêu đề đánh giá...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Nội dung đánh giá</label>
+                    <textarea class="form-textarea" rows="4" placeholder="Chia sẻ trải nghiệm của bạn..."></textarea>
+                </div>
+                
+                <div class="flex space-x-3 pt-4">
+                    <button type="submit" class="btn-primary flex-1">Gửi Đánh Giá</button>
+                    <button type="button" class="btn-outline close-review-modal">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar fixed right-0 top-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Giỏ Hàng</h3>
+                <button class="cart-close text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="cart-items flex-1 overflow-y-auto p-6">
+            <div class="empty-cart text-center py-12">
+                <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500">Giỏ hàng của bạn đang trống</p>
+                <a href="services.html" style="background: var(--gradient-primary);" class="inline-block mt-4  text-white px-6 py-3 rounded-full hover:shadow-lg transition-all">
+                    Khám Phá Dịch Vụ
+                </a>
+            </div>
+        </div>
+        
+        <div class="cart-footer p-6 border-t">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-semibold">Tổng cộng:</span>
+                <span class="cart-total font-bold text-lg text-primary-500">0đ</span>
+            </div>
+            <button style="background: var(--gradient-primary);" class="w-full  text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all">
+                Thanh Toán
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <!-- Back to Top -->
+    <button style="background: var(--gradient-primary);" class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="assets/js/config.js" type="module"></script>
+    <script src="assets/js/header.js"></script>
+    <script src="assets/js/product-detail.js" type="module"></script>
+</body>
+</html>

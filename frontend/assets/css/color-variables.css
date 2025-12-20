@@ -1,0 +1,67 @@
+/* Color Variables CSS để sử dụng màu từ Tailwind Config */
+:root {
+    /* Primary Colors - Purple */
+    --color-primary-50: 250, 245, 255;
+    --color-primary-100: 243, 232, 255;
+    --color-primary-200: 233, 213, 255;
+    --color-primary-300: 216, 180, 254;  /* Màu chủ đạo */
+    --color-primary-400: 192, 132, 252;
+    --color-primary-500: 168, 85, 247;
+    --color-primary-600: 147, 51, 234;
+    --color-primary-700: 124, 58, 237;
+    --color-primary-800: 107, 33, 168;
+    --color-primary-900: 88, 28, 135;
+
+    /* Secondary Colors - Sky */
+    --color-secondary-50: 240, 249, 255;
+    --color-secondary-100: 224, 242, 254;
+    --color-secondary-200: 186, 230, 253;
+    --color-secondary-300: 125, 211, 252;
+    --color-secondary-400: 56, 189, 248;  /* Màu phụ */
+    --color-secondary-500: 14, 165, 233;
+    --color-secondary-600: 2, 132, 199;
+    --color-secondary-700: 3, 105, 161;
+    --color-secondary-800: 7, 89, 133;
+    --color-secondary-900: 12, 74, 110;
+}
+
+/* Utility classes để sử dụng màu config */
+.text-primary {
+    color: rgb(var(--color-primary-300));
+}
+
+.text-secondary {
+    color: rgb(var(--color-secondary-400));
+}
+
+.bg-primary {
+    background-color: rgb(var(--color-primary-300));
+}
+
+.bg-secondary {
+    background-color: rgb(var(--color-secondary-400));
+}
+
+.border-primary {
+    border-color: rgb(var(--color-primary-300));
+}
+
+.border-secondary {
+    border-color: rgb(var(--color-secondary-400));
+}
+
+.hover\:text-primary:hover {
+    color: rgb(var(--color-primary-300));
+}
+
+.hover\:text-secondary:hover {
+    color: rgb(var(--color-secondary-400));
+}
+
+.hover\:bg-primary:hover {
+    background-color: rgb(var(--color-primary-300));
+}
+
+.hover\:bg-secondary:hover {
+    background-color: rgb(var(--color-secondary-400));
+}

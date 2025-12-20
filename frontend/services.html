@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch Vụ - Elora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind.config.spa.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/color-variables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = window.tailwindConfigSpa;
+    </script>
+</head>
+
+<body data-page="services" class="font-sans min-h-screen" style="background: var(--gradient-primary-br);">
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-lg transition-all duration-300"
+        id="header"> </header>
+
+    <!-- Page Header -->
+    <section class="pt-32 pb-16" style="background: var(--gradient-primary);">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl lg:text-6xl font-display font-bold text-white mb-4" data-aos="fade-up">
+                Dịch Vụ Spa
+            </h1>
+            <p class="text-xl text-secondary-100 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                Khám phá những dịch vụ chăm sóc sức khỏe và sắc đẹp hàng đầu
+            </p>
+
+            <!-- Search Bar -->
+            <div class="mt-8 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="400">
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Tìm kiếm dịch vụ..."
+                        class="w-full pl-4 pr-12 py-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-secondary-200 focus:outline-none focus:bg-white/20 transition-all">
+                    <button
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-secondary-200 hover:text-white">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="lg:flex lg:space-x-8">
+                <!-- Sidebar Filters -->
+                <aside class="lg:w-1/4 mb-8 lg:mb-0">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg sticky top-32" data-aos="fade-right">
+                        <!-- Categories -->
+                        <div class="filter-group mb-6">
+                            <h3 class="filter-title">Danh Mục</h3>
+                            <div class="space-y-3" id="category-filters">
+                                <!-- Category filters will be loaded dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="filter-group mb-6">
+                            <h3 class="filter-title">Khoảng Giá</h3>
+                            <div class="space-y-3">
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox price-filter" value="0-200000">
+                                    <span>Dưới 200.000đ</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox price-filter" value="200000-400000">
+                                    <span>200.000đ - 400.000đ</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox price-filter" value="400000-600000">
+                                    <span>400.000đ - 600.000đ</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox price-filter" value="600000-1000000">
+                                    <span>600.000đ - 1.000.000đ</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox price-filter" value="1000000+">
+                                    <span>Trên 1.000.000đ</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="filter-group mb-6">
+                            <h3 class="filter-title">Thời Gian</h3>
+                            <div class="space-y-3">
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox duration-filter" value="0-30">
+                                    <span>Dưới 30 phút</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox duration-filter" value="30-60">
+                                    <span>30 - 60 phút</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox duration-filter" value="60-90">
+                                    <span>60 - 90 phút</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox duration-filter" value="90+">
+                                    <span>Trên 90 phút</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Rating -->
+                        <div class="filter-group mb-6">
+                            <h3 class="filter-title">Đánh Giá</h3>
+                            <div class="space-y-3">
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox rating-filter" value="4.5+">
+                                    <div class="flex items-center">
+                                        <div class="rating-stars mr-2">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star-half-alt text-yellow-400"></i>
+                                        </div>
+                                        <span>4.5+ sao</span>
+                                    </div>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox rating-filter" value="4+">
+                                    <div class="flex items-center">
+                                        <div class="rating-stars mr-2">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="far fa-star text-gray-300"></i>
+                                        </div>
+                                        <span>4+ sao</span>
+                                    </div>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox rating-filter" value="3+">
+                                    <div class="flex items-center">
+                                        <div class="rating-stars mr-2">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <i class="far fa-star text-gray-300"></i>
+                                            <i class="far fa-star text-gray-300"></i>
+                                        </div>
+                                        <span>3+ sao</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Special Offers -->
+                        <div class="filter-group">
+                            <h3 class="filter-title">Ưu Đãi Đặc Biệt</h3>
+                            <div class="space-y-3">
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox special-filter" value="discount">
+                                    <span>Có giảm giá</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox special-filter" value="trending">
+                                    <span>Xu hướng</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox special-filter" value="bestseller">
+                                    <span>Bán chạy</span>
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" class="filter-checkbox special-filter" value="featured">
+                                    <span>Nổi bật</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Clear Filters -->
+                        <div class="mt-6">
+                            <button id="clear-filters"
+                                class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg hover:bg-gray-200 transition-colors">
+                                <i class="fas fa-times mr-2"></i>
+                                Xóa Bộ Lọc
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main class="lg:w-3/4">
+                    <!-- Sort and View Options -->
+                    <div class="bg-white rounded-2xl p-6 shadow-lg mb-8" data-aos="fade-left">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-gray-600">Sắp xếp theo:</span>
+                                <select id="sort-select" class="sort-dropdown">
+                                    <option value="default">Mặc định</option>
+                                    <option value="price-asc">Giá: Thấp đến Cao</option>
+                                    <option value="price-desc">Giá: Cao đến Thấp</option>
+                                    <option value="rating-desc">Đánh giá cao nhất</option>
+                                    <option value="duration-asc">Thời gian: Ngắn đến Dài</option>
+                                    <option value="duration-desc">Thời gian: Dài đến Ngắn</option>
+                                    <option value="name-asc">Tên: A-Z</option>
+                                    <option value="name-desc">Tên: Z-A</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center space-x-4">
+                                <span class="text-gray-600">Hiển thị:</span>
+                                <div class="flex space-x-2">
+                                    <button class="view-toggle active" data-view="grid" title="Lưới">
+                                        <i class="fas fa-th-large"></i>
+                                    </button>
+                                    <button class="view-toggle" data-view="list" title="Danh sách">
+                                        <i class="fas fa-list"></i>
+                                    </button>
+                                </div>
+
+                                <span class="text-gray-600">|</span>
+                                <span class="text-gray-600">
+                                    <span id="results-count">0</span> kết quả
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Active Filters -->
+                        <div id="active-filters" class="mt-4 hidden">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-sm text-gray-600 mr-2">Bộ lọc đang áp dụng:</span>
+                                <div id="active-filters-list" class="flex flex-wrap gap-2">
+                                    <!-- Active filters will be shown here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Products will be loaded dynamically -->
+                    </div>
+
+                    <!-- Loading -->
+                    <div id="loading" class="text-center py-12 hidden">
+                        <div class="loading mx-auto mb-4"></div>
+                        <p class="text-gray-600">Đang tải dịch vụ...</p>
+                    </div>
+
+                    <!-- No Results -->
+                    <div id="no-results" class="text-center py-12 hidden">
+                        <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Không tìm thấy dịch vụ phù hợp</h3>
+                        <p class="text-gray-500 mb-6">Hãy thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+                        <button id="reset-search" class="btn-primary">
+                            Xem Tất Cả Dịch Vụ
+                        </button>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div id="pagination" class="mt-12 flex justify-center">
+                        <div class="flex items-center space-x-2">
+                            <button id="prev-page" class="pagination-btn" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+
+                            <div id="page-numbers" class="flex space-x-2">
+                                <!-- Page numbers will be generated dynamically -->
+                            </div>
+
+                            <button id="next-page" class="pagination-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Company Info -->
+                <div data-aos="fade-up">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div style="background: var(--gradient-primary);"
+                            class="w-10 h-10  rounded-full flex items-center justify-center">
+                            <i class="fas fa-spa text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-display font-bold">Elora</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Không gian thư giãn lý tưởng với các dịch vụ spa và massage chuyên nghiệp,
+                        mang đến trải nghiệm chăm sóc sức khỏe và sắc đẹp hoàn hảo.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <h4 class="text-lg font-semibold mb-6">Liên Kết Nhanh</h4>
+                    <ul class="space-y-3">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition-colors">Trang Chủ</a>
+                        </li>
+                        <li><a href="services.html" class="text-gray-400 hover:text-white transition-colors">Dịch Vụ</a>
+                        </li>
+                        <li><a href="booking.html" class="text-gray-400 hover:text-white transition-colors">Đặt Lịch</a>
+                        </li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition-colors">Giới Thiệu</a>
+                        </li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition-colors">Liên Hệ</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <h4 class="text-lg font-semibold mb-6">Dịch Vụ Nổi Bật</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Massage Thư Giãn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Da Mặt</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tẩy Tế Bào Chết</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Liệu Trình Trị Mụn</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Chăm Sóc Tóc</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <h4 class="text-lg font-semibold mb-6">Thông Tin Liên Hệ</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-primary-500 mt-1"></i>
+                            <span class="text-gray-400">123 Nguyễn Văn Linh, Q.7, TP.HCM</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-phone text-primary-500"></i>
+                            <span class="text-gray-400">0123 456 789</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-primary-500"></i>
+                            <span class="text-gray-400">info@elora.vn</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-primary-500"></i>
+                            <span class="text-gray-400">8:00 - 22:00 hàng ngày</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom -->
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                        © 2024 Elora. Tất cả quyền được bảo lưu.
+                    </p>
+                    <div class="flex space-x-6 text-sm">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Chính Sách Bảo Mật</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Điều Khoản Sử Dụng</a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">Hỗ Trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div
+        class="cart-sidebar fixed right-0 top-0 h-full w-96 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50">
+        <div class="p-6 border-b">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Giỏ Hàng</h3>
+                <button class="cart-close text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="cart-items flex-1 overflow-y-auto p-6">
+            <div class="empty-cart text-center py-12">
+                <i class="fas fa-shopping-bag text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-500">Giỏ hàng của bạn đang trống</p>
+                <a href="services.html" style="background: var(--gradient-primary);"
+                    class="inline-block mt-4  text-white px-6 py-3 rounded-full hover:shadow-lg transition-all">
+                    Khám Phá Dịch Vụ
+                </a>
+            </div>
+        </div>
+
+        <div class="cart-footer p-6 border-t">
+            <div class="flex justify-between items-center mb-4">
+                <span class="font-semibold">Tổng cộng:</span>
+                <span class="cart-total font-bold text-lg text-primary-500">0đ</span>
+            </div>
+            <button style="background: var(--gradient-primary);"
+                class="w-full  text-white py-3 rounded-full font-semibold hover:shadow-lg transition-all">
+                Thanh Toán
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
+
+    <!-- Back to Top -->
+    <button style="background: var(--gradient-primary);"
+        class="back-to-top fixed bottom-8 right-8 w-12 h-12  text-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all opacity-0 pointer-events-none z-30">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/header.js"></script>
+    <script src="assets/js/config.js" type="module"></script>
+    <script src="assets/js/services.js" type="module"></script>
+</body>
+
+</html>

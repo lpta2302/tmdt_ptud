@@ -1,0 +1,76 @@
+### Cart API Tests
+
+# Lấy giỏ hàng của khách hàng
+GET http://localhost:3000/api/cart/674b2f8e123456789abcdef2
+
+###
+
+# Thêm sản phẩm vào giỏ hàng
+POST http://localhost:3000/api/cart/674b2f8e123456789abcdef2/add
+Content-Type: application/json
+
+{
+  "productId": "674b2f8e123456789abcdef0",
+  "quantity": 2
+}
+
+###
+
+# Cập nhật số lượng sản phẩm trong giỏ hàng
+PUT http://localhost:3000/api/cart/674b2f8e123456789abcdef2/update/674b2f8e123456789abcdef4
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+###
+
+# Xóa sản phẩm khỏi giỏ hàng
+DELETE http://localhost:3000/api/cart/674b2f8e123456789abcdef2/remove/674b2f8e123456789abcdef4
+
+###
+
+# Xóa tất cả sản phẩm trong giỏ hàng
+DELETE http://localhost:3000/api/cart/674b2f8e123456789abcdef2/clear
+
+###
+
+# Hợp nhất giỏ hàng (khi đăng nhập)
+POST http://localhost:3000/api/cart/674b2f8e123456789abcdef2/merge
+Content-Type: application/json
+
+{
+  "tempCartItems": [
+    {
+      "productId": "674b2f8e123456789abcdef0",
+      "quantity": 1
+    },
+    {
+      "productId": "674b2f8e123456789abcdef1",
+      "quantity": 2
+    }
+  ]
+}
+
+###
+
+# Thêm nhiều sản phẩm vào giỏ hàng
+POST http://localhost:3000/api/cart/674b2f8e123456789abcdef2/add
+Content-Type: application/json
+
+{
+  "productId": "674b2f8e123456789abcdef1",
+  "quantity": 1
+}
+
+###
+
+# Kiểm tra tồn kho trước khi thêm
+POST http://localhost:3000/api/cart/674b2f8e123456789abcdef2/add
+Content-Type: application/json
+
+{
+  "productId": "674b2f8e123456789abcdef0",
+  "quantity": 100
+}

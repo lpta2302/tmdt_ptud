@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Đơn Hàng - Spa Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <div class="row between" style="margin-bottom: 20px;">
+            <h1 class="page-title">Quản Lý Đơn Hàng</h1>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="row">
+                <select id="status-filter" onchange="handleFilter()" 
+                    style="width: 200px; margin: 0;">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xác nhận</option>
+                    <option value="confirmed">Đã xác nhận</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="card" style="margin-bottom: 20px;">
+            <table class="table" id="orders-table">
+                <thead>
+                    <tr>
+                        <th>Mã Đơn</th>
+                        <th>Ngày Tạo</th>
+                        <th style="width: 120px;">Tổng Tiền</th>
+                        <th style="width: 120px;">Trạng Thái</th>
+                        <th style="width: 150px;">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                            <p style="margin-top: 10px;">Đang tải dữ liệu...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="card">
+            <h2 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-chart-pie" style="color: var(--color-primary-500);"></i>
+                Thống Kê Đơn Hàng
+            </h2>
+            <div id="orders-stats" class="grid grid-4">
+                <div style="text-align: center; padding: 20px; background: var(--color-gray-50); border-radius: var(--border-radius);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--color-primary-500);"></i>
+                    <p style="margin-top: 10px;">Đang tải...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/orders.js"></script>
+    <script>
+        // Load header
+        function loadHeader() {
+            fetch('layouts/header.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('header').innerHTML = html;
+                });
+        }
+
+        loadHeader();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            renderOrdersTable();
+            renderOrdersStats();
+        });
+
+        // Filter handler
+        function handleFilter() {
+            renderOrdersTable();
+        }
+    </script>
+</body>
+
+</html>

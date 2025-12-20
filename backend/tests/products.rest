@@ -1,0 +1,138 @@
+### Products API Tests
+
+# Lấy tất cả sản phẩm
+GET http://localhost:3000/api/products
+
+###
+
+# Lấy sản phẩm với phân trang và tìm kiếm  
+GET http://localhost:3000/api/products?page=1&limit=5&search=massage&category=674b2f8e123456789abcdef1
+
+###
+
+# Lấy sản phẩm với bộ lọc giá
+GET http://localhost:3000/api/products?minPrice=100000&maxPrice=500000&sortBy=price&sortOrder=asc
+
+###
+
+# Lấy chi tiết sản phẩm theo ID
+GET http://localhost:3000/api/products/674b2f8e123456789abcdef0
+
+###
+
+# Tạo sản phẩm mới (với file upload)
+POST http://localhost:3000/api/products
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="name"
+
+Massage thư giãn toàn thân
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="description"
+
+Dịch vụ massage thư giãn toàn thân với tinh dầu thiên nhiên, giúp thư giãn cơ bắp và giảm căng thẳng
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="price"
+
+400000
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="originalPrice"
+
+500000
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="category"
+
+6939bf432dfe6bca31679d7d
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="duration"
+
+60
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="benefits"
+
+["Thư giãn cơ bắp", "Giảm căng thẳng", "Cải thiện tuần hoàn máu"]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="suitableFor"
+
+["Người làm việc văn phòng", "Sau tập thể thao", "Căng thẳng"]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="ingredients"
+
+["Tinh dầu lavender", "Tinh dầu eucalyptus", "Dầu dừa"]
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="images"; filename="spa1.jpg"
+Content-Type: image/jpeg
+
+< ./images/spa1.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+###
+
+# Tạo sản phẩm mới (JSON)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Chăm sóc da mặt cơ bản",
+  "description": "Dịch vụ chăm sóc da mặt cơ bản với các bước làm sạch, tẩy tế bào chết và đắp mặt nạ dưỡng ẩm",
+  "price": 300000,
+  "originalPrice": 350000,
+  "category": "674b2f8e123456789abcdef1",
+  "duration": 45,
+  "benefits": [
+    "Làm sạch sâu lỗ chân lông",
+    "Loại bỏ tế bào chết",
+    "Cung cấp độ ẩm cho da"
+  ],
+  "suitableFor": [
+    "Da khô",
+    "Da hỗn hợp",
+    "Da nhạy cảm"
+  ],
+  "ingredients": [
+    "Sữa rửa mặt tự nhiên",
+    "Tẩy tế bào chết từ yến mạch",
+    "Mặt nạ collagen"
+  ]
+}
+
+###
+
+# Cập nhật sản phẩm
+PUT http://localhost:3000/api/products/674b2f8e123456789abcdef0
+Content-Type: application/json
+
+{
+  "name": "Massage thư giãn toàn thân VIP",
+  "price": 600000,
+  "originalPrice": 700000,
+  "description": "Dịch vụ massage cao cấp với tinh dầu nhập khẩu và kỹ thuật chuyên nghiệp",
+  "duration": 90,
+  "benefits": ["Thư giãn sâu", "Giảm đau cơ", "Tăng cường tuần hoàn"],
+  "suitableFor": ["Người làm việc căng thẳng", "Vận động viên", "Người cao tuổi"]
+}
+
+###
+
+# Xóa sản phẩm (soft delete - set isActive = false)
+DELETE http://localhost:3000/api/products/6939c3e6a52e0364d557b604
+
+###
+
+# Lấy danh sách categories
+GET http://localhost:3000/api/products/categories/list
+
+###
+
+# Tìm kiếm sản phẩm theo tên
+GET http://localhost:3000/api/products?search=massage
+
+###
+
+# Lấy sản phẩm sắp xếp theo giá
+GET http://localhost:3000/api/products?sortBy=price&sortOrder=asc&limit=10
+
+###
+
+# Lấy sản phẩm theo khoảng thời gian
+GET http://localhost:3000/api/products?sortBy=duration&minPrice=200000&maxPrice=800000

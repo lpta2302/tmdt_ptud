@@ -1,0 +1,65 @@
+### Kiểm tra health
+GET http://localhost:3000/api/health
+
+### Lấy danh sách sản phẩm
+GET http://localhost:3000/api/products
+
+### Lấy chi tiết sản phẩm (id=1)
+GET http://localhost:3000/api/products/1
+
+### Lấy danh mục
+GET http://localhost:3000/api/categories
+
+### Đăng ký khách hàng mới
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@mail.com",
+  "password": "123456",
+  "firstName": "Test",
+  "lastName": "User"
+}
+
+### Đăng nhập
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@mail.com",
+  "password": "123456"
+}
+
+### Lấy thông tin khuyến mãi
+GET http://localhost:3000/api/promotions
+
+### Lấy banner
+GET http://localhost:3000/api/banners
+
+### Lấy bình luận sản phẩm (id=1)
+GET http://localhost:3000/api/comments/product/1
+
+### Đặt lịch (booking) (cần token)
+# Thay {{token}} bằng token JWT lấy từ đăng nhập
+POST http://localhost:3000/api/bookings
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "customerId": 1,
+  "items": [
+    { "productId": 1, "quantity": 1 }
+  ],
+  "total": 100000,
+  "paymentMethod": "cod"
+}
+
+### Thêm sản phẩm vào giỏ (cần token)
+POST http://localhost:3000/api/cart/1/add
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "productId": 1,
+  "quantity": 1
+}

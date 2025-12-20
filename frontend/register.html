@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Elora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/js/tailwind.config.spa.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/color-variables.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        tailwind.config = window.tailwindConfigSpa;
+    </script>
+</head>
+<body class="min-h-screen" style="background: var(--gradient-primary-br);">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <div class="logo-icon">
+                        <i class="fas fa-spa text-white text-lg"></i>
+                    </div>
+                    <span class="logo-text">
+                        Elora
+                    </span>
+                </a>
+                <a href="index.html" class="text-gray-600 hover:text-primary-500 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Về trang chủ
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-12 min-h-screen flex items-center justify-center">
+        <div class="container mx-auto px-6">
+            <div class="max-w-lg mx-auto">
+                <!-- Register Card -->
+                <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden" data-aos="fade-up">
+                    <div class="p-8">
+                        <div class="text-center mb-8">
+                            <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style="background: var(--gradient-primary);">
+                                <i class="fas fa-user-plus text-white text-2xl"></i>
+                            </div>
+                            <h1 class="text-3xl font-display font-bold text-gray-800 mb-2">Đăng Ký</h1>
+                            <p class="text-gray-600">Tạo tài khoản Elora để trải nghiệm dịch vụ tốt nhất</p>
+                        </div>
+
+                        <!-- Register Form -->
+                        <form id="register-form" class="space-y-6">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Họ</label>
+                                    <input type="text" id="firstName" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
+                                           placeholder="Họ">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Tên</label>
+                                    <input type="text" id="lastName" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors"
+                                           placeholder="Tên">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <div class="relative">
+                                    <input type="email" id="email" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors pl-12"
+                                           placeholder="Nhập email của bạn">
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+                                <div class="relative">
+                                    <input type="tel" id="phone" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors pl-12"
+                                           placeholder="Nhập số điện thoại">
+                                    <i class="fas fa-phone absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mật khẩu</label>
+                                <div class="relative">
+                                    <input type="password" id="password" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors pl-12 pr-12"
+                                           placeholder="Tối thiểu 8 ký tự">
+                                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('password')">
+                                        <i class="fas fa-eye" id="eye-icon-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Xác nhận mật khẩu</label>
+                                <div class="relative">
+                                    <input type="password" id="confirmPassword" required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-300 focus:border-primary-300 transition-colors pl-12 pr-12"
+                                           placeholder="Nhập lại mật khẩu">
+                                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <button type="button" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600" onclick="togglePassword('confirmPassword')">
+                                        <i class="fas fa-eye" id="eye-icon-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Giới tính</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="gender" value="male" class="text-primary-500 focus:ring-primary-300">
+                                        <span class="ml-2 text-sm">Nam</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="gender" value="female" class="text-primary-500 focus:ring-primary-300">
+                                        <span class="ml-2 text-sm">Nữ</span>
+                                    </label>
+                                    <label class="flex items-center p-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50">
+                                        <input type="radio" name="gender" value="other" class="text-primary-500 focus:ring-primary-300">
+                                        <span class="ml-2 text-sm">Khác</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start">
+                                <input type="checkbox" id="terms" required class="mt-1 rounded border-gray-300 text-primary-500 focus:ring-primary-300">
+                                <label for="terms" class="ml-2 text-sm text-gray-600">
+                                    Tôi đồng ý với 
+                                    <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Điều khoản dịch vụ</a> 
+                                    và 
+                                    <a href="#" class="text-primary-500 hover:text-primary-400 font-medium">Chính sách bảo mật</a>
+                                </label>
+                            </div>
+
+                            <button type="submit" 
+                                    style="background: var(--gradient-primary);" class="w-full  text-white py-3 px-6 rounded-xl font-semibold hover:from-primary-400 hover:to-secondary-500 transform hover:-translate-y-0.5 transition-all duration-300 shadow-lg hover:shadow-xl">
+                                <i class="fas fa-user-plus mr-2"></i>
+                                Tạo Tài Khoản
+                            </button>
+                        </form>
+
+                        <!-- Social Register -->
+                        <div class="mt-8">
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-gray-300"></div>
+                                </div>
+                                <div class="relative flex justify-center text-sm">
+                                    <span class="px-2 bg-white text-gray-500">Hoặc đăng ký với</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 grid grid-cols-2 gap-3">
+                                <button class="w-full inline-flex justify-center py-2.5 px-4 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
+                                    <i class="fab fa-google text-red-500 mr-2"></i>
+                                    Google
+                                </button>
+                                <button class="w-full inline-flex justify-center py-2.5 px-4 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
+                                    <i class="fab fa-facebook text-blue-600 mr-2"></i>
+                                    Facebook
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="mt-8 text-center">
+                            <p class="text-gray-600">
+                                Đã có tài khoản? 
+                                <a href="login.html" class="text-primary-500 hover:text-primary-400 font-semibold">Đăng nhập ngay</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="assets/js/config.js" type="module"></script>
+    <script src="assets/js/register.js" type="module"></script>
+</body>
+</html>
