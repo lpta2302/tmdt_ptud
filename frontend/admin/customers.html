@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Khách Hàng - Spa Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <div class="row between" style="margin-bottom: 20px;">
+            <h1 class="page-title">Quản Lý Khách Hàng</h1>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="card" style="margin-bottom: 20px;">
+            <input type="text" id="search-input" placeholder="Tìm kiếm theo tên, email, số điện thoại..." 
+                style="width: 100%; margin: 0;" onkeyup="handleSearch()" />
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-4 cards-row" style="margin-bottom: 20px;">
+            <div class="card" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600)); color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px;">Tổng khách hàng</p>
+                        <p id="stat-total" class="stat-number" style="color: white;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                    <i class="fas fa-users" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, var(--color-success), #059669); color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px;">Khách hàng mới (tháng)</p>
+                        <p id="stat-new" class="stat-number" style="color: white;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                    <i class="fas fa-user-plus" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600)); color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px;">Khách đã xác thực</p>
+                        <p id="stat-verified" class="stat-number" style="color: white;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                    <i class="fas fa-user-check" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+            <div class="card" style="background: linear-gradient(135deg, var(--color-warning), #f97316); color: white;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px;">Tổng điểm tích lũy</p>
+                        <p id="stat-points" class="stat-number" style="color: white; font-size: 1.2rem;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </p>
+                    </div>
+                    <i class="fas fa-award" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers Table -->
+        <div class="card">
+            <table class="table" id="customers-table">
+                <thead>
+                    <tr>
+                        <th>Họ Tên</th>
+                        <th>Email</th>
+                        <th>Số Điện Thoại</th>
+                        <th style="width: 120px;">Điểm Tích Lũy</th>
+                        <th style="width: 120px;">Tổng Chi Tiêu</th>
+                        <th style="width: 120px;">Ngày Tham Gia</th>
+                        <th style="width: 150px;">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody id="customers-tbody">
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                            <p style="margin-top: 10px;">Đang tải dữ liệu...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Chi Tiết Khách Hàng -->
+    <div class="modal hidden" id="customer-modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="row between">
+                <h2>Chi Tiết Khách Hàng</h2>
+                <button class="btn" onclick="closeCustomerModal()" style="width: auto;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="customer-details" style="margin-top: 20px;">
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                </div>
+            </div>
+
+            <div class="row right" style="margin-top: 20px;">
+                <button type="button" class="btn muted" onclick="closeCustomerModal()" 
+                    style="width: auto;">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let allCustomers = [];
+
+        // Khởi tạo
+        document.addEventListener('DOMContentLoaded', function () {
+            loadHeader();
+            loadCustomers();
+        });
+
+        // Load header
+        function loadHeader() {
+            fetch('layouts/header.html')
+                .then(r => r.text())
+                .then(html => {
+                    document.getElementById('header').innerHTML = html;
+                });
+        }
+
+        // Load danh sách khách hàng
+        async function loadCustomers() {
+            try {
+                const response = await fetch(`${API_BASE}/customers?limit=100`);
+                const data = await response.json();
+                allCustomers = data?.customers || data || [];
+                renderCustomers(allCustomers);
+                updateStats();
+            } catch (error) {
+                console.error('Lỗi khi tải khách hàng:', error);
+                document.getElementById('customers-tbody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: red;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p style="margin-top: 10px;">Không thể tải dữ liệu. Vui lòng kiểm tra kết nối API.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Render bảng khách hàng
+        function renderCustomers(customers) {
+            const tbody = document.getElementById('customers-tbody');
+
+            if (customers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-user-slash" style="font-size: 48px; color: #ccc;"></i>
+                            <p style="margin-top: 10px; color: #999;">Chưa có khách hàng nào</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = customers.map(customer => {
+                const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                    ${(customer.firstName || 'U').charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <strong>${fullName || customer.email}</strong>
+                                    ${customer.isVerified ? '<i class="fas fa-check-circle" style="color: var(--color-success); margin-left: 4px;" title="Đã xác thực"></i>' : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td>${customer.email}</td>
+                        <td>${customer.phone || '-'}</td>
+                        <td style="text-align: center; color: var(--color-warning); font-weight: 600;">
+                            <i class="fas fa-award"></i> ${customer.loyaltyPoints || 0}
+                        </td>
+                        <td style="color: var(--color-success); font-weight: 600;">
+                            ${formatPrice(customer.totalSpent || 0)}
+                        </td>
+                        <td>${formatDate(customer.createdAt)}</td>
+                        <td>
+                            <button class="btn" onclick="viewCustomer('${customer._id}')" 
+                                style="width: auto;">
+                                <i class="fas fa-eye"></i> Xem
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = allCustomers.length;
+            const now = new Date();
+            const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const newThisMonth = allCustomers.filter(c => new Date(c.createdAt) >= firstDayOfMonth).length;
+            const verified = allCustomers.filter(c => c.isVerified).length;
+            const totalPoints = allCustomers.reduce((sum, c) => sum + (c.loyaltyPoints || 0), 0);
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-new').textContent = newThisMonth;
+            document.getElementById('stat-verified').textContent = verified;
+            document.getElementById('stat-points').textContent = totalPoints.toLocaleString();
+        }
+
+        // Tìm kiếm
+        function handleSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            const filtered = allCustomers.filter(customer => {
+                const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.toLowerCase();
+                return fullName.includes(searchTerm) ||
+                    customer.email.toLowerCase().includes(searchTerm) ||
+                    (customer.phone && customer.phone.includes(searchTerm));
+            });
+
+            renderCustomers(filtered);
+        }
+
+        // Xem chi tiết khách hàng
+        async function viewCustomer(customerId) {
+            const modal = document.getElementById('customer-modal');
+            modal.classList.remove('hidden');
+
+            try {
+                const response = await fetch(`${API_BASE}/customers/${customerId}`);
+                const customer = await response.json();
+
+                const detailsDiv = document.getElementById('customer-details');
+                const fullName = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+
+                detailsDiv.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h3 style="margin-bottom: 16px; color: var(--color-primary-500);">Thông Tin Cá Nhân</h3>
+                            <p style="margin-bottom: 12px;"><strong>Họ Tên:</strong> ${fullName || '-'}</p>
+                            <p style="margin-bottom: 12px;"><strong>Email:</strong> ${customer.email}</p>
+                            <p style="margin-bottom: 12px;"><strong>Số ĐT:</strong> ${customer.phone || '-'}</p>
+                            <p style="margin-bottom: 12px;"><strong>Giới Tính:</strong> ${translateGender(customer.gender)}</p>
+                            <p style="margin-bottom: 12px;"><strong>Ngày Sinh:</strong> ${customer.dateOfBirth ? formatDate(customer.dateOfBirth) : '-'}</p>
+                            <p style="margin-bottom: 12px;"><strong>Địa Chỉ:</strong> ${formatAddress(customer.address)}</p>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 16px; color: var(--color-primary-500);">Thông Tin Tài Khoản</h3>
+                            <p style="margin-bottom: 12px;"><strong>Trạng Thái:</strong> 
+                                ${customer.isActive ? '<span style="color: var(--color-success);">Đang hoạt động</span>' : '<span style="color: var(--color-error);">Đã khóa</span>'}
+                            </p>
+                            <p style="margin-bottom: 12px;"><strong>Xác Thực:</strong> 
+                                ${customer.isVerified ? '<span style="color: var(--color-success);"><i class="fas fa-check-circle"></i> Đã xác thực</span>' : '<span style="color: var(--color-warning);">Chưa xác thực</span>'}
+                            </p>
+                            <p style="margin-bottom: 12px;"><strong>Điểm Tích Lũy:</strong> 
+                                <span style="color: var(--color-warning); font-weight: 600; font-size: 1.1rem;">${customer.loyaltyPoints || 0} điểm</span>
+                            </p>
+                            <p style="margin-bottom: 12px;"><strong>Tổng Chi Tiêu:</strong> 
+                                <span style="color: var(--color-success); font-weight: 600; font-size: 1.1rem;">${formatPrice(customer.totalSpent || 0)}</span>
+                            </p>
+                            <p style="margin-bottom: 12px;"><strong>Ngày Tham Gia:</strong> ${formatDate(customer.createdAt)}</p>
+                            <p style="margin-bottom: 12px;"><strong>Cập Nhật Lần Cuối:</strong> ${formatDate(customer.updatedAt)}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Lỗi khi tải chi tiết khách hàng:', error);
+                document.getElementById('customer-details').innerHTML = `
+                    <p style="color: red; text-align: center;">Không thể tải thông tin khách hàng</p>
+                `;
+            }
+        }
+
+        // Đóng modal
+        function closeCustomerModal() {
+            document.getElementById('customer-modal').classList.add('hidden');
+        }
+
+        // Format giá
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(price);
+        }
+
+        // Format ngày
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN');
+        }
+
+        // Translate gender
+        function translateGender(gender) {
+            const map = {
+                'male': 'Nam',
+                'female': 'Nữ',
+                'other': 'Khác'
+            };
+            return map[gender] || '-';
+        }
+
+        // Format address
+        function formatAddress(address) {
+            if (!address) return '-';
+            const parts = [address.street, address.district, address.city].filter(Boolean);
+            return parts.length > 0 ? parts.join(', ') : '-';
+        }
+    </script>
+</body>
+
+</html>
